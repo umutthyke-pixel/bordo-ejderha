@@ -7,7 +7,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;user-select:none}
-#canvas-container{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
+#canvas-container{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:default}
 
 /* ── Başlangıç Ekranı (Modern Bordo-Obsidyen Glassmorphism) ── */
 #splash{
@@ -173,16 +173,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 
 /* ── HUD ── */
 #hud{position:fixed;inset:0;pointer-events:none;z-index:50}
-#crosshair{
-  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:10px;height:10px;border-radius:50%;
-  border:2px solid rgba(255,255,255,0.7);
-  box-shadow:0 0 10px rgba(255,180,60,0.6);
-  pointer-events:none;
-}
-#crosshair::before{
-  content:'';position:absolute;inset:2px;border-radius:50%;background:#ffaa00;
-}
+#crosshair{display:none !important;}
 #hud-flight{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
   display:flex;align-items:center;gap:20px;
@@ -503,7 +494,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 
       <div class="lobby-body" id="lobby-view-solo">
         <div class="lobby-status-msg">
-          <span>🏔️ Tek kişilik serbest uçuş ve kule imha modu.</span>
+          <span>🏔️ Şarkılar eşliğinde huzurlu ve serbest uçuş modu.</span>
         </div>
       </div>
 
@@ -543,14 +534,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
     <button id="startBtn" onclick="startExperience()">▶ &nbsp;UÇUŞA BAŞLA</button>
     <div class="keys-hint">
       <span><span class="k-badge">🖱️ FARE</span> Yönlendir</span>
-      <span><span class="k-badge">W/S</span> Hız</span>
-      <span><span class="k-badge">A/D</span> Yatış</span>
-      <span><span class="k-badge">Q / E</span> 🔄 Fıçı Taklası (Sıyrılma)</span>
-      <span><span class="k-badge">F</span> 💥 Alev Topu</span>
-      <span><span class="k-badge">SPACE</span> 🔥 Alevle Kule İmha</span>
-      <span><span class="k-badge">SHIFT</span> 🚀 Turbo</span>
+      <span><span class="k-badge">W / S</span> Hız</span>
+      <span><span class="k-badge">A / D</span> Yatış / Dönüş</span>
+      <span><span class="k-badge">SHIFT</span> 🚀 Hızlı Süzülüş</span>
       <span><span class="k-badge">V</span> 🎥 Kamera</span>
-      <span><span class="k-badge">T / G</span> ⛈️ Hava & Fırtına</span>
+      <span><span class="k-badge">T / G</span> 🌅 Gökyüzü & Fırtına</span>
+      <span><span class="k-badge">N / P</span> 🎶 Şarkı Değiştir</span>
     </div>
   </div>
 </div>
@@ -559,13 +548,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <div id="vignette"></div>
 <div id="wind-blur"></div>
 <div id="turbo-fx"></div>
-<div id="fire-fx"></div>
+<div id="fire-fx" style="display:none;"></div>
 <div id="cam-mode-indicator">🎥 1. ŞAHIS KOKPİT (Sırt Üstü Bakış)</div>
 <div id="ring-popup">✨ HALKA GEÇİLDİ! +HIZ ✨</div>
-<div id="tower-target-lock">🎯 HEDEF KİLİTLENDİ</div>
-<div id="incoming-warning">⚠️ DİKKAT: KULE SANA KİLİTLENDİ! [Q/E İLE SIYRIL]</div>
-<div id="friend-tag" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-100%);background:rgba(15,5,12,0.88);border:1px solid #00e5ff;color:#e0f7ff;font-size:0.75rem;font-weight:800;padding:4px 10px;border-radius:8px;box-shadow:0 0 15px rgba(0,229,255,0.45);white-space:nowrap;">⚔️ <span id="friend-tag-name">Arkadaşın</span> [<span id="friend-tag-dist">--</span>m]</div>
-<div id="friend-offscreen-pointer" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-50%);color:#00e5ff;font-size:0.80rem;font-weight:900;text-shadow:0 0 12px #00ffff;background:rgba(10,5,15,0.88);border:1px solid #00e5ff;padding:4px 12px;border-radius:20px;box-shadow:0 0 16px rgba(0,229,255,0.5);">◀ ⚔️ Arkadaşın (<span id="friend-offscreen-dist">--</span>m)</div>
+<div id="tower-target-lock" style="display:none;"></div>
+<div id="incoming-warning" style="display:none;"></div>
+<div id="friend-tag" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-100%);background:rgba(15,5,12,0.88);border:1px solid #00e5ff;color:#e0f7ff;font-size:0.75rem;font-weight:800;padding:4px 10px;border-radius:8px;box-shadow:0 0 15px rgba(0,229,255,0.45);white-space:nowrap;">🐉 <span id="friend-tag-name">Arkadaşın</span> [<span id="friend-tag-dist">--</span>m]</div>
+<div id="friend-offscreen-pointer" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-50%);color:#00e5ff;font-size:0.80rem;font-weight:900;text-shadow:0 0 12px #00ffff;background:rgba(10,5,15,0.88);border:1px solid #00e5ff;padding:4px 12px;border-radius:20px;box-shadow:0 0 16px rgba(0,229,255,0.5);">◀ 🐉 Arkadaşın (<span id="friend-offscreen-dist">--</span>m)</div>
 
 <!-- Mini Harita / Radar HUD -->
 <div id="radar-wrap">
@@ -577,24 +566,19 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 </div>
 
 <div id="hud">
-  <div id="crosshair"></div>
+  <!-- Crosshair kaldırıldı - manzara temiz kalsın -->
   <div id="top-bar">
     <div class="pill" id="multiplayer-hud-pill" style="border-color: rgba(0,229,255,0.5); background: rgba(5,20,30,0.85);">🌐 <b>Lobi:</b> <span id="val-lobby-status" style="color:#00e5ff; font-weight:bold;">Tek Kişilik</span></div>
     <div class="pill" id="friend-hud-pill" style="display:none; border-color: #00ffaa; background: rgba(5,30,20,0.85);">📍 <b>Arkadaşın:</b> <span id="val-friend-dist" style="color:#00ffaa; font-weight:bold;">--</span></div>
-    <div class="pill" style="border-color: rgba(255,200,60,0.6); background: rgba(40,25,5,0.85);">🏆 <b>Skor:</b> <span id="val-score" style="color:#ffcc00; font-weight:bold;">0</span></div>
     <div class="pill">⭐ <b>Halka:</b> <span id="val-rings">0</span></div>
-    <div class="pill" style="border-color: rgba(255,80,50,0.5);">🏰 <b>Kule:</b> <span id="val-towers" style="color:#ff6644; font-weight:bold;">0/10</span></div>
     <div class="pill">🖱️ <b>Fare:</b> Yön</div>
     <div class="pill"><b>W/S:</b> Hız</div>
-    <div class="pill"><b>Q/E:</b> 🔄 Takla (Sıyrıl)</div>
-    <div class="pill" style="border-color: rgba(255,120,40,0.6);"><b>F:</b> 💥 Alev Topu</div>
-    <div class="pill"><b>SPACE:</b> 🔥 Alev</div>
-    <div class="pill"><b>SHIFT:</b> ⚡ Turbo</div>
+    <div class="pill"><b>SHIFT:</b> ⚡ Hızlı Süzülüş</div>
     <div class="pill"><b>V:</b> 🎥 Kamera</div>
     <div class="pill"><b>T:</b> 🌅 Gökyüzü</div>
     <div class="pill" style="border-color: rgba(100,180,255,0.6);"><b>G:</b> ⛈️ Fırtına</div>
     <div class="pill"><b>M:</b> 📜 Liste</div>
-    <div class="pill"><b>N:</b> ⏭ Şarkı</div>
+    <div class="pill"><b>N:</b> ⏭ Sonraki Şarkı</div>
   </div>
   <div id="hud-flight">
     <div class="hud-cell">
@@ -1873,365 +1857,30 @@ function destroyWatchtower(tw){
 const _toTowerVec = new THREE.Vector3();
 
 function checkTowerFireInteractions(dragonMouthPos, forwardVec, isBreathFiring, dt){
-  if(watchtowers.length === 0) return;
-
-  const dp = towerDebrisPoints.geometry.attributes.position.array;
-  let hasActiveDebris = false;
-  for(let i = 0; i < MAX_TOWER_DEBRIS; i++){
-    const idx = i * 3;
-    if(dp[idx + 1] > -5000){
-      hasActiveDebris = true;
-      dp[idx] += towerDebrisVel[i].x * dt;
-      dp[idx + 1] += towerDebrisVel[i].y * dt;
-      dp[idx + 2] += towerDebrisVel[i].z * dt;
-      towerDebrisVel[i].y -= 28.0 * dt;
-      if(dp[idx + 1] < getTerrainHeight(dp[idx], dp[idx + 2]) - 2.0){
-        dp[idx + 1] = -9999;
-      }
-    }
-  }
-  if(hasActiveDebris){
-    towerDebrisPoints.geometry.attributes.position.needsUpdate = true;
-  }
-
-  watchtowers.forEach(tw => {
-    if(!tw.alive) return;
-
-    _toTowerVec.subVectors(tw.pos, dragonMouthPos);
-    const dist = _toTowerVec.length();
-
-    if(isBreathFiring && dist < 68.0){
-      _toTowerVec.multiplyScalar(1 / dist);
-      const dot = forwardVec.dot(_toTowerVec);
-      if(dot > 0.70){
-        tw.health -= dt * 170.0;
-        tw.burning = Math.min(1.0, tw.burning + dt * 3.0);
-        tw.bLight.intensity = 3.8;
-        if(tw.bEmber) tw.bEmber.material.color.setHex(0xffaa00);
-
-        if(tw.health <= 0){
-          destroyWatchtower(tw);
-          if(activeConnection && activeConnection.open){
-            activeConnection.send({ t: 'tw', id: tw.id });
-          }
-        }
-      }
-    }
-  });
+  // Chill mod: Kule canı ve kule imhası kaldırıldı
+  return;
 }
 
 // ═══════════════════════════════════════════════════
-//  MEGA ALEV TOPU SİSTEMİ (Tuş: F & Ağ Senkronizasyonu)
+//  SAVAŞ VE SALDIRI SİSTEMLERİ DEVRE DIŞI (CHILL FLIGHT)
 // ═══════════════════════════════════════════════════
 const activeFireballs = [];
 let fireballCooldown = 0;
 
-const sharedFbGeo = new THREE.SphereGeometry(1.0, 10, 10);
-const sharedFbMat = new THREE.MeshBasicMaterial({ color: 0xffaa11 });
-const sharedFbGlowGeo = new THREE.SphereGeometry(1.48, 8, 8);
-const sharedFbGlowMat = new THREE.MeshBasicMaterial({
-  color: 0xff4400,
-  transparent: true,
-  opacity: 0.6,
-  blending: THREE.AdditiveBlending
-});
-
-function spawnMegaFireball(spawnPos, fwd, speed, isLocal = true){
-  const fbGroup = new THREE.Group();
-  fbGroup.position.copy(spawnPos);
-
-  const fbMesh = new THREE.Mesh(sharedFbGeo, sharedFbMat);
-  fbGroup.add(fbMesh);
-
-  const fbGlow = new THREE.Mesh(sharedFbGlowGeo, sharedFbGlowMat);
-  fbGroup.add(fbGlow);
-
-  scene.add(fbGroup);
-
-  activeFireballs.push({
-    group: fbGroup,
-    pos: spawnPos.clone(),
-    vel: fwd.clone().multiplyScalar(speed + 115.0),
-    life: 3.5,
-    isLocal: isLocal
-  });
-
-  if(isLocal){
-    if(activeConnection && activeConnection.open){
-      activeConnection.send({
-        t: 'fb',
-        p: [spawnPos.x, spawnPos.y, spawnPos.z],
-        v: [fwd.x, fwd.y, fwd.z],
-        s: speed
-      });
-    }
-
-    const pop = document.getElementById('ring-popup');
-    if(pop){
-      pop.textContent = "💥 MEGA ALEV TOPU! [F]";
-      pop.style.color = "#ff8833";
-      pop.style.textShadow = "0 0 20px #ff4400";
-      pop.style.opacity = '1';
-      pop.style.transform = 'translate(-50%, -50%) scale(1.15)';
-      setTimeout(()=>{
-        pop.style.opacity = '0';
-        pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
-      }, 1000);
-    }
-  }
-}
-
-function shootMegaFireball(){
-  if(!gameActive || fireballCooldown > 0) return;
-  fireballCooldown = 1.1;
-
-  playFireballLaunchSound();
-
-  const mouthOffset = _tempVec2.set(0, 0.18, -1.85).applyQuaternion(dragonRig.quaternion);
-  const spawnPos = dragonPos.clone().add(mouthOffset);
-
-  const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
-  const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
-  const fwd = new THREE.Vector3(-sinY * cosP, sinP, -cosY * cosP).normalize();
-
-  spawnMegaFireball(spawnPos, fwd, flightSpeed, true);
-}
-
-function updateFireballs(dt){
-  if(fireballCooldown > 0) fireballCooldown -= dt;
-
-  for(let i = activeFireballs.length - 1; i >= 0; i--){
-    const fb = activeFireballs[i];
-    fb.pos.addScaledVector(fb.vel, dt);
-    fb.group.position.copy(fb.pos);
-    fb.life -= dt;
-
-    let hit = false;
-
-    // Kule çarpışması
-    for(let tw of watchtowers){
-      if(!tw.alive) continue;
-      if(tw.pos.distanceTo(fb.pos) < 14.0){
-        hit = true;
-        tw.health -= 65.0;
-        tw.burning = Math.min(1.0, tw.burning + 0.6);
-        playExplosionSound();
-        spawnTowerDebris(tw, 20);
-
-        if(tw.health <= 0){
-          destroyWatchtower(tw);
-          if(activeConnection && activeConnection.open){
-            activeConnection.send({ t: 'tw', id: tw.id });
-          }
-        } else if(fb.isLocal) {
-          const pop = document.getElementById('ring-popup');
-          if(pop){
-            pop.textContent = "💥 KULEYE ALEV TOPU DARBESİ! -65 CAN";
-            pop.style.color = "#ffaa33";
-            pop.style.textShadow = "0 0 20px #ff5500";
-            pop.style.opacity = '1';
-            pop.style.transform = 'translate(-50%, -50%) scale(1.1)';
-            setTimeout(()=>{
-              pop.style.opacity = '0';
-              pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
-            }, 1200);
-          }
-        }
-        break;
-      }
-    }
-
-    // Zemin çarpışması
-    if(!hit && fb.pos.y <= getTerrainHeight(fb.pos.x, fb.pos.z) + 1.2){
-      hit = true;
-      playExplosionSound();
-    }
-
-    if(hit || fb.life <= 0){
-      scene.remove(fb.group);
-      activeFireballs.splice(i, 1);
-    }
-  }
-}
-
-// ═══════════════════════════════════════════════════
-//  KULE SAVUNMA BALİSTALARI & SIYRILMA (DODGE) SİSTEMİ
-// ═══════════════════════════════════════════════════
-const activeBallistaBolts = [];
-const elIncomingWarn = document.getElementById('incoming-warning');
-
-const sharedBoltGeo = new THREE.CylinderGeometry(0.14, 0.14, 2.6, 6);
-sharedBoltGeo.rotateX(Math.PI / 2);
-const sharedBoltMat = new THREE.MeshBasicMaterial({ color: 0xff3311 });
-const sharedBoltGlowGeo = new THREE.CylinderGeometry(0.28, 0.28, 2.9, 6);
-sharedBoltGlowGeo.rotateX(Math.PI / 2);
-const sharedBoltGlowMat = new THREE.MeshBasicMaterial({
-  color: 0xff8800,
-  transparent: true,
-  opacity: 0.55,
-  blending: THREE.AdditiveBlending
-});
+function spawnMegaFireball(spawnPos, fwd, speed, isLocal = true){ return; }
+function shootMegaFireball(){ return; }
+function updateFireballs(dt){ return; }
 
 function updateTowerBallistas(dt){
-  if(!gameActive) return;
-
-  let anyIncoming = false;
-
-  watchtowers.forEach(tw => {
-    if(!tw.alive) return;
-    const dist = tw.pos.distanceTo(dragonPos);
-    if(dist < 270){
-      tw.ballistaTimer -= dt;
-      if(tw.ballistaTimer <= 0){
-        tw.ballistaTimer = 3.0 + Math.random() * 2.2;
-
-        const boltGroup = new THREE.Group();
-        const boltMesh = new THREE.Mesh(sharedBoltGeo, sharedBoltMat);
-        const boltGlow = new THREE.Mesh(sharedBoltGlowGeo, sharedBoltGlowMat);
-        boltGroup.add(boltMesh);
-        boltGroup.add(boltGlow);
-
-        boltGroup.position.copy(tw.topPos);
-        const aimDir = dragonPos.clone().sub(tw.topPos).normalize();
-        boltGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), aimDir);
-        scene.add(boltGroup);
-
-        activeBallistaBolts.push({
-          mesh: boltGroup,
-          vel: aimDir.multiplyScalar(88.0),
-          life: 4.0
-        });
-      }
-    }
-  });
-
-  for(let i = activeBallistaBolts.length - 1; i >= 0; i--){
-    const b = activeBallistaBolts[i];
-    b.mesh.position.addScaledVector(b.vel, dt);
-    b.life -= dt;
-
-    const dDragon = b.mesh.position.distanceTo(dragonPos);
-    if(dDragon < 120 && dDragon > 18) {
-      anyIncoming = true;
-    }
-
-    // Fıçı taklası ile sıyrılma
-    if(dDragon < 18.0 && barrelRollActive){
-      playWhooshSound();
-      playerScore += 250;
-      if(elScore) elScore.textContent = playerScore;
-      flightSpeed = Math.min(flightSpeed + 18, 125);
-
-      const pop = document.getElementById('ring-popup');
-      if(pop){
-        pop.textContent = "⚡ KUSURSUZ SIYRILMA! +250 PUAN ⚡";
-        pop.style.color = "#38bdf8";
-        pop.style.textShadow = "0 0 24px #0284c7";
-        pop.style.opacity = '1';
-        pop.style.transform = 'translate(-50%, -50%) scale(1.22)';
-        setTimeout(()=>{
-          pop.style.opacity = '0';
-          pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
-        }, 1400);
-      }
-
-      scene.remove(b.mesh);
-      activeBallistaBolts.splice(i, 1);
-      continue;
-    }
-
-    // Ejderhaya isabet
-    if(dDragon < 4.2){
-      playExplosionSound();
-      playerScore = Math.max(0, playerScore - 100);
-      if(elScore) elScore.textContent = playerScore;
-      flightSpeed = Math.max(16, flightSpeed - 18);
-
-      const pop = document.getElementById('ring-popup');
-      if(pop){
-        pop.textContent = "💥 KULE OKU İSABET ETTİ! -100 PUAN";
-        pop.style.color = "#ff3333";
-        pop.style.textShadow = "0 0 20px #990000";
-        pop.style.opacity = '1';
-        pop.style.transform = 'translate(-50%, -50%) scale(1.15)';
-        setTimeout(()=>{
-          pop.style.opacity = '0';
-          pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
-        }, 1400);
-      }
-
-      elFireFX.style.opacity = '0.85';
-      setTimeout(()=>{ elFireFX.style.opacity = '0'; }, 300);
-
-      scene.remove(b.mesh);
-      activeBallistaBolts.splice(i, 1);
-      continue;
-    }
-
-    if(b.life <= 0 || b.mesh.position.y < getTerrainHeight(b.mesh.position.x, b.mesh.position.z)){
-      scene.remove(b.mesh);
-      activeBallistaBolts.splice(i, 1);
-    }
-  }
-
-  if(elIncomingWarn){
-    elIncomingWarn.style.display = anyIncoming ? 'block' : 'none';
-  }
+  if(elIncomingWarn) elIncomingWarn.style.display = 'none';
+  return;
 }
 
-// ═══════════════════════════════════════════════════
-//  HEDEF KİLİTLENME HUD (TARGET LOCK RETICLE)
-// ═══════════════════════════════════════════════════
 const elTargetLock = document.getElementById('tower-target-lock');
-const _toTwVec = new THREE.Vector3();
-const _projTowerVec = new THREE.Vector3();
 
 function updateTargetLockHUD(forwardVec){
-  if(!elTargetLock || !gameActive){
-    if(elTargetLock) elTargetLock.style.display = 'none';
-    return;
-  }
-
-  let closestTower = null;
-  let minDist = 320.0;
-
-  watchtowers.forEach(tw => {
-    if(!tw.alive) return;
-    _toTwVec.subVectors(tw.pos, dragonPos);
-    const dist = _toTwVec.length();
-    if(dist < minDist){
-      _toTwVec.multiplyScalar(1 / dist);
-      const dot = forwardVec.dot(_toTwVec);
-      if(dot > 0.68){
-        minDist = dist;
-        closestTower = tw;
-      }
-    }
-  });
-
-  if(closestTower){
-    _projTowerVec.copy(closestTower.pos).project(camera);
-    if(_projTowerVec.z > 0 && _projTowerVec.z < 1.0 && Math.abs(_projTowerVec.x) < 0.95 && Math.abs(_projTowerVec.y) < 0.95){
-      const x = (_projTowerVec.x * 0.5 + 0.5) * window.innerWidth;
-      const y = (-_projTowerVec.y * 0.5 + 0.5) * window.innerHeight;
-      elTargetLock.style.left = x + 'px';
-      elTargetLock.style.top = y + 'px';
-      elTargetLock.style.display = 'block';
-      const dMeters = Math.round(minDist);
-      const pct = Math.max(0, Math.round((closestTower.health / closestTower.maxHealth) * 100));
-      elTargetLock.innerHTML = `🎯 KULE [ ${dMeters}m ] CAN: %${pct}`;
-      if(minDist < 75){
-        elTargetLock.style.borderColor = '#00ff88';
-        elTargetLock.style.color = '#00ff88';
-      } else {
-        elTargetLock.style.borderColor = '#ff4422';
-        elTargetLock.style.color = '#ff4422';
-      }
-      return;
-    }
-  }
-
-  elTargetLock.style.display = 'none';
+  if(elTargetLock) elTargetLock.style.display = 'none';
+  return;
 }
 
 // ═══════════════════════════════════════════════════
@@ -2835,42 +2484,14 @@ let barrelRollAngle = 0;
 let barrelRollDir = 1;
 
 function triggerBarrelRoll(dir){
-  if(!gameActive || barrelRollActive) return;
-  barrelRollActive = true;
-  barrelRollAngle = 0;
-  barrelRollDir = dir;
-  flightSpeed = Math.min(flightSpeed + 16, 115);
-  playWhooshSound();
-
-  if(activeConnection && activeConnection.open){
-    activeConnection.send({ t: 'roll', d: dir });
-  }
-
-  const pop = document.getElementById('ring-popup');
-  if(pop){
-    pop.textContent = (dir > 0) ? "🔄 SOLA FIÇI TAKLASI! +HIZ" : "🔄 SAĞA FIÇI TAKLASI! +HIZ";
-    pop.style.color = '#38bdf8';
-    pop.style.textShadow = '0 0 18px #0284c7';
-    pop.style.opacity = '1';
-    pop.style.transform = 'translate(-50%, -50%) scale(1.15)';
-    setTimeout(()=>{
-      pop.style.opacity = '0';
-      pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
-    }, 1200);
-  }
+  // Chill mod: Manevralar ve ani taklalar devre dışı
+  return;
 }
 
 window.addEventListener('keydown', e => {
   keys[e.code] = true;
-  if(e.code === 'Space'){ e.preventDefault(); isFiring = true; }
   if(e.code === 'ShiftLeft' || e.code === 'ShiftRight'){
     triggerTurboRoar();
-  }
-  if(e.code === 'KeyQ'){
-    triggerBarrelRoll(1);
-  }
-  if(e.code === 'KeyE'){
-    triggerBarrelRoll(-1);
   }
   if(e.code === 'KeyV'){
     isFirstPerson = !isFirstPerson;
@@ -2878,9 +2499,6 @@ window.addEventListener('keydown', e => {
     elCamInd.textContent = isFirstPerson ? '🎥 1. ŞAHIS KOKPİT (Sırt Üstü Bakış)' : '🎥 3. ŞAHIS (Takip Kamerası)';
     elCamInd.style.opacity = '1';
     setTimeout(()=>{ elCamInd.style.opacity = '0.35'; }, 2200);
-  }
-  if(e.code === 'KeyF'){
-    shootMegaFireball();
   }
   if(e.code === 'KeyG'){
     toggleStormMode();
@@ -2900,7 +2518,6 @@ window.addEventListener('keydown', e => {
 });
 window.addEventListener('keyup', e => {
   keys[e.code] = false;
-  if(e.code === 'Space') isFiring = false;
 });
 
 container.addEventListener('click', () => {
@@ -3155,38 +2772,6 @@ function updateRemotePlayerFlight(dt){
     remoteMixer.update(dt);
   }
 
-  if(remoteIsFiring){
-    remoteFireStrength = Math.min(remoteFireStrength + dt * 6.0, 1.0);
-  } else {
-    remoteFireStrength = Math.max(remoteFireStrength - dt * 5.0, 0.0);
-  }
-  if(remoteFireMat){
-    remoteFireMat.opacity = remoteFireStrength * 0.92;
-  }
-
-  if(remoteFireStrength > 0.05 && remoteFireParticles){
-    _tempVec2.set(0, 0.18, -1.85).applyQuaternion(remoteDragonRig.quaternion);
-    _tempVec3.copy(remoteDragonRig.position).add(_tempVec2);
-    const rPosArr = remoteFireParticles.geometry.attributes.position.array;
-    for(let i = 0; i < 40; i++){
-      const idx = i * 3;
-      if(rPosArr[idx + 1] === -9999 || Math.random() < 0.22){
-        rPosArr[idx] = _tempVec3.x + (Math.random() - 0.5) * 0.35;
-        rPosArr[idx + 1] = _tempVec3.y + (Math.random() - 0.5) * 0.35;
-        rPosArr[idx + 2] = _tempVec3.z + (Math.random() - 0.5) * 0.35;
-        remoteFireVel[i].copy(remoteTargetFwd).multiplyScalar(remoteTargetSpeed * 1.9 + Math.random() * 20);
-        remoteFireVel[i].x += (Math.random() - 0.5) * 4;
-        remoteFireVel[i].y += (Math.random() - 0.5) * 4;
-        remoteFireVel[i].z += (Math.random() - 0.5) * 4;
-      } else {
-        rPosArr[idx] += remoteFireVel[i].x * dt;
-        rPosArr[idx + 1] += remoteFireVel[i].y * dt;
-        rPosArr[idx + 2] += remoteFireVel[i].z * dt;
-      }
-    }
-    remoteFireParticles.geometry.attributes.position.needsUpdate = true;
-  }
-
   updateRemotePlayerHUD();
 }
 
@@ -3278,21 +2863,10 @@ function handleRemotePacket(data){
     }
 
     remoteTargetSpeed = data.s || 45;
-    remoteIsFiring = !!data.f;
-
-    // Alev saçılımı için ileri yön
-    remoteTargetFwd.set(0, 0, -1).applyQuaternion(remoteTargetQuat);
 
     if(data.sp && (data.sp !== remoteSpecies || data.c !== remoteColorKey || !remoteDragonScene)){
       spawnRemoteDragon(data.sp, data.c || 'bordo');
     }
-  } else if(data.t === 'fb'){
-    const spawnP = new THREE.Vector3(data.p[0], data.p[1], data.p[2]);
-    const fwdVec = new THREE.Vector3(data.v[0], data.v[1], data.v[2]);
-    spawnMegaFireball(spawnP, fwdVec, data.s || 45, false);
-  } else if(data.t === 'tw'){
-    const tw = watchtowers.find(t => t.id === data.id);
-    if(tw && tw.alive) destroyWatchtower(tw);
   }
 }
 
@@ -3485,7 +3059,6 @@ function setupNetworkSendLoop(){
         q: [dragonRig.quaternion.x, dragonRig.quaternion.y, dragonRig.quaternion.z, dragonRig.quaternion.w],
         r: [pitch, yaw, roll],
         s: flightSpeed,
-        f: (isFiring && fireStrength > 0.05),
         sp: currentSpecies,
         c: currentColorKey
       });
@@ -3766,18 +3339,6 @@ function animate(){
     const turnIntent = (keys['KeyA']||keys['ArrowLeft']) ? 1 : (keys['KeyD']||keys['ArrowRight']) ? -1 : 0;
     roll = roll * 0.86 + turnIntent * 0.55 * 0.14;
 
-    // Fıçı Taklası (Barrel Roll - Q/E tuşları)
-    if(barrelRollActive){
-      const rollSpeed = Math.PI * 3.6;
-      const dRoll = rollSpeed * dt;
-      barrelRollAngle += dRoll;
-      roll += barrelRollDir * dRoll;
-      if(barrelRollAngle >= Math.PI * 2){
-        barrelRollActive = false;
-        barrelRollAngle = 0;
-      }
-    }
-
     // Kombo Zaman Aşımı
     if(ringComboTimer > 0){
       ringComboTimer -= dt;
@@ -3785,29 +3346,6 @@ function animate(){
         ringCombo = 0;
       }
     }
-
-    // Dik Dalışta Yerçekimi Hızlandırması & Dinamik Ses Duvarı (Sonic Dive)
-    if(pitch < -0.30){
-      const diveFactor = Math.min(1.0, (-pitch - 0.30) / 0.5);
-      flightSpeed = Math.min(flightSpeed + diveFactor * dt * 45.0, 125);
-      camera.fov = THREE.MathUtils.lerp(camera.fov, 74, dt * 3.2);
-      camera.updateProjectionMatrix();
-      if(elWindBlur) elWindBlur.style.opacity = Math.min(0.85, (flightSpeed - 55) / 45).toFixed(2);
-    } else {
-      if(camera.fov > 60.05){
-        camera.fov = THREE.MathUtils.lerp(camera.fov, 60, dt * 2.5);
-        camera.updateProjectionMatrix();
-      }
-    }
-
-    // Alev Efekti
-    if(isFiring){
-      fireStrength = Math.min(fireStrength + dt * 6.0, 1.0);
-    } else {
-      fireStrength = Math.max(fireStrength - dt * 5.0, 0.0);
-    }
-    elFireFX.style.opacity = (fireStrength * 0.95).toFixed(2);
-    fireLight.intensity = fireStrength * 5.5;
 
     if(windGain && audioCtx){
       const targetGain = (0.03 + (flightSpeed / 98) * 0.16) * currentVolume;
@@ -3844,14 +3382,6 @@ function animate(){
     if(typeof checkSanctuaryCollision === 'function'){
       checkSanctuaryCollision(dragonPos);
     }
-
-    // Dağ Gözetleme Kuleleri & Alevle İmha (Vektör Havuzu)
-    _mouthOffset.set(0, 0.18, -1.85).applyQuaternion(dragonRig.quaternion);
-    _mouthPos.copy(dragonPos).add(_mouthOffset);
-    checkTowerFireInteractions(_mouthPos, _forward, isFiring && fireStrength > 0.22, dt);
-    updateFireballs(dt);
-    updateTowerBallistas(dt);
-    updateTargetLockHUD(_forward);
 
     // Fırtına Yağmur & Şimşek Dinamiği
     if(isStormActive){
