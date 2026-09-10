@@ -1,0 +1,3155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no"/>
+<title>🐉 Bordo Ejderha Sürme — Türkçe Pop Klasikler</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;user-select:none}
+#canvas-container{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:crosshair}
+
+/* ── Başlangıç Ekranı (Modern Bordo-Obsidyen Glassmorphism) ── */
+#splash{
+  position:fixed;inset:0;z-index:999;display:flex;
+  align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 50% 40%,#200612 0%,#0e0308 55%,#030002 100%);
+  transition:opacity 0.8s ease,visibility 0.8s;
+  padding:20px;
+}
+#splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
+
+.splash-card{
+  max-width:560px;width:92%;
+  background:rgba(22,6,13,0.76);
+  border:1px solid rgba(255,100,135,0.32);
+  box-shadow:0 30px 80px rgba(0,0,0,0.88), 0 0 60px rgba(180,20,50,0.25);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-radius:28px;padding:32px 28px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  position:relative;
+}
+
+.dragon-badge-img{
+  width:145px;height:auto;max-height:180px;object-fit:contain;margin-bottom:12px;
+  filter:drop-shadow(0 0 28px rgba(220,25,65,0.75)) drop-shadow(0 0 50px rgba(255,140,40,0.35));
+  animation:dragonFloat 3.6s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes dragonFloat{
+  0%,100%{transform:translateY(0) scale(1) rotate(-1.2deg)}
+  50%{transform:translateY(-12px) scale(1.025) rotate(1.2deg)}
+}
+
+.splash-card h1{
+  font-size:clamp(2.0rem,5.2vw,3.2rem);font-weight:900;letter-spacing:4px;
+  text-transform:uppercase;margin:0;
+  background:linear-gradient(135deg,#fff4d0 0%,#f7b731 35%,#e83350 70%,#941026 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 4px 20px rgba(180,20,50,0.5));
+}
+.splash-card .sub{
+  color:#f7ccd3;font-size:.88rem;letter-spacing:2.2px;margin-top:6px;
+  text-transform:uppercase;font-weight:600;opacity:.9;
+}
+
+/* ── Ejderha Özelleştirme & Atölye Paneli (Modern Glassmorphic Tasarım) ── */
+.customizer-box{
+  margin-top:14px;width:100%;max-width:530px;
+  background:rgba(14,5,9,0.72);border:1px solid rgba(255,100,130,0.30);
+  box-shadow:0 12px 32px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12);
+  border-radius:20px;padding:13px 18px;display:flex;flex-direction:column;gap:11px;
+  backdrop-filter:blur(14px);
+}
+.cust-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+.cust-label{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.74rem;color:#ffc5d3;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+}
+.cust-label-icon{
+  width:14px;height:14px;stroke:#ff7a94;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.cust-types{
+  display:flex;gap:6px;flex-wrap:wrap;
+}
+.cust-btn{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  color:#ead5da;padding:5px 11px;border-radius:12px;font-size:.71rem;font-weight:700;
+  cursor:pointer;transition:all .18s ease;outline:none;display:inline-flex;align-items:center;gap:6px;
+}
+.cust-btn .cust-svg{
+  width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  transition:transform .18s;
+}
+.cust-btn:hover{background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.3);transform:translateY(-1px)}
+.cust-btn.active{
+  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(255,120,30,0.65));
+  border-color:#ff99b0;color:#fff;box-shadow:0 0 14px rgba(225,35,70,0.6);
+}
+.cust-btn.active .cust-svg{
+  stroke:#ffe380;transform:scale(1.12);
+}
+.color-chips{
+  display:flex;gap:8px;align-items:center;
+}
+.color-chip{
+  width:23px;height:23px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.28);
+  transition:all .18s cubic-bezier(0.2,0.8,0.2,1);box-shadow:0 2px 8px rgba(0,0,0,0.7);
+}
+.color-chip:hover{transform:scale(1.22);border-color:rgba(255,255,255,0.6)}
+.color-chip.active{border-color:#fff;box-shadow:0 0 14px rgba(255,255,255,0.95), 0 0 6px rgba(255,80,120,0.8);transform:scale(1.22)}
+.accessory-toggles{
+  display:flex;gap:8px;flex-wrap:wrap;
+}
+.acc-toggle-btn{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
+  color:#dfc3cb;padding:5px 10px;border-radius:12px;font-size:.71rem;font-weight:700;
+  cursor:pointer;transition:all .18s ease;outline:none;display:inline-flex;align-items:center;gap:6px;
+  user-select:none;
+}
+.acc-toggle-btn .acc-svg{
+  width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.acc-toggle-btn .acc-status-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all .18s;
+}
+.acc-toggle-btn:hover{
+  background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.3);
+}
+.acc-toggle-btn.active{
+  background:linear-gradient(135deg,rgba(160,20,50,0.75),rgba(200,80,30,0.55));
+  border-color:#ff8ca5;color:#fff;box-shadow:0 0 12px rgba(220,30,60,0.45);
+}
+.acc-toggle-btn.active .acc-svg{
+  stroke:#ffd255;
+}
+.acc-toggle-btn.active .acc-status-dot{
+  background:#00ffaa;box-shadow:0 0 8px #00ffaa;
+}
+
+/* ── Turbo Kükreme HUD Efekti ── */
+#turbo-fx{
+  position:fixed;inset:0;pointer-events:none;z-index:39;opacity:0;
+  background:radial-gradient(circle at 50% 50%,transparent 40%,rgba(255,100,20,0.25) 85%,rgba(255,30,60,0.45) 100%);
+  mix-blend-mode:screen;transition:opacity .15s ease;
+}
+
+/* Başlangıç Şarkı Seçici */
+.song-picker-splash{
+  display:inline-flex;align-items:center;gap:10px;margin-top:18px;
+  padding:8px 18px;border-radius:25px;
+  background:rgba(120,12,35,0.4);border:1px solid rgba(255,130,160,0.4);
+  box-shadow:0 4px 18px rgba(0,0,0,0.45);max-width:92%;
+}
+.song-picker-splash select{
+  background:transparent;border:none;color:#ffebef;font-size:.88rem;
+  font-weight:700;font-family:inherit;cursor:pointer;outline:none;max-width:260px;
+}
+.song-picker-splash select option{background:#16040b;color:#ffebef}
+
+#startBtn{
+  margin-top:22px;padding:14px 44px;font-size:1.2rem;font-weight:800;
+  letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;border-radius:50px;
+  background:linear-gradient(135deg,#840d24 0%,#d81e44 50%,#840d24 100%);
+  color:#fff;border:2px solid #ff7a94;
+  box-shadow:0 0 35px rgba(216,30,68,0.7),0 6px 20px rgba(0,0,0,0.6);
+  transition:all .2s cubic-bezier(0.2,0.8,0.2,1);
+}
+#startBtn:hover{
+  transform:scale(1.05) translateY(-2px);
+  box-shadow:0 0 55px rgba(255,60,100,0.95),0 10px 28px rgba(0,0,0,0.7);
+  border-color:#fff;
+}
+.splash-card .keys-hint{
+  margin-top:20px;display:flex;gap:7px;flex-wrap:wrap;justify-content:center;
+  color:#caa2ab;font-size:.76rem;letter-spacing:.6px;
+}
+.k-badge{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,160,185,0.22);
+  padding:3px 7px;border-radius:6px;color:#ffe6eb;font-family:monospace;font-size:.78rem;
+}
+
+/* ── HUD ── */
+#hud{position:fixed;inset:0;pointer-events:none;z-index:50}
+#crosshair{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:10px;height:10px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.7);
+  box-shadow:0 0 10px rgba(255,180,60,0.6);
+  pointer-events:none;
+}
+#crosshair::before{
+  content:'';position:absolute;inset:2px;border-radius:50%;background:#ffaa00;
+}
+#hud-flight{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:20px;
+  background:rgba(14,6,10,0.85);border:1px solid rgba(255,140,165,0.35);
+  border-radius:50px;padding:9px 28px;backdrop-filter:blur(16px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.6);
+}
+.hud-cell{display:flex;flex-direction:column;align-items:center;min-width:65px}
+.hud-val{color:#f7b731;font-size:1.35rem;font-weight:800;font-family:monospace;line-height:1}
+.hud-lbl{color:#e89aa8;font-size:.62rem;letter-spacing:2px;margin-top:4px;font-weight:700}
+#speed-bar-wrap{width:110px;height:7px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
+#speed-bar{width:40%;height:100%;background:linear-gradient(90deg,#e02444,#ffbb00);border-radius:4px;transition:width .1s}
+
+/* ── Üst Bilgi Barı (Sol Üst Köşe - Asla Müzik Kartıyla Çakışmaz) ── */
+#top-bar{
+  position:fixed;top:16px;left:18px;
+  display:flex;gap:7px;align-items:center;flex-wrap:wrap;
+  max-width:calc(100vw - 440px);pointer-events:none;z-index:60;
+}
+.pill{
+  background:rgba(14,6,10,0.86);border:1px solid rgba(255,130,160,0.25);
+  color:#edd2d9;padding:5px 11px;border-radius:18px;font-size:.70rem;
+  letter-spacing:.6px;font-weight:600;backdrop-filter:blur(10px);
+  box-shadow:0 4px 16px rgba(0,0,0,0.5);
+}
+.pill b{color:#f7b731}
+
+/* ── Müzik & Ses Kontrol Kartı (Sağ Üst Köşe) ── */
+#music-card{
+  position:fixed;top:16px;right:18px;z-index:110;
+  display:flex;align-items:center;gap:8px;
+  background:rgba(16,6,12,0.92);border:1px solid rgba(255,100,130,0.4);
+  border-radius:30px;padding:6px 14px;backdrop-filter:blur(18px);
+  box-shadow:0 6px 26px rgba(0,0,0,0.65);pointer-events:auto;
+}
+#music-card .pulse{
+  width:10px;height:10px;border-radius:50%;background:#e02444;
+  box-shadow:0 0 10px #e02444;animation:pulseDot 1.4s infinite;
+}
+@keyframes pulseDot{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.4);opacity:1}}
+
+.music-nav-btn{
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);
+  color:#ffc966;border-radius:50%;width:26px;height:26px;display:flex;
+  align-items:center;justify-content:center;font-size:.78rem;cursor:pointer;
+  transition:all .15s;outline:none;
+}
+.music-nav-btn:hover{
+  background:rgba(255,160,0,0.35);color:#fff;transform:scale(1.15);
+}
+
+.song-info-wrap{
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  padding:3px 8px;border-radius:14px;transition:background .18s;max-width:240px;
+}
+.song-info-wrap:hover{background:rgba(255,255,255,0.1)}
+#song-title{
+  color:#ffe4a0;font-size:.78rem;font-weight:700;letter-spacing:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.playlist-badge{
+  background:rgba(255,140,0,0.22);border:1px solid rgba(255,160,0,0.45);
+  color:#ffc966;font-size:.66rem;padding:2px 7px;border-radius:10px;font-weight:700;white-space:nowrap;
+}
+
+#music-btn{
+  background:rgba(200,20,50,0.3);border:1px solid #ff4a68;
+  color:#ffd2dc;border-radius:20px;padding:4px 10px;font-size:.72rem;
+  cursor:pointer;font-weight:700;transition:all .18s;white-space:nowrap;outline:none;
+}
+#music-btn:hover{background:rgba(220,30,60,0.6);color:#fff}
+
+/* Ses Kaydırıcı */
+#vol-wrap{display:flex;align-items:center;gap:7px;border-left:1px solid rgba(255,255,255,0.18);padding-left:8px}
+#vol-icon{cursor:pointer;font-size:.88rem;opacity:.9;transition:transform .15s}
+#vol-icon:hover{transform:scale(1.2)}
+#vol-slider{
+  -webkit-appearance:none;appearance:none;width:65px;height:5px;
+  border-radius:5px;background:rgba(255,255,255,0.22);outline:none;cursor:pointer;
+}
+#vol-slider::-webkit-slider-thumb{
+  -webkit-appearance:none;appearance:none;width:12px;height:12px;
+  border-radius:50%;background:#ffb347;border:2px solid #fff;cursor:pointer;
+}
+#vol-percent{color:#ffd044;font-size:.70rem;font-family:monospace;font-weight:700;min-width:28px}
+
+/* ── Şarkı Listesi Açılır Menüsü (41 Parça İçin Optimize) ── */
+#playlist-dropdown{
+  position:fixed;top:66px;right:18px;width:350px;max-height:500px;
+  background:rgba(16,6,12,0.96);border:1px solid rgba(255,130,60,0.45);
+  border-radius:18px;backdrop-filter:blur(22px);box-shadow:0 14px 45px rgba(0,0,0,0.8);
+  z-index:120;display:none;flex-direction:column;overflow:hidden;
+}
+#playlist-dropdown.open{display:flex;animation:plSlide .22s cubic-bezier(0.18, 0.89, 0.32, 1.2)}
+@keyframes plSlide{
+  from{opacity:0;transform:translateY(-10px) scale(0.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.playlist-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;background:rgba(255,255,255,0.06);
+  border-bottom:1px solid rgba(255,255,255,0.1);color:#ffd044;
+  font-size:.82rem;font-weight:800;letter-spacing:1px;
+}
+.close-pl{cursor:pointer;color:#aaa;font-size:1.1rem;padding:2px 6px;border-radius:4px}
+.close-pl:hover{color:#fff;background:rgba(255,255,255,0.15)}
+.playlist-items{overflow-y:auto;max-height:430px;padding:6px}
+.playlist-items::-webkit-scrollbar{width:5px}
+.playlist-items::-webkit-scrollbar-thumb{background:rgba(255,140,0,0.4);border-radius:4px}
+.pl-item{
+  display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;
+  cursor:pointer;transition:all .15s;color:#e8d1d7;font-size:.80rem;
+}
+.pl-item:hover{background:rgba(255,255,255,0.08);color:#fff;transform:translateX(4px)}
+.pl-item.active{
+  background:linear-gradient(90deg,rgba(200,30,60,0.4) 0%,rgba(255,140,0,0.25) 100%);
+  border:1px solid rgba(255,140,60,0.5);color:#ffd044;font-weight:700;
+}
+.pl-item-idx{font-family:monospace;color:#ffaa33;font-size:.74rem;min-width:24px}
+.pl-item-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-item-wave{font-size:.75rem;color:#00ffaa}
+
+/* ── Uçuş Radar Mini-Haritası ── */
+#radar-wrap{
+  position:fixed;bottom:22px;left:20px;width:125px;height:125px;
+  border-radius:50%;background:rgba(12,4,9,0.88);
+  border:2px solid rgba(255,130,60,0.55);
+  box-shadow:0 8px 30px rgba(0,0,0,0.75), inset 0 0 20px rgba(180,20,50,0.3);
+  backdrop-filter:blur(12px);z-index:55;pointer-events:none;
+  overflow:hidden;
+}
+#radar-canvas{width:100%;height:100%;display:block;border-radius:50%}
+#radar-n,#radar-s,#radar-w,#radar-e{
+  position:absolute;font-family:monospace;font-weight:800;font-size:9px;color:#f7b731;pointer-events:none;
+}
+#radar-n{top:3px;left:50%;transform:translateX(-50%);color:#ff3b60}
+#radar-s{bottom:3px;left:50%;transform:translateX(-50%)}
+#radar-w{left:4px;top:50%;transform:translateY(-50%)}
+#radar-e{right:4px;top:50%;transform:translateY(-50%)}
+
+
+/* ── Efekt Katmanları ── */
+#fire-fx{
+  position:fixed;inset:0;pointer-events:none;z-index:40;
+  background:radial-gradient(ellipse at 50% 65%,rgba(255,70,0,0.45) 0%,rgba(255,20,0,0.2) 45%,transparent 70%);
+  opacity:0;transition:opacity .06s ease;
+}
+#vignette{
+  position:fixed;inset:0;pointer-events:none;z-index:35;
+  background:radial-gradient(ellipse at 50% 50%,transparent 58%,rgba(2,8,3,0.7) 100%);
+}
+#wind-blur{
+  position:fixed;inset:0;pointer-events:none;z-index:38;opacity:0;
+  background:radial-gradient(circle at 50% 50%,transparent 30%,rgba(255,255,255,0.09) 100%);
+  transition:opacity .15s ease;
+}
+#cam-mode-indicator{
+  position:fixed;bottom:85px;left:50%;transform:translateX(-50%);
+  color:#9be2a6;font-size:.82rem;letter-spacing:2px;font-weight:700;
+  background:rgba(4,14,6,0.75);padding:4px 16px;border-radius:12px;
+  border:1px solid rgba(255,255,255,0.18);pointer-events:none;z-index:50;
+  transition:opacity 0.4s;
+}
+#ring-popup{
+  position:fixed;top:38%;left:50%;transform:translate(-50%,-50%) scale(0.7);
+  color:#fff799;font-size:1.8rem;font-weight:900;letter-spacing:3px;
+  text-shadow:0 0 20px #ff9900,0 0 40px #ff5500;pointer-events:none;z-index:70;
+  opacity:0;transition:all .3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+#tower-target-lock{
+  position:fixed;display:none;transform:translate(-50%,-50%);pointer-events:none;z-index:45;
+  font-family:monospace;font-weight:bold;font-size:12px;color:#ff4422;
+  text-shadow:0 0 10px #ff2200;border:2px solid #ff4422;border-radius:6px;
+  padding:4px 8px;background:rgba(30,8,8,0.72);box-shadow:0 0 16px rgba(255,50,0,0.5);
+  transition:border-color 0.15s, color 0.15s;
+}
+#incoming-warning{
+  position:fixed;top:28%;left:50%;transform:translate(-50%,-50%);display:none;pointer-events:none;z-index:75;
+  font-family:sans-serif;font-weight:900;font-size:1.15rem;color:#ff3333;text-shadow:0 0 20px #ff0000;
+  letter-spacing:2px;background:rgba(40,0,0,0.85);border:1px solid #ff3333;border-radius:10px;padding:6px 20px;
+  box-shadow:0 0 25px rgba(255,0,0,0.6);animation:warnPulse .4s infinite alternate;
+}
+@keyframes warnPulse{
+  from{transform:translate(-50%,-50%) scale(1);opacity:.85;}
+  to{transform:translate(-50%,-50%) scale(1.06);opacity:1;}
+}
+#err-box{
+  position:fixed;bottom:10px;left:10px;z-index:9999;
+  background:rgba(200,0,0,0.85);color:#fff;padding:8px 14px;border-radius:8px;
+  font-family:monospace;font-size:12px;display:none;max-width:80%;
+}
+</style>
+
+<!-- Yerel Kütüphaneler & Gerçek Model Verisi -->
+<script src="three.min.js"></script>
+<script src="GLTFLoader.js"></script>
+<script src="dragon_model_data.js"></script>
+</head>
+<body>
+
+<div id="err-box"></div>
+
+<!-- Dinamik Çalma Listesi Ses Öğesi -->
+<audio id="bgm" preload="auto"></audio>
+
+<div id="splash">
+  <div class="splash-card">
+    <img src="dragon_badge_user.png" class="dragon-badge-img" id="splash-dragon-badge" alt="Asil Ejderha"/>
+    <h1 id="splash-dragon-title">Asil Kan Ejderhası (Meleys)</h1>
+    <div class="sub">Gamsız Hayat — House of the Dragon Sinematik Süvari Bakışı</div>
+
+    <!-- EJDERHA ATÖLYESİ (DRAGON CUSTOMIZER) -->
+    <div class="customizer-box">
+      <!-- 1. Tür & Irk -->
+      <div class="cust-row">
+        <span class="cust-label">
+          <svg class="cust-label-icon" viewBox="0 0 24 24"><path d="M12 2l2.5 5 5.5.8-4 3.9 1 5.3-5-2.6-5 2.6 1-5.3-4-3.9 5.5-.8z"/></svg>
+          Tür & Irk:
+        </span>
+        <div class="cust-types">
+          <button type="button" class="cust-btn active" id="btn-species-meleys" onclick="selectDragonSpecies('meleys', this)">
+            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+            Asil Ejderha (Orijinal Bordo)
+          </button>
+          <button type="button" class="cust-btn" id="btn-species-demon" onclick="selectDragonSpecies('demon', this)">
+            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4.1 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
+            Kadim İblis (Volkanik Obsidyen)
+          </button>
+          <button type="button" class="cust-btn" id="btn-species-wyvern" onclick="selectDragonSpecies('wyvern', this)">
+            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 7v5m-3-2.5h6"/></svg>
+            Zırhlı Wyvern (3D GLB)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="song-picker-splash">
+      <span>🎵 Başlangıç Şarkısı:</span>
+      <select id="splash-song-select" onchange="loadTrack(parseInt(this.value), false)">
+        <!-- JavaScript ile doldurulur -->
+      </select>
+    </div>
+    <button id="startBtn" onclick="startExperience()">▶ &nbsp;UÇUŞA BAŞLA</button>
+    <div class="keys-hint">
+      <span><span class="k-badge">🖱️ FARE</span> Yönlendir</span>
+      <span><span class="k-badge">W/S</span> Hız</span>
+      <span><span class="k-badge">A/D</span> Yatış</span>
+      <span><span class="k-badge">Q / E</span> 🔄 Fıçı Taklası (Sıyrılma)</span>
+      <span><span class="k-badge">F</span> 💥 Alev Topu</span>
+      <span><span class="k-badge">SPACE</span> 🔥 Alevle Kule İmha</span>
+      <span><span class="k-badge">SHIFT</span> 🚀 Turbo</span>
+      <span><span class="k-badge">V</span> 🎥 Kamera</span>
+      <span><span class="k-badge">T / G</span> ⛈️ Hava & Fırtına</span>
+    </div>
+  </div>
+</div>
+
+<div id="canvas-container"></div>
+<div id="vignette"></div>
+<div id="wind-blur"></div>
+<div id="turbo-fx"></div>
+<div id="fire-fx"></div>
+<div id="cam-mode-indicator">🎥 1. ŞAHIS KOKPİT (Sırt Üstü Bakış)</div>
+<div id="ring-popup">✨ HALKA GEÇİLDİ! +HIZ ✨</div>
+<div id="tower-target-lock">🎯 HEDEF KİLİTLENDİ</div>
+<div id="incoming-warning">⚠️ DİKKAT: KULE SANA KİLİTLENDİ! [Q/E İLE SIYRIL]</div>
+
+<!-- Mini Harita / Radar HUD -->
+<div id="radar-wrap">
+  <canvas id="radar-canvas" width="125" height="125"></canvas>
+  <div id="radar-n">K</div>
+  <div id="radar-s">G</div>
+  <div id="radar-w">B</div>
+  <div id="radar-e">D</div>
+</div>
+
+<div id="hud">
+  <div id="crosshair"></div>
+  <div id="top-bar">
+    <div class="pill" style="border-color: rgba(255,200,60,0.6); background: rgba(40,25,5,0.85);">🏆 <b>Skor:</b> <span id="val-score" style="color:#ffcc00; font-weight:bold;">0</span></div>
+    <div class="pill">⭐ <b>Halka:</b> <span id="val-rings">0</span></div>
+    <div class="pill" style="border-color: rgba(255,80,50,0.5);">🏰 <b>Kule:</b> <span id="val-towers" style="color:#ff6644; font-weight:bold;">0/10</span></div>
+    <div class="pill">🖱️ <b>Fare:</b> Yön</div>
+    <div class="pill"><b>W/S:</b> Hız</div>
+    <div class="pill"><b>Q/E:</b> 🔄 Takla (Sıyrıl)</div>
+    <div class="pill" style="border-color: rgba(255,120,40,0.6);"><b>F:</b> 💥 Alev Topu</div>
+    <div class="pill"><b>SPACE:</b> 🔥 Alev</div>
+    <div class="pill"><b>SHIFT:</b> ⚡ Turbo</div>
+    <div class="pill"><b>V:</b> 🎥 Kamera</div>
+    <div class="pill"><b>T:</b> 🌅 Gökyüzü</div>
+    <div class="pill" style="border-color: rgba(100,180,255,0.6);"><b>G:</b> ⛈️ Fırtına</div>
+    <div class="pill"><b>M:</b> 📜 Liste</div>
+    <div class="pill"><b>N:</b> ⏭ Şarkı</div>
+  </div>
+  <div id="hud-flight">
+    <div class="hud-cell">
+      <span class="hud-val" id="val-spd">0</span>
+      <span class="hud-lbl">HIZ KM/S</span>
+    </div>
+    <div id="speed-bar-wrap">
+      <div id="speed-bar"></div>
+    </div>
+    <div class="hud-cell">
+      <span class="hud-val" id="val-alt">0</span>
+      <span class="hud-lbl">İRTİFA M</span>
+    </div>
+    <div class="hud-cell">
+      <span class="hud-val" id="val-hdg">K</span>
+      <span class="hud-lbl">YÖN</span>
+    </div>
+  </div>
+</div>
+
+<div id="music-card">
+  <div class="pulse"></div>
+  <button class="music-nav-btn" onclick="prevTrack()" title="Önceki Şarkı (P)">⏮</button>
+  <div class="song-info-wrap" onclick="togglePlaylistMenu()" title="Şarkı Listesini Aç/Kapat (M)">
+    <span id="song-title">Yükleniyor...</span>
+    <span class="playlist-badge">📜 Liste</span>
+  </div>
+  <button class="music-nav-btn" onclick="nextTrack()" title="Sonraki Şarkı (N)">⏭</button>
+  <button id="music-btn" onclick="toggleMusic()">⏸ Duraklat</button>
+  <div id="vol-wrap">
+    <span id="vol-icon" onclick="toggleMute()" title="Sesi Aç/Kapat">🔉</span>
+    <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0.50" oninput="setVolume(parseFloat(this.value))" title="Ses Seviyesi"/>
+    <span id="vol-percent">50%</span>
+  </div>
+</div>
+
+<div id="playlist-dropdown">
+  <div class="playlist-header">
+    <span>🎶 90'lar & 2000'ler Türkçe Klasikler</span>
+    <span class="close-pl" onclick="togglePlaylistMenu(false)">✕</span>
+  </div>
+  <div id="playlist-items" class="playlist-items">
+    <!-- Dinamik Şarkı Listesi -->
+  </div>
+</div>
+
+<script>
+'use strict';
+
+window.onerror = function(msg, url, line){
+  const b = document.getElementById('err-box');
+  if(b){ b.style.display = 'block'; b.textContent = 'Hata (' + line + '): ' + msg; }
+};
+
+// ═══════════════════════════════════════════════════
+//  TÜRKÇE KLASİK ŞARKI LİSTESİ & GELİŞMİŞ ÇALAR
+// ═══════════════════════════════════════════════════
+const PLAYLIST = [
+  { id: 0, artist: "Candan Erçetin", song: "Gamsız Hayat", src: "music.webm" },
+  { id: 1, artist: "Gökhan Kırdar", song: "Yerine Sevemem", src: "song_1.m4a" },
+  { id: 2, artist: "Yaşar", song: "Kumralım", src: "song_2.m4a" },
+  { id: 3, artist: "Göksel", song: "Günün Birinde", src: "song_3.m4a" },
+  { id: 4, artist: "MFÖ", song: "Sakın Gelme", src: "song_4.m4a" },
+  { id: 5, artist: "Mirkelam", song: "Hatıralar", src: "song_5.m4a" },
+  { id: 6, artist: "Ayna", song: "Severek Ayrılanlar", src: "song_6.m4a" },
+  { id: 7, artist: "Harun Kolçak & Bendeniz", song: "Elimde Değil", src: "song_7.m4a" },
+  { id: 8, artist: "Kıraç", song: "Yıllar Sonra", src: "song_8.m4a" },
+  { id: 9, artist: "Çelik", song: "Hercai", src: "song_9.m4a" },
+  { id: 10, artist: "Funda Arar", song: "Benim İçin Üzülme", src: "song_10.m4a" },
+  { id: 11, artist: "Barış Manço", song: "Dönence", src: "song_11.m4a" },
+  { id: 12, artist: "Fikret Kızılok", song: "Gönül", src: "song_12.m4a" },
+  { id: 13, artist: "Levent Yüksel", song: "Tuana", src: "song_13.m4a" },
+  { id: 14, artist: "Bülent Ortaçgil", song: "Sensiz Olmaz", src: "song_14.m4a" },
+  { id: 15, artist: "MFÖ", song: "Güllerin İçinden", src: "song_15.m4a" },
+  { id: 16, artist: "Kayahan", song: "Odalarda Işıksızım", src: "song_16.m4a" },
+  { id: 17, artist: "İlhan Şeşen", song: "Rüzgar", src: "song_17.m4a" },
+  { id: 18, artist: "Kenan Doğulu", song: "Kurşun Adres Sormaz Ki", src: "song_18.m4a" },
+  { id: 19, artist: "Tarkan", song: "Kış Güneşi", src: "song_19.m4a" },
+  { id: 20, artist: "Yaşar", song: "Kuşlar", src: "song_20.m4a" },
+  { id: 21, artist: "Çelik", song: "Dilberim", src: "song_21.m4a" },
+  { id: 22, artist: "Ayna", song: "Gittiğin Yağmurla Gel", src: "song_22.m4a" },
+  { id: 23, artist: "Haluk Levent", song: "Anlasana", src: "song_23.m4a" },
+  { id: 24, artist: "Murat Göğebakan", song: "Ay Yüzlüm", src: "song_24.m4a" },
+  { id: 25, artist: "Barış Akarsu", song: "Gözlerin", src: "song_25.m4a" },
+  { id: 26, artist: "Fikret Kızılok", song: "Bir Harmanım Bu Akşam", src: "song_26.m4a" },
+  { id: 27, artist: "Ezginin Günlüğü", song: "Düşler Sokağı", src: "song_27.m4a" },
+  { id: 28, artist: "Nilüfer", song: "Ta Uzak Yollardan", src: "song_28.m4a" },
+  { id: 29, artist: "Zerrin Özer", song: "O Yaz", src: "song_29.m4a" },
+  { id: 30, artist: "Suat Suna", song: "Hasret Fenerleri", src: "song_30.m4a" },
+  { id: 31, artist: "Ümit Sayın", song: "Ben Tabii Ki", src: "song_31.m4a" },
+  { id: 32, artist: "Gökhan Kırdar", song: "Üstüme Basıp Geçme", src: "song_32.m4a" },
+  { id: 33, artist: "Kıraç", song: "Endamın Yeter", src: "song_33.m4a" },
+  { id: 34, artist: "Levent Yüksel", song: "Med Cezir", src: "song_34.m4a" },
+  { id: 35, artist: "Hakan Peker", song: "Bir Efsane", src: "song_35.m4a" },
+  { id: 36, artist: "Feridun Düzağaç", song: "Alev Alev", src: "song_36.m4a" },
+  { id: 37, artist: "Barış Manço", song: "Gülpembe", src: "song_37.m4a" },
+  { id: 38, artist: "MFÖ", song: "Sarı Laleler", src: "song_38.m4a" },
+  { id: 39, artist: "Göksel", song: "Kurşuni Renkler", src: "song_39.m4a" },
+  { id: 40, artist: "Yüksek Sadakat", song: "Belki Üstümüzden Bir Kuş Geçer", src: "song_40.m4a" },
+  { id: 41, artist: "Songül Güner", song: "Dağlara Mı Yazdın", src: "song_41.m4a" },
+  { id: 42, artist: "Norm Ender & Ebru Gündeş", song: "Bir Çift Göz", src: "song_42.m4a" },
+  { id: 43, artist: "Ender Balkır", song: "Ruhumda Sızı", src: "song_43.m4a" },
+  { id: 44, artist: "No.1 & Melek Mosso", song: "Hiç Işık Yok", src: "song_44.m4a" },
+  { id: 45, artist: "Murat Göğebakan", song: "Unutamam Seni", src: "song_45.m4a" },
+  { id: 46, artist: "Volkan Konak", song: "Mimoza Çiçeğim", src: "song_46.m4a" },
+  { id: 47, artist: "İzel", song: "Işıklı Yol", src: "song_47.m4a" },
+  { id: 48, artist: "Nurettin Rençber", song: "Söyle Sunam", src: "song_48.m4a" },
+  { id: 49, artist: "Volkan Konak", song: "Cerrahpaşa", src: "song_49.m4a" },
+  { id: 50, artist: "Ayşe Hatun Önal & Onurr", song: "Güm Güm (Remix)", src: "song_50.m4a" },
+  { id: 51, artist: "Kızılırmak", song: "Pazarlık M'olur", src: "song_51.m4a" },
+  { id: 52, artist: "Tahribad-ı İsyan", song: "Sınama Beni Yeter", src: "song_52.m4a" },
+  { id: 53, artist: "Murat Göğebakan", song: "Diğer Yarım", src: "song_53.m4a" },
+  { id: 54, artist: "Contra", song: "Ölü", src: "song_54.m4a" },
+  { id: 55, artist: "Candan Erçetin", song: "Yalan", src: "song_55.m4a" },
+  { id: 56, artist: "Özdemir Erdoğan", song: "Ne Ağlarsın Benim Zülfü Siyahım", src: "song_56.m4a" },
+  { id: 57, artist: "Pilli Bebek", song: "Bak", src: "song_57.m4a" },
+  { id: 58, artist: "Aynur Haşhaş", song: "O Yar Gelir", src: "song_58.m4a" },
+  { id: 59, artist: "Barış Manço", song: "Alla Beni Pulla Beni", src: "song_59.m4a" },
+  { id: 60, artist: "Sufle", song: "Pus", src: "song_60.m4a" },
+  { id: 61, artist: "Ceza", song: "Yerli Plaka", src: "song_61.m4a" },
+  { id: 62, artist: "Ebru Gündeş", song: "Yaparım Bilirsin", src: "song_62.m4a" },
+  { id: 63, artist: "Simge", song: "Misafir", src: "song_63.m4a" },
+  { id: 64, artist: "Tame Impala", song: "Loser", src: "song_64.m4a" },
+  { id: 65, artist: "Çetin İçten", song: "Sevda Değil", src: "song_65.m4a" },
+  { id: 66, artist: "İlyas Yalçıntaş & Enbe Orkestrası", song: "İncir", src: "song_66.m4a" },
+  { id: 67, artist: "Ebru Gündeş", song: "Müstehak", src: "song_67.m4a" },
+  { id: 68, artist: "Dolu Kadehi Ters Tut", song: "Vişne", src: "song_68.m4a" },
+  { id: 69, artist: "Aller Erinç", song: "Bu Böyle (Akustik)", src: "song_69.m4a" },
+  { id: 70, artist: "Wegh", song: "Tuzak", src: "song_70.m4a" },
+  { id: 71, artist: "Kum", song: "Gemiler", src: "song_71.m4a" },
+  { id: 72, artist: "Burcu Güneş", song: "Aşkın Beni Baştan Yazar", src: "song_72.m4a" },
+  { id: 73, artist: "Fırat Tanış", song: "Yani", src: "song_73.m4a" },
+  { id: 74, artist: "Dolu Kadehi Ters Tut", song: "Yangın (Canlı / Live)", src: "song_74.m4a" },
+  { id: 75, artist: "Candan Erçetin", song: "Gamsız Hayat", src: "song_75.m4a" }
+];
+
+let currentTrackIdx = 75; // Başlangıç şarkısı: Candan Erçetin - Gamsız Hayat ("Ejderha üstünde gamsız hayat dinleme işi")
+const bgm = document.getElementById('bgm');
+let audioCtx = null, windGain = null;
+let currentVolume = 0.50;
+let prevVolume = 0.50;
+let isPlaylistOpen = false;
+let gameActive = false;
+
+function initPlaylistUI(){
+  const select = document.getElementById('splash-song-select');
+  const itemsWrap = document.getElementById('playlist-items');
+  select.innerHTML = '';
+  itemsWrap.innerHTML = '';
+
+  PLAYLIST.forEach((track, idx) => {
+    // Splash select option
+    const opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = `${track.artist} — ${track.song}`;
+    if(idx === currentTrackIdx) opt.selected = true;
+    select.appendChild(opt);
+
+    // In-game dropdown item
+    const item = document.createElement('div');
+    item.className = 'pl-item' + (idx === currentTrackIdx ? ' active' : '');
+    item.id = 'pl-item-' + idx;
+    item.onclick = () => { loadTrack(idx, true); togglePlaylistMenu(false); };
+    item.innerHTML = `
+      <span class="pl-item-idx">${idx + 1}.</span>
+      <span class="pl-item-title">${track.artist} — ${track.song}</span>
+      <span class="pl-item-wave" id="pl-wave-${idx}" style="${idx === currentTrackIdx ? '' : 'display:none;'}">ılı.</span>
+    `;
+    itemsWrap.appendChild(item);
+  });
+
+  loadTrack(currentTrackIdx, false);
+}
+
+function updatePlaylistUI(){
+  const select = document.getElementById('splash-song-select');
+  if(select) select.value = currentTrackIdx;
+
+  PLAYLIST.forEach((_, idx) => {
+    const el = document.getElementById('pl-item-' + idx);
+    const wave = document.getElementById('pl-wave-' + idx);
+    if(el){
+      if(idx === currentTrackIdx){
+        el.classList.add('active');
+        if(wave) wave.style.display = 'inline';
+      } else {
+        el.classList.remove('active');
+        if(wave) wave.style.display = 'none';
+      }
+    }
+  });
+}
+
+function loadTrack(idx, autoPlay = true){
+  if(idx < 0) idx = PLAYLIST.length - 1;
+  if(idx >= PLAYLIST.length) idx = 0;
+  currentTrackIdx = idx;
+  const track = PLAYLIST[currentTrackIdx];
+
+  bgm.src = track.src;
+  bgm.load();
+  bgm.volume = currentVolume;
+  document.getElementById('song-title').textContent = `${track.artist} — ${track.song}`;
+  updatePlaylistUI();
+
+  if(autoPlay && gameActive){
+    bgm.play().then(()=>{
+      document.getElementById('music-btn').textContent = '⏸ Duraklat';
+    }).catch(()=>{});
+  }
+}
+
+function nextTrack(){
+  loadTrack(currentTrackIdx + 1, true);
+}
+
+function prevTrack(){
+  loadTrack(currentTrackIdx - 1, true);
+}
+
+bgm.onended = function(){
+  nextTrack();
+};
+
+function togglePlaylistMenu(forceState){
+  const menu = document.getElementById('playlist-dropdown');
+  isPlaylistOpen = typeof forceState === 'boolean' ? forceState : !isPlaylistOpen;
+  if(isPlaylistOpen){
+    menu.classList.add('open');
+  } else {
+    menu.classList.remove('open');
+  }
+}
+
+function initAudio(){
+  try{
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const sz = audioCtx.sampleRate * 2;
+    const buf = audioCtx.createBuffer(1, sz, audioCtx.sampleRate);
+    const out = buf.getChannelData(0);
+    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    for(let i=0; i<sz; i++){
+      const w = Math.random()*2-1;
+      b0 = 0.99886*b0 + w*0.0555179;
+      b1 = 0.99332*b1 + w*0.0750759;
+      b2 = 0.96900*b2 + w*0.1538520;
+      b3 = 0.86650*b3 + w*0.3104856;
+      b4 = 0.55000*b4 + w*0.5329522;
+      b5 = -0.7616*b5 - w*0.0168980;
+      out[i] = (b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.09;
+      b6 = w*0.115926;
+    }
+    const node = audioCtx.createBufferSource();
+    node.buffer = buf; node.loop = true;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass'; filter.frequency.value = 520;
+    windGain = audioCtx.createGain();
+    windGain.gain.value = 0.04 * currentVolume;
+    node.connect(filter); filter.connect(windGain); windGain.connect(audioCtx.destination);
+    node.start();
+  }catch(e){}
+}
+
+function setVolume(v){
+  currentVolume = Math.max(0, Math.min(1, v));
+  bgm.volume = currentVolume;
+  document.getElementById('vol-slider').value = currentVolume;
+  document.getElementById('vol-percent').textContent = Math.round(currentVolume * 100) + '%';
+  const icon = document.getElementById('vol-icon');
+  if(currentVolume === 0){
+    icon.textContent = '🔇';
+  } else if(currentVolume < 0.4){
+    icon.textContent = '🔈';
+  } else if(currentVolume < 0.75){
+    icon.textContent = '🔉';
+  } else {
+    icon.textContent = '🔊';
+  }
+}
+
+function toggleMute(){
+  if(currentVolume > 0){
+    prevVolume = currentVolume;
+    setVolume(0);
+  } else {
+    setVolume(prevVolume > 0 ? prevVolume : 0.50);
+  }
+}
+
+function playRingChime(combo = 1){
+  if(!audioCtx) return;
+  try{
+    const notes = [523.25, 659.25, 783.99, 1046.50];
+    const pitchScale = Math.min(1.8, 1.0 + (combo - 1) * 0.12);
+    notes.forEach((freq, idx) => {
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq * pitchScale, audioCtx.currentTime + idx * 0.04);
+      g.gain.setValueAtTime(0.14 * currentVolume, audioCtx.currentTime + idx * 0.04);
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + idx * 0.04 + 0.45);
+      osc.connect(g);
+      g.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + idx * 0.04);
+      osc.stop(audioCtx.currentTime + idx * 0.04 + 0.48);
+    });
+  }catch(e){}
+}
+
+function playExplosionSound(){
+  if(!audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(140, now);
+    osc.frequency.exponentialRampToValueAtTime(25, now + 0.65);
+    gain.gain.setValueAtTime(0.38 * currentVolume, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.65);
+  } catch(e){}
+}
+
+function playWhooshSound(){
+  if(!audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(180, now);
+    osc.frequency.linearRampToValueAtTime(340, now + 0.22);
+    osc.frequency.linearRampToValueAtTime(120, now + 0.50);
+    gain.gain.setValueAtTime(0.22 * currentVolume, now);
+    gain.gain.linearRampToValueAtTime(0.001, now + 0.50);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.50);
+  } catch(e){}
+}
+
+function playFireballLaunchSound(){
+  if(!audioCtx) return;
+  try{
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(290, now);
+    osc.frequency.exponentialRampToValueAtTime(75, now + 0.35);
+    gain.gain.setValueAtTime(0.32 * currentVolume, now);
+    gain.gain.linearRampToValueAtTime(0.001, now + 0.35);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.36);
+  }catch(e){}
+}
+
+function playThunderSound(){
+  if(!audioCtx) return;
+  try{
+    const now = audioCtx.currentTime;
+    const bufferSize = audioCtx.sampleRate * 2.2;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let lastOut = 0.0;
+    for(let i = 0; i < bufferSize; i++){
+      const white = Math.random() * 2 - 1;
+      data[i] = (lastOut + (0.04 * white)) / 1.04;
+      lastOut = data[i];
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(220, now);
+    filter.frequency.linearRampToValueAtTime(80, now + 2.0);
+
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.40 * currentVolume, now + 0.08);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.1);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    noise.start(now);
+    noise.stop(now + 2.2);
+  }catch(e){}
+}
+
+let turboRoarCooldown = 0;
+let turboActiveTime = 0;
+
+function playDragonRoarSound(){
+  if(!audioCtx) return;
+  try{
+    const t0 = audioCtx.currentTime;
+
+    // 1. Derin Rezonans ve Kükreme Osilatörleri
+    const osc1 = audioCtx.createOscillator();
+    const osc2 = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    const filter = audioCtx.createBiquadFilter();
+
+    osc1.type = 'sawtooth';
+    osc2.type = 'triangle';
+
+    osc1.frequency.setValueAtTime(115, t0);
+    osc1.frequency.exponentialRampToValueAtTime(40, t0 + 1.25);
+
+    osc2.frequency.setValueAtTime(85, t0);
+    osc2.frequency.exponentialRampToValueAtTime(30, t0 + 1.25);
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(850, t0);
+    filter.frequency.exponentialRampToValueAtTime(200, t0 + 1.25);
+    filter.Q.value = 3.5;
+
+    gainNode.gain.setValueAtTime(0.001, t0);
+    gainNode.gain.linearRampToValueAtTime(0.32 * currentVolume, t0 + 0.12);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.3);
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+    filter.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    osc1.start(t0);
+    osc2.start(t0);
+    osc1.stop(t0 + 1.35);
+    osc2.stop(t0 + 1.35);
+
+    // 2. Alevli Nefes ve Rüzgar Hışırtısı
+    const bufferSize = audioCtx.sampleRate * 1.1;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+
+    const nFilter = audioCtx.createBiquadFilter();
+    nFilter.type = 'bandpass';
+    nFilter.frequency.setValueAtTime(700, t0);
+    nFilter.frequency.exponentialRampToValueAtTime(320, t0 + 1.1);
+    nFilter.Q.value = 1.4;
+
+    const nGain = audioCtx.createGain();
+    nGain.gain.setValueAtTime(0.001, t0);
+    nGain.gain.linearRampToValueAtTime(0.22 * currentVolume, t0 + 0.18);
+    nGain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.2);
+
+    noise.connect(nFilter);
+    nFilter.connect(nGain);
+    nGain.connect(audioCtx.destination);
+
+    noise.start(t0);
+    noise.stop(t0 + 1.25);
+  }catch(e){}
+}
+
+function triggerTurboRoar(){
+  if(!gameActive || turboRoarCooldown > 0) return;
+  turboRoarCooldown = 4.5;
+  turboActiveTime = 2.2;
+
+  flightSpeed = Math.min(flightSpeed + 42, 130);
+  playDragonRoarSound();
+
+  const turboEl = document.getElementById('turbo-fx');
+  if(turboEl){
+    turboEl.style.opacity = '1';
+    setTimeout(()=>{
+      turboEl.style.opacity = '0';
+    }, 1800);
+  }
+
+  const pop = document.getElementById('ring-popup');
+  if(pop){
+    pop.textContent = "⚡ EJDERHA KÜKREMESİ! SÜPER HIZ ⚡";
+    pop.style.opacity = '1';
+    pop.style.transform = 'translate(-50%, -50%) scale(1.2)';
+    setTimeout(()=>{
+      pop.style.opacity = '0';
+      pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    }, 1600);
+  }
+}
+
+function startExperience(){
+  setVolume(0.50);
+  bgm.play().then(()=>{
+    document.getElementById('music-btn').textContent = '⏸ Duraklat';
+  }).catch(()=>{
+    document.addEventListener('click', () => { if(bgm.paused) bgm.play(); }, {once:true});
+  });
+
+  initAudio();
+  if(typeof applyDragonCustomization === 'function'){
+    applyDragonCustomization();
+  }
+  document.getElementById('splash').classList.add('hidden');
+  gameActive = true;
+  document.body.requestPointerLock();
+}
+
+function toggleMusic(){
+  if(bgm.paused){
+    bgm.play();
+    document.getElementById('music-btn').textContent = '⏸ Duraklat';
+  } else {
+    bgm.pause();
+    document.getElementById('music-btn').textContent = '▶ Çal';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  THREE.JS SAHNE, KAMERA VE IŞIKLAR
+// ═══════════════════════════════════════════════════
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+
+const skyDay = new THREE.Color(0x64b0eb);
+const fogDay = new THREE.Color(0x8dc5ec);
+const skySunset = new THREE.Color(0x2a1638);
+const fogSunset = new THREE.Color(0xb85038);
+
+scene.background = skyDay.clone();
+scene.fog = new THREE.FogExp2(fogDay, 0.00062);
+
+const camera = new THREE.PerspectiveCamera(76, window.innerWidth / window.innerHeight, 0.02, 5500);
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.15;
+container.appendChild(renderer.domElement);
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Işıklar
+const hemiLight = new THREE.HemisphereLight(0xdcf0ff, 0x1e6618, 0.98);
+scene.add(hemiLight);
+
+const sunLight = new THREE.DirectionalLight(0xfffaea, 1.45);
+sunLight.position.set(400, 850, 300);
+scene.add(sunLight);
+
+const ambLight = new THREE.AmbientLight(0xd7f0dd, 0.42);
+scene.add(ambLight);
+
+// Gökyüzü Modu
+let isSunset = false;
+function toggleSkyMode(){
+  isSunset = !isSunset;
+  const ind = document.getElementById('cam-mode-indicator');
+  if(isSunset){
+    scene.background.copy(skySunset);
+    scene.fog.color.copy(fogSunset);
+    sunLight.color.setHex(0xff7c38);
+    sunLight.intensity = 1.6;
+    hemiLight.color.setHex(0xff9e7a);
+    hemiLight.groundColor.setHex(0x401815);
+    ind.textContent = '🌅 GÜN BATIMI & ALTIN SAAT MODU';
+  } else {
+    scene.background.copy(skyDay);
+    scene.fog.color.copy(fogDay);
+    sunLight.color.setHex(0xfffaea);
+    sunLight.intensity = 1.45;
+    hemiLight.color.setHex(0xdcf0ff);
+    hemiLight.groundColor.setHex(0x1e6618);
+    ind.textContent = '☀️ CANLI GÜNDÜZ MODU';
+  }
+  ind.style.opacity = '1';
+  setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+}
+
+// ── Fırtına & Şimşek Modu (G tuşu) ──
+let isStormActive = false;
+const skyStorm = new THREE.Color(0x0c1219);
+const fogStorm = new THREE.Color(0x161d28);
+
+const RAIN_COUNT = 800;
+const rainGeo = new THREE.BufferGeometry();
+const rainPositions = new Float32Array(RAIN_COUNT * 3);
+for(let i = 0; i < RAIN_COUNT; i++){
+  rainPositions[i * 3] = (Math.random() - 0.5) * 140;
+  rainPositions[i * 3 + 1] = Math.random() * 90;
+  rainPositions[i * 3 + 2] = (Math.random() - 0.5) * 140;
+}
+rainGeo.setAttribute('position', new THREE.BufferAttribute(rainPositions, 3));
+const rainMat = new THREE.PointsMaterial({
+  color: 0x99ccee,
+  size: 0.95,
+  transparent: true,
+  opacity: 0.65
+});
+const rainPoints = new THREE.Points(rainGeo, rainMat);
+rainPoints.visible = false;
+scene.add(rainPoints);
+
+let lightningTimer = 4.0;
+let lightningFlash = 0;
+
+function toggleStormMode(){
+  isStormActive = !isStormActive;
+  const ind = document.getElementById('cam-mode-indicator');
+  if(isStormActive){
+    scene.background.copy(skyStorm);
+    scene.fog.color.copy(fogStorm);
+    scene.fog.density = 0.0011;
+    sunLight.color.setHex(0x3a4f66);
+    sunLight.intensity = 0.45;
+    ambLight.color.setHex(0x1a2636);
+    hemiLight.color.setHex(0x283848);
+    hemiLight.groundColor.setHex(0x0d141d);
+    rainPoints.visible = true;
+    ind.textContent = '⛈️ KARANLIK FIRTINA & ŞİMŞEK MODU AKTİF';
+  } else {
+    scene.fog.density = 0.00062;
+    rainPoints.visible = false;
+    if(isSunset){
+      scene.background.copy(skySunset);
+      scene.fog.color.copy(fogSunset);
+      sunLight.color.setHex(0xff7c38);
+      sunLight.intensity = 1.6;
+      hemiLight.color.setHex(0xff9e7a);
+      hemiLight.groundColor.setHex(0x401815);
+      ind.textContent = '🌅 GÜN BATIMI MODU';
+    } else {
+      scene.background.copy(skyDay);
+      scene.fog.color.copy(fogDay);
+      sunLight.color.setHex(0xfffaea);
+      sunLight.intensity = 1.45;
+      hemiLight.color.setHex(0xdcf0ff);
+      hemiLight.groundColor.setHex(0x1e6618);
+      ind.textContent = '☀️ CANLI GÜNDÜZ MODU';
+    }
+  }
+  ind.style.opacity = '1';
+  setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+}
+
+// ═══════════════════════════════════════════════════
+//  SABİT DÜNYA: YÜKSEK DAĞLAR, TEPELER, VADİLER & GÖLLER
+// ═══════════════════════════════════════════════════
+function getTerrainHeight(x, z){
+  const P = 0.0022;
+  const distFromCenter = Math.sqrt(x*x + z*z);
+  const boundaryMountains = Math.pow(Math.max(0, (distFromCenter - 1050) / 1100), 2.0) * 175.0;
+
+  const ridge = Math.abs(Math.sin(x * P * 1.4 + z * P * 0.7));
+  const mountains = Math.pow(ridge, 1.5) * 115.0;
+
+  const hills = Math.sin(x * P * 2.8) * Math.cos(z * P * 2.6) * 42.0
+              + Math.cos(x * P * 5.2 + 1.2) * Math.sin(z * P * 4.8) * 20.0;
+
+  const valley = Math.sin(x * P * 0.8 + 0.4) * Math.cos(z * P * 0.8) * 32.0;
+  const detail = Math.sin(x * P * 12.0) * Math.cos(z * P * 11.0 + 1.0) * 7.0;
+
+  return mountains + hills + valley + detail + boundaryMountains - 24.0;
+}
+
+const TERRAIN_WIDTH = 4800;
+const terrainGeo = new THREE.PlaneGeometry(TERRAIN_WIDTH, TERRAIN_WIDTH, 160, 160);
+terrainGeo.rotateX(-Math.PI / 2);
+
+const cShore       = new THREE.Color(0x9a9372);
+const cGrassValley = new THREE.Color(0x1a6622);
+const cGrassMeadow = new THREE.Color(0x36a02b);
+const cGrassHill   = new THREE.Color(0x54ba35);
+const cRock        = new THREE.Color(0x566758);
+const cSnow        = new THREE.Color(0xdce5ed);
+
+const colors = [];
+const posAttr = terrainGeo.attributes.position;
+for(let i=0; i<posAttr.count; i++){
+  const vx = posAttr.getX(i);
+  const vz = posAttr.getZ(i);
+  const vy = getTerrainHeight(vx, vz);
+  posAttr.setY(i, vy);
+
+  let col;
+  if(vy < -6.0){
+    col = cShore.clone().lerp(cGrassValley, Math.max(0, (vy + 8.5) / 2.5));
+  } else {
+    const noise = (Math.sin(vx * 0.018) * Math.cos(vz * 0.018) + 1.0) * 0.5;
+    col = cGrassValley.clone().lerp(cGrassMeadow, noise);
+
+    if(vy > 18.0) col.lerp(cGrassHill, Math.min(1.0, (vy - 18.0) / 48.0));
+    const slope = Math.abs(vy) / 80.0;
+    if(slope > 0.46) col.lerp(cRock, Math.min(1.0, (slope - 0.46) * 2.2));
+    if(vy > 105.0) col.lerp(cSnow, Math.min(1.0, (vy - 105.0) / 26.0));
+  }
+  colors.push(col.r, col.g, col.b);
+}
+terrainGeo.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+terrainGeo.computeVertexNormals();
+
+const terrainMat = new THREE.MeshStandardMaterial({
+  vertexColors: true,
+  roughness: 0.78,
+  metalness: 0.04,
+  flatShading: false
+});
+const terrainMesh = new THREE.Mesh(terrainGeo, terrainMat);
+terrainMesh.position.set(0, 0, 0);
+scene.add(terrainMesh);
+
+// Vadi İçi Işıltılı Göl Su Yüzeyi
+const waterGeo = new THREE.PlaneGeometry(TERRAIN_WIDTH, TERRAIN_WIDTH);
+waterGeo.rotateX(-Math.PI / 2);
+const waterMat = new THREE.MeshStandardMaterial({
+  color: 0x12709e,
+  roughness: 0.12,
+  metalness: 0.85,
+  transparent: true,
+  opacity: 0.82
+});
+const waterMesh = new THREE.Mesh(waterGeo, waterMat);
+waterMesh.position.set(0, -8.5, 0);
+scene.add(waterMesh);
+
+// ═══════════════════════════════════════════════════
+//  ÇOKLU AĞAÇ TÜRLERİ & DOĞAL FLORA (INSTANCED)
+// ═══════════════════════════════════════════════════
+function mergeGeometriesWithColors(geosAndColors) {
+  let totalVerts = 0;
+  geosAndColors.forEach(item => {
+    totalVerts += item.geo.index ? item.geo.index.count : item.geo.attributes.position.count;
+  });
+
+  const positions = new Float32Array(totalVerts * 3);
+  const normals   = new Float32Array(totalVerts * 3);
+  const colorsArr = new Float32Array(totalVerts * 3);
+
+  let offset = 0;
+  geosAndColors.forEach(item => {
+    const nonIndexed = item.geo.index ? item.geo.toNonIndexed() : item.geo;
+    const pos = nonIndexed.attributes.position;
+    const norm = nonIndexed.attributes.normal;
+    const col = new THREE.Color(item.color);
+
+    for(let i = 0; i < pos.count; i++){
+      const base = (offset + i) * 3;
+      positions[base]     = pos.getX(i);
+      positions[base + 1] = pos.getY(i);
+      positions[base + 2] = pos.getZ(i);
+
+      normals[base]     = norm.getX(i);
+      normals[base + 1] = norm.getY(i);
+      normals[base + 2] = norm.getZ(i);
+
+      colorsArr[base]     = col.r;
+      colorsArr[base + 1] = col.g;
+      colorsArr[base + 2] = col.b;
+    }
+    offset += pos.count;
+  });
+
+  const merged = new THREE.BufferGeometry();
+  merged.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  merged.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+  merged.setAttribute('color', new THREE.BufferAttribute(colorsArr, 3));
+  return merged;
+}
+
+// 1. Ladin Çam
+const pTrunk = new THREE.CylinderGeometry(0.38, 0.65, 4.5, 7); pTrunk.translate(0, 2.25, 0);
+const pT1 = new THREE.ConeGeometry(3.6, 4.8, 7); pT1.translate(0, 5.0, 0);
+const pT2 = new THREE.ConeGeometry(2.7, 4.0, 7); pT2.translate(0, 7.5, 0);
+const pT3 = new THREE.ConeGeometry(1.7, 3.2, 7); pT3.translate(0, 9.6, 0);
+const pineGeo = mergeGeometriesWithColors([
+  { geo: pTrunk, color: 0x4a2e18 }, { geo: pT1, color: 0x164a18 },
+  { geo: pT2, color: 0x1f6624 }, { geo: pT3, color: 0x2b8030 }
+]);
+
+// 2. Meşe
+const oTrunk = new THREE.CylinderGeometry(0.45, 0.75, 5.0, 6); oTrunk.translate(0, 2.5, 0);
+const oC1 = new THREE.DodecahedronGeometry(3.3, 1); oC1.translate(0, 7.0, 0);
+const oC2 = new THREE.DodecahedronGeometry(2.3, 1); oC2.translate(1.4, 6.2, 0.8);
+const oC3 = new THREE.DodecahedronGeometry(2.1, 1); oC3.translate(-1.3, 6.4, -0.7);
+const oakGeo = mergeGeometriesWithColors([
+  { geo: oTrunk, color: 0x54361c }, { geo: oC1, color: 0x3d9e26 },
+  { geo: oC2, color: 0x52b834 }, { geo: oC3, color: 0x338520 }
+]);
+
+// 3. Altın Huş
+const bTrunk = new THREE.CylinderGeometry(0.28, 0.45, 6.0, 6); bTrunk.translate(0, 3.0, 0);
+const bT1 = new THREE.ConeGeometry(3.2, 5.0, 7); bT1.translate(0, 6.0, 0);
+const bT2 = new THREE.ConeGeometry(2.4, 4.4, 7); bT2.translate(0, 8.4, 0);
+const bT3 = new THREE.ConeGeometry(1.5, 3.2, 7); bT3.translate(0, 10.3, 0);
+const birchGeo = mergeGeometriesWithColors([
+  { geo: bTrunk, color: 0xd6d2c4 }, { geo: bT1, color: 0xdb9616 },
+  { geo: bT2, color: 0xebb223 }, { geo: bT3, color: 0xf2c438 }
+]);
+
+// 4. Granit Kaya
+const r1 = new THREE.DodecahedronGeometry(2.2, 0); r1.translate(0, 1.4, 0);
+const r2 = new THREE.DodecahedronGeometry(1.5, 0); r2.translate(1.6, 1.0, 0.5);
+const rockGeo = mergeGeometriesWithColors([
+  { geo: r1, color: 0x606668 }, { geo: r2, color: 0x525759 }
+]);
+
+// 5. Görkemli Uzun Dağ Çamı (Tall Alpine Pine - 18 ila 28 Metre)
+const tpTrunk = new THREE.CylinderGeometry(0.48, 0.95, 12.0, 7); tpTrunk.translate(0, 6.0, 0);
+const tpT1 = new THREE.ConeGeometry(5.2, 5.8, 7); tpT1.translate(0, 8.5, 0);
+const tpT2 = new THREE.ConeGeometry(4.4, 5.4, 7); tpT2.translate(0, 11.5, 0);
+const tpT3 = new THREE.ConeGeometry(3.6, 4.8, 7); tpT3.translate(0, 14.5, 0);
+const tpT4 = new THREE.ConeGeometry(2.7, 4.2, 7); tpT4.translate(0, 17.5, 0);
+const tpT5 = new THREE.ConeGeometry(1.6, 3.8, 7); tpT5.translate(0, 20.5, 0);
+const tallPineGeo = mergeGeometriesWithColors([
+  { geo: tpTrunk, color: 0x382012 },
+  { geo: tpT1, color: 0x0c3014 },
+  { geo: tpT2, color: 0x113e1a },
+  { geo: tpT3, color: 0x184d22 },
+  { geo: tpT4, color: 0x1e5d2b },
+  { geo: tpT5, color: 0x266e34 }
+]);
+
+// ── SIK ORMAN BÖLGELERİ (Dense Forest Biomes) ──
+const FOREST_BIOMES = [
+  { x: -550, z: -450, radius: 460, name: "Kuzey Çamlığı" },
+  { x: 700, z: -350, radius: 480, name: "Doğu Yamaç Ormanı" },
+  { x: -750, z: 650, radius: 500, name: "Batı Vadi Koruluğu" },
+  { x: 500, z: 800, radius: 440, name: "Güney Göl Kıyısı Çamlığı" },
+  { x: -250, z: 1100, radius: 420, name: "Derin Sis Ormanı" },
+  { x: 350, z: -1050, radius: 450, name: "Ulu Dağ Sık Ormanı" }
+];
+
+const floraMat = new THREE.MeshStandardMaterial({
+  vertexColors: true,
+  roughness: 0.70,
+  metalness: 0.04,
+  flatShading: true
+});
+
+function placeInstances(geo, count, scaleRange, validMinY, validMaxY){
+  const imesh = new THREE.InstancedMesh(geo, floraMat, count);
+  const d = new THREE.Object3D();
+  let placed = 0, attempts = 0;
+  while(placed < count && attempts < count * 5){
+    attempts++;
+    const tx = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.88);
+    const tz = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.88);
+    const ty = getTerrainHeight(tx, tz);
+    if(ty < validMinY || ty > validMaxY) continue;
+
+    d.position.set(tx, ty, tz);
+    const s = scaleRange[0] + Math.random() * (scaleRange[1] - scaleRange[0]);
+    d.scale.set(s, s * (0.9 + Math.random()*0.35), s);
+    d.rotation.y = Math.random() * Math.PI * 2;
+    d.updateMatrix();
+    imesh.setMatrixAt(placed, d.matrix);
+    placed++;
+  }
+  imesh.instanceMatrix.needsUpdate = true;
+  scene.add(imesh);
+}
+
+function placeForestInstances(geo, count, scaleRange, validMinY, validMaxY, biomes){
+  const imesh = new THREE.InstancedMesh(geo, floraMat, count);
+  const d = new THREE.Object3D();
+  let placed = 0, attempts = 0;
+  while(placed < count && attempts < count * 6){
+    attempts++;
+    let tx, tz;
+    if(biomes && biomes.length > 0 && Math.random() < 0.75){
+      const b = biomes[Math.floor(Math.random() * biomes.length)];
+      const ang = Math.random() * Math.PI * 2;
+      const dist = Math.sqrt(Math.random()) * b.radius;
+      tx = b.x + Math.cos(ang) * dist;
+      tz = b.z + Math.sin(ang) * dist;
+    } else {
+      tx = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.86);
+      tz = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.86);
+    }
+    const ty = getTerrainHeight(tx, tz);
+    if(ty < validMinY || ty > validMaxY) continue;
+
+    d.position.set(tx, ty, tz);
+    const s = scaleRange[0] + Math.random() * (scaleRange[1] - scaleRange[0]);
+    d.scale.set(s, s * (0.95 + Math.random() * 0.45), s);
+    d.rotation.y = Math.random() * Math.PI * 2;
+    d.updateMatrix();
+    imesh.setMatrixAt(placed, d.matrix);
+    placed++;
+  }
+  imesh.instanceMatrix.needsUpdate = true;
+  scene.add(imesh);
+}
+
+placeForestInstances(tallPineGeo, 1650, [1.0, 1.85], -6.0, 82.0, FOREST_BIOMES);
+placeInstances(pineGeo, 850, [0.8, 1.6], -6.0, 85.0);
+placeInstances(oakGeo, 550, [0.85, 1.55], -6.0, 60.0);
+placeInstances(birchGeo, 400, [0.75, 1.45], -4.0, 68.0);
+placeInstances(rockGeo, 600, [0.7, 1.8], -7.0, 115.0);
+
+// ═══════════════════════════════════════════════════
+//  3D POFUDUK BULUTLAR (Floating Low-Poly Clouds)
+// ═══════════════════════════════════════════════════
+const cPart1 = new THREE.DodecahedronGeometry(12.0, 1); cPart1.translate(0, 0, 0);
+const cPart2 = new THREE.DodecahedronGeometry(9.5, 1); cPart2.translate(9.5, -1.0, 3.0);
+const cPart3 = new THREE.DodecahedronGeometry(9.0, 1); cPart3.translate(-9.0, -1.5, -2.0);
+const cPart4 = new THREE.DodecahedronGeometry(8.0, 1); cPart4.translate(4.0, 4.0, -1.5);
+const cloudGeo = mergeGeometriesWithColors([
+  { geo: cPart1, color: 0xffffff }, { geo: cPart2, color: 0xf5f8fc },
+  { geo: cPart3, color: 0xecf3fa }, { geo: cPart4, color: 0xffffff }
+]);
+const cloudMat = new THREE.MeshStandardMaterial({
+  vertexColors: true, roughness: 0.9, transparent: true, opacity: 0.85, flatShading: true
+});
+const cloudInst = new THREE.InstancedMesh(cloudGeo, cloudMat, 65);
+const cd = new THREE.Object3D();
+for(let i=0; i<65; i++){
+  const cx = (Math.random() - 0.5) * TERRAIN_WIDTH;
+  const cz = (Math.random() - 0.5) * TERRAIN_WIDTH;
+  const cy = 205 + Math.random() * 125;
+  cd.position.set(cx, cy, cz);
+  cd.scale.set(1.6 + Math.random()*1.4, 1.1 + Math.random()*0.7, 1.6 + Math.random()*1.4);
+  cd.rotation.y = Math.random() * Math.PI * 2;
+  cd.updateMatrix();
+  cloudInst.setMatrixAt(i, cd.matrix);
+}
+cloudInst.instanceMatrix.needsUpdate = true;
+scene.add(cloudInst);
+
+// ═══════════════════════════════════════════════════
+//  UÇUŞ ALTIN HALKALARI (Golden Flight Rings & Mini-Oyun)
+// ═══════════════════════════════════════════════════
+const ringGeo = new THREE.TorusGeometry(5.8, 0.45, 8, 26);
+const ringMat = new THREE.MeshStandardMaterial({
+  color: 0xffcc00,
+  emissive: 0xff9900,
+  emissiveIntensity: 0.7,
+  roughness: 0.25,
+  metalness: 0.85
+});
+const NUM_RINGS = 18;
+const rings = [];
+const ringGroup = new THREE.Group();
+scene.add(ringGroup);
+
+for(let i=0; i<NUM_RINGS; i++){
+  const rMesh = new THREE.Mesh(ringGeo, ringMat);
+  const rx = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.65);
+  const rz = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.65);
+  const groundY = getTerrainHeight(rx, rz);
+  const ry = Math.max(groundY + 18, 45 + Math.random() * 75);
+  rMesh.position.set(rx, ry, rz);
+  rMesh.rotation.y = Math.random() * Math.PI;
+  ringGroup.add(rMesh);
+  rings.push({ mesh: rMesh, active: true });
+}
+
+let ringsCollected = 0;
+const elRings = document.getElementById('val-rings');
+const elRingPopup = document.getElementById('ring-popup');
+
+function checkRingCollision(pos){
+  rings.forEach((r) => {
+    if(r.active && pos.distanceTo(r.mesh.position) < 8.2){
+      r.active = false;
+      ringsCollected++;
+      if(elRings) elRings.textContent = ringsCollected;
+
+      ringCombo++;
+      ringComboTimer = 8.5; // 8.5 saniye combo penceresi
+      const comboBonus = 100 * ringCombo;
+      playerScore += comboBonus;
+      if(elScore) elScore.textContent = playerScore;
+
+      playRingChime(ringCombo);
+
+      flightSpeed = Math.min(flightSpeed + 15, 105);
+      elRingPopup.textContent = (ringCombo > 1) ? 
+        `⚡ ${ringCombo}x KOMBO! +${comboBonus} PUAN ⚡` : 
+        `✨ HALKA GEÇİLDİ! +${comboBonus} PUAN ✨`;
+      elRingPopup.style.color = (ringCombo > 1) ? '#ffea00' : '#ffffff';
+      elRingPopup.style.textShadow = '0 0 20px #ff9900';
+      elRingPopup.style.opacity = '1';
+      elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.18)';
+      setTimeout(()=>{
+        elRingPopup.style.opacity = '0';
+        elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+      }, 1200);
+
+      setTimeout(() => {
+        const nx = dragonPos.x + (Math.random() - 0.5) * 800 + Math.sin(yaw) * -400;
+        const nz = dragonPos.z + (Math.random() - 0.5) * 800 + Math.cos(yaw) * -400;
+        const ngy = getTerrainHeight(nx, nz);
+        r.mesh.position.set(nx, Math.max(ngy + 18, 45 + Math.random() * 75), nz);
+        r.active = true;
+      }, 2500);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  KADİM DAĞ TAPINAĞI HARABELERİ (Ancient Mountain Sanctuary)
+// ═══════════════════════════════════════════════════
+const SANCTUARY_POS = new THREE.Vector3(350, 0, -1050);
+SANCTUARY_POS.y = getTerrainHeight(SANCTUARY_POS.x, SANCTUARY_POS.z);
+
+const sanctuaryGroup = new THREE.Group();
+sanctuaryGroup.position.copy(SANCTUARY_POS);
+
+const stoneMat = new THREE.MeshStandardMaterial({ color: 0x505459, roughness: 0.85, metalness: 0.08 });
+const runeGoldMat = new THREE.MeshStandardMaterial({
+  color: 0xffaa00, emissive: 0xaa5500, emissiveIntensity: 0.8, roughness: 0.3, metalness: 0.7
+});
+
+const colGeo = new THREE.CylinderGeometry(1.6, 2.2, 18, 7);
+colGeo.translate(0, 9, 0);
+const numCols = 12;
+const colRadius = 38;
+for(let i=0; i<numCols; i++){
+  const ang = (i / numCols) * Math.PI * 2;
+  const cx = Math.cos(ang) * colRadius;
+  const cz = Math.sin(ang) * colRadius;
+  const colMesh = new THREE.Mesh(colGeo, stoneMat);
+  colMesh.position.set(cx, 0, cz);
+  colMesh.rotation.y = ang;
+  sanctuaryGroup.add(colMesh);
+
+  const capGeo = new THREE.BoxGeometry(3.8, 1.5, 3.8);
+  capGeo.translate(0, 18.5, 0);
+  const capMesh = new THREE.Mesh(capGeo, runeGoldMat);
+  capMesh.position.set(cx, 0, cz);
+  sanctuaryGroup.add(capMesh);
+}
+
+const altarGeo = new THREE.CylinderGeometry(14, 16, 3, 10);
+altarGeo.translate(0, 1.5, 0);
+const altarMesh = new THREE.Mesh(altarGeo, stoneMat);
+sanctuaryGroup.add(altarMesh);
+
+const sanctuaryRing = new THREE.Mesh(new THREE.TorusGeometry(12, 0.75, 8, 30), runeGoldMat);
+sanctuaryRing.position.set(0, 16, 0);
+sanctuaryRing.rotation.x = Math.PI / 2;
+sanctuaryGroup.add(sanctuaryRing);
+
+const sLight = new THREE.PointLight(0xcc44ff, 3.5, 65);
+sLight.position.set(0, 14, 0);
+sanctuaryGroup.add(sLight);
+
+scene.add(sanctuaryGroup);
+
+let sanctuaryCooldown = 0;
+function checkSanctuaryCollision(pos){
+  if(sanctuaryCooldown > 0) return;
+  const dist = pos.distanceTo(SANCTUARY_POS.clone().add(new THREE.Vector3(0, 16, 0)));
+  if(dist < 26){
+    sanctuaryCooldown = 8.0;
+    flightSpeed = Math.min(flightSpeed + 30, 125);
+    playRingChime();
+    elRingPopup.textContent = "🏛️ KADİM TAPINAK KUTSAMASI! +TURBO";
+    elRingPopup.style.opacity = '1';
+    elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.15)';
+    setTimeout(()=>{
+      elRingPopup.style.opacity = '0';
+      elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    }, 1800);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  DAĞ ŞELALESİ & VADİ DERESİ (Mountain Waterfall)
+// ═══════════════════════════════════════════════════
+const waterfallGeo = new THREE.PlaneGeometry(22, 120, 4, 16);
+const waterfallMat = new THREE.MeshStandardMaterial({
+  color: 0x5cd6ff, roughness: 0.12, metalness: 0.8, transparent: true, opacity: 0.82
+});
+const waterfallMesh = new THREE.Mesh(waterfallGeo, waterfallMat);
+waterfallMesh.position.set(-620, 48, 180);
+waterfallMesh.rotation.set(0.3, -Math.PI / 3, 0);
+scene.add(waterfallMesh);
+
+// ═══════════════════════════════════════════════════
+//  GERÇEK 3D DAĞ GÖZETLEME KULELERİ (MEDIEVAL & VASHLOVANI GLB)
+// ═══════════════════════════════════════════════════
+const gltfLoader = new THREE.GLTFLoader();
+
+const TOWER_COORDS = [
+  { x: -520, z: -780 },
+  { x: 680, z: -620 },
+  { x: -840, z: 420 },
+  { x: 760, z: 720 },
+  { x: 220, z: -1380 },
+  { x: -680, z: 1220 },
+  { x: 920, z: -1080 },
+  { x: -1080, z: -380 },
+  { x: 420, z: 1180 },
+  { x: -1150, z: 820 }
+];
+
+const watchtowers = [];
+const towerGroup = new THREE.Group();
+scene.add(towerGroup);
+
+const MAX_TOWER_DEBRIS = 100;
+const towerDebrisGeo = new THREE.BufferGeometry();
+const towerDebrisPos = new Float32Array(MAX_TOWER_DEBRIS * 3);
+const towerDebrisVel = [];
+for(let i = 0; i < MAX_TOWER_DEBRIS; i++){
+  towerDebrisPos[i * 3] = 0;
+  towerDebrisPos[i * 3 + 1] = -9999;
+  towerDebrisPos[i * 3 + 2] = 0;
+  towerDebrisVel.push(new THREE.Vector3());
+}
+towerDebrisGeo.setAttribute('position', new THREE.BufferAttribute(towerDebrisPos, 3));
+const towerDebrisMat = new THREE.PointsMaterial({
+  color: 0xff5511,
+  size: 3.8,
+  transparent: true,
+  opacity: 0.95,
+  blending: THREE.AdditiveBlending
+});
+const towerDebrisPoints = new THREE.Points(towerDebrisGeo, towerDebrisMat);
+scene.add(towerDebrisPoints);
+
+function spawnTowerDebris(tw, count = 18){
+  const dp = towerDebrisPoints.geometry.attributes.position.array;
+  for(let p = 0; p < count; p++){
+    const pIdx = ((tw.id * 10 + p) % MAX_TOWER_DEBRIS) * 3;
+    dp[pIdx] = tw.pos.x + (Math.random() - 0.5) * 6;
+    dp[pIdx + 1] = tw.pos.y + 10 + Math.random() * 12;
+    dp[pIdx + 2] = tw.pos.z + (Math.random() - 0.5) * 6;
+    towerDebrisVel[(tw.id * 10 + p) % MAX_TOWER_DEBRIS].set(
+      (Math.random() - 0.5) * 40,
+      18 + Math.random() * 26,
+      (Math.random() - 0.5) * 40
+    );
+  }
+  towerDebrisPoints.geometry.attributes.position.needsUpdate = true;
+}
+
+let towersDestroyedCount = 0;
+const elTowers = document.getElementById('val-towers');
+const elScore = document.getElementById('val-score');
+let playerScore = 0;
+let ringCombo = 0;
+let ringComboTimer = 0;
+
+const towerTemplates = { medieval: null, vashlovani: null };
+
+function setupTowersIfReady(){
+  if(!towerTemplates.medieval || !towerTemplates.vashlovani) return;
+  if(watchtowers.length > 0) return;
+
+  TOWER_COORDS.forEach((coord, idx) => {
+    const gy = getTerrainHeight(coord.x, coord.z);
+    const tg = new THREE.Group();
+    tg.position.set(coord.x, gy, coord.z);
+
+    const isMedieval = (idx % 2 === 0);
+    const tmpl = isMedieval ? towerTemplates.medieval : towerTemplates.vashlovani;
+    const model = tmpl.clone();
+
+    if(isMedieval){
+      model.scale.set(0.014, 0.014, 0.014);
+    } else {
+      model.scale.set(1.288, 1.288, 1.288);
+    }
+    model.traverse(c => {
+      if(c.isMesh){
+        c.castShadow = true;
+        c.receiveShadow = true;
+      }
+    });
+    tg.add(model);
+
+    // Kule Zirve Meşalesi & Işık
+    const beaconHeight = 28.0;
+    const bLight = new THREE.PointLight(0xff5500, 2.2, 45);
+    bLight.position.set(0, beaconHeight, 0);
+    tg.add(bLight);
+
+    const bEmber = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.7, 0.4, 1.1, 6),
+      new THREE.MeshBasicMaterial({ color: 0xff6600 })
+    );
+    bEmber.position.set(0, beaconHeight - 0.4, 0);
+    tg.add(bEmber);
+
+    towerGroup.add(tg);
+
+    watchtowers.push({
+      id: idx,
+      group: tg,
+      model: model,
+      bLight: bLight,
+      bEmber: bEmber,
+      pos: new THREE.Vector3(coord.x, gy + 16, coord.z),
+      topPos: new THREE.Vector3(coord.x, gy + beaconHeight, coord.z),
+      alive: true,
+      health: 100,
+      maxHealth: 100,
+      burning: 0,
+      ballistaTimer: 1.5 + Math.random() * 2.5
+    });
+  });
+
+  if(elTowers) elTowers.textContent = towersDestroyedCount + '/' + TOWER_COORDS.length;
+}
+
+gltfLoader.load('medieval_tower.glb', (gltf) => {
+  towerTemplates.medieval = gltf.scene;
+  setupTowersIfReady();
+});
+
+gltfLoader.load('vashlovani_tower.glb', (gltf) => {
+  towerTemplates.vashlovani = gltf.scene;
+  setupTowersIfReady();
+});
+
+function destroyWatchtower(tw){
+  if(!tw.alive) return;
+  tw.alive = false;
+  towersDestroyedCount++;
+  playerScore += 500;
+  if(elScore) elScore.textContent = playerScore;
+  if(elTowers) elTowers.textContent = towersDestroyedCount + '/' + TOWER_COORDS.length;
+
+  playExplosionSound();
+
+  // Yıkılma / hasar eğilmesi
+  tw.model.rotation.z = 0.35;
+  tw.model.rotation.x = 0.22;
+  tw.model.position.y -= 4.5;
+  tw.bLight.color.setHex(0x551100);
+  tw.bLight.intensity = 0.6;
+  if(tw.bEmber) tw.bEmber.material.color.setHex(0x441100);
+
+  spawnTowerDebris(tw, 26);
+
+  const pop = document.getElementById('ring-popup');
+  if(pop){
+    pop.textContent = "💥 DAĞ KULESİ İMHA EDİLDİ! +500 PUAN 💥";
+    pop.style.color = "#ff6b35";
+    pop.style.textShadow = "0 0 24px #ff2200";
+    pop.style.opacity = '1';
+    pop.style.transform = 'translate(-50%, -50%) scale(1.25)';
+    setTimeout(() => {
+      pop.style.opacity = '0';
+      pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    }, 2200);
+  }
+}
+
+function checkTowerFireInteractions(dragonMouthPos, forwardVec, isBreathFiring, dt){
+  if(watchtowers.length === 0) return;
+
+  const dp = towerDebrisPoints.geometry.attributes.position.array;
+  let hasActiveDebris = false;
+  for(let i = 0; i < MAX_TOWER_DEBRIS; i++){
+    const idx = i * 3;
+    if(dp[idx + 1] > -5000){
+      hasActiveDebris = true;
+      dp[idx] += towerDebrisVel[i].x * dt;
+      dp[idx + 1] += towerDebrisVel[i].y * dt;
+      dp[idx + 2] += towerDebrisVel[i].z * dt;
+      towerDebrisVel[i].y -= 28.0 * dt;
+      if(dp[idx + 1] < getTerrainHeight(dp[idx], dp[idx + 2]) - 2.0){
+        dp[idx + 1] = -9999;
+      }
+    }
+  }
+  if(hasActiveDebris){
+    towerDebrisPoints.geometry.attributes.position.needsUpdate = true;
+  }
+
+  watchtowers.forEach(tw => {
+    if(!tw.alive) return;
+
+    const toTower = tw.pos.clone().sub(dragonMouthPos);
+    const dist = toTower.length();
+
+    if(isBreathFiring && dist < 68.0){
+      toTower.normalize();
+      const dot = forwardVec.dot(toTower);
+      if(dot > 0.70){
+        tw.health -= dt * 170.0;
+        tw.burning = Math.min(1.0, tw.burning + dt * 3.0);
+        tw.bLight.intensity = 3.8;
+        if(tw.bEmber) tw.bEmber.material.color.setHex(0xffaa00);
+
+        if(tw.health <= 0){
+          destroyWatchtower(tw);
+        }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  MEGA ALEV TOPU SİSTEMİ (Tuş: F)
+// ═══════════════════════════════════════════════════
+const activeFireballs = [];
+let fireballCooldown = 0;
+
+function shootMegaFireball(){
+  if(!gameActive || fireballCooldown > 0) return;
+  fireballCooldown = 1.1;
+
+  playFireballLaunchSound();
+
+  const mouthOffset = new THREE.Vector3(0, 0.18, -1.85).applyQuaternion(dragonRig.quaternion);
+  const spawnPos = dragonPos.clone().add(mouthOffset);
+
+  const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+  const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+  const fwd = new THREE.Vector3(-sinY * cosP, sinP, -cosY * cosP).normalize();
+
+  const fbGroup = new THREE.Group();
+  fbGroup.position.copy(spawnPos);
+
+  const fbMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.95, 10, 10),
+    new THREE.MeshBasicMaterial({ color: 0xffaa11 })
+  );
+  fbGroup.add(fbMesh);
+
+  const fbLight = new THREE.PointLight(0xff6600, 3.5, 30);
+  fbGroup.add(fbLight);
+
+  scene.add(fbGroup);
+
+  activeFireballs.push({
+    group: fbGroup,
+    pos: spawnPos,
+    vel: fwd.clone().multiplyScalar(flightSpeed + 115.0),
+    life: 3.5
+  });
+
+  const pop = document.getElementById('ring-popup');
+  if(pop){
+    pop.textContent = "💥 MEGA ALEV TOPU! [F]";
+    pop.style.color = "#ff8833";
+    pop.style.textShadow = "0 0 20px #ff4400";
+    pop.style.opacity = '1';
+    pop.style.transform = 'translate(-50%, -50%) scale(1.15)';
+    setTimeout(()=>{
+      pop.style.opacity = '0';
+      pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    }, 1000);
+  }
+}
+
+function updateFireballs(dt){
+  if(fireballCooldown > 0) fireballCooldown -= dt;
+
+  for(let i = activeFireballs.length - 1; i >= 0; i--){
+    const fb = activeFireballs[i];
+    fb.pos.addScaledVector(fb.vel, dt);
+    fb.group.position.copy(fb.pos);
+    fb.life -= dt;
+
+    let hit = false;
+
+    // Kule çarpışması
+    for(let tw of watchtowers){
+      if(!tw.alive) continue;
+      if(tw.pos.distanceTo(fb.pos) < 14.0){
+        hit = true;
+        tw.health -= 65.0;
+        tw.burning = Math.min(1.0, tw.burning + 0.6);
+        playExplosionSound();
+        spawnTowerDebris(tw, 20);
+
+        if(tw.health <= 0){
+          destroyWatchtower(tw);
+        } else {
+          const pop = document.getElementById('ring-popup');
+          if(pop){
+            pop.textContent = "💥 KULEYE ALEV TOPU DARBESİ! -65 CAN";
+            pop.style.color = "#ffaa33";
+            pop.style.textShadow = "0 0 20px #ff5500";
+            pop.style.opacity = '1';
+            pop.style.transform = 'translate(-50%, -50%) scale(1.1)';
+            setTimeout(()=>{
+              pop.style.opacity = '0';
+              pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
+            }, 1200);
+          }
+        }
+        break;
+      }
+    }
+
+    // Zemin çarpışması
+    if(!hit && fb.pos.y <= getTerrainHeight(fb.pos.x, fb.pos.z) + 1.2){
+      hit = true;
+      playExplosionSound();
+    }
+
+    if(hit || fb.life <= 0){
+      scene.remove(fb.group);
+      activeFireballs.splice(i, 1);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  KULE SAVUNMA BALİSTALARI & SIYRILMA (DODGE) SİSTEMİ
+// ═══════════════════════════════════════════════════
+const activeBallistaBolts = [];
+const elIncomingWarn = document.getElementById('incoming-warning');
+
+function updateTowerBallistas(dt){
+  if(!gameActive) return;
+
+  let anyIncoming = false;
+
+  watchtowers.forEach(tw => {
+    if(!tw.alive) return;
+    const dist = tw.pos.distanceTo(dragonPos);
+    if(dist < 270){
+      tw.ballistaTimer -= dt;
+      if(tw.ballistaTimer <= 0){
+        tw.ballistaTimer = 3.0 + Math.random() * 2.2;
+
+        const boltGeo = new THREE.CylinderGeometry(0.12, 0.12, 2.6, 6);
+        boltGeo.rotateX(Math.PI / 2);
+        const boltMat = new THREE.MeshBasicMaterial({ color: 0xff4422 });
+        const boltMesh = new THREE.Mesh(boltGeo, boltMat);
+
+        const bLight = new THREE.PointLight(0xff3300, 1.8, 18);
+        boltMesh.add(bLight);
+
+        boltMesh.position.copy(tw.topPos);
+        const aimDir = dragonPos.clone().sub(tw.topPos).normalize();
+        boltMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, -1), aimDir);
+        scene.add(boltMesh);
+
+        activeBallistaBolts.push({
+          mesh: boltMesh,
+          vel: aimDir.multiplyScalar(88.0),
+          life: 4.0
+        });
+      }
+    }
+  });
+
+  for(let i = activeBallistaBolts.length - 1; i >= 0; i--){
+    const b = activeBallistaBolts[i];
+    b.mesh.position.addScaledVector(b.vel, dt);
+    b.life -= dt;
+
+    const dDragon = b.mesh.position.distanceTo(dragonPos);
+    if(dDragon < 120 && dDragon > 18) {
+      anyIncoming = true;
+    }
+
+    // Fıçı taklası ile sıyrılma
+    if(dDragon < 18.0 && barrelRollActive){
+      playWhooshSound();
+      playerScore += 250;
+      if(elScore) elScore.textContent = playerScore;
+      flightSpeed = Math.min(flightSpeed + 18, 125);
+
+      const pop = document.getElementById('ring-popup');
+      if(pop){
+        pop.textContent = "⚡ KUSURSUZ SIYRILMA! +250 PUAN ⚡";
+        pop.style.color = "#38bdf8";
+        pop.style.textShadow = "0 0 24px #0284c7";
+        pop.style.opacity = '1';
+        pop.style.transform = 'translate(-50%, -50%) scale(1.22)';
+        setTimeout(()=>{
+          pop.style.opacity = '0';
+          pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
+        }, 1400);
+      }
+
+      scene.remove(b.mesh);
+      activeBallistaBolts.splice(i, 1);
+      continue;
+    }
+
+    // Ejderhaya isabet
+    if(dDragon < 4.2){
+      playExplosionSound();
+      playerScore = Math.max(0, playerScore - 100);
+      if(elScore) elScore.textContent = playerScore;
+      flightSpeed = Math.max(16, flightSpeed - 18);
+
+      const pop = document.getElementById('ring-popup');
+      if(pop){
+        pop.textContent = "💥 KULE OKU İSABET ETTİ! -100 PUAN";
+        pop.style.color = "#ff3333";
+        pop.style.textShadow = "0 0 20px #990000";
+        pop.style.opacity = '1';
+        pop.style.transform = 'translate(-50%, -50%) scale(1.15)';
+        setTimeout(()=>{
+          pop.style.opacity = '0';
+          pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
+        }, 1400);
+      }
+
+      elFireFX.style.opacity = '0.85';
+      setTimeout(()=>{ elFireFX.style.opacity = '0'; }, 300);
+
+      scene.remove(b.mesh);
+      activeBallistaBolts.splice(i, 1);
+      continue;
+    }
+
+    if(b.life <= 0 || b.mesh.position.y < getTerrainHeight(b.mesh.position.x, b.mesh.position.z)){
+      scene.remove(b.mesh);
+      activeBallistaBolts.splice(i, 1);
+    }
+  }
+
+  if(elIncomingWarn){
+    elIncomingWarn.style.display = anyIncoming ? 'block' : 'none';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  HEDEF KİLİTLENME HUD (TARGET LOCK RETICLE)
+// ═══════════════════════════════════════════════════
+const elTargetLock = document.getElementById('tower-target-lock');
+
+function updateTargetLockHUD(forwardVec){
+  if(!elTargetLock || !gameActive){
+    if(elTargetLock) elTargetLock.style.display = 'none';
+    return;
+  }
+
+  let closestTower = null;
+  let minDist = 320.0;
+
+  watchtowers.forEach(tw => {
+    if(!tw.alive) return;
+    const toTw = tw.pos.clone().sub(dragonPos);
+    const dist = toTw.length();
+    if(dist < minDist){
+      toTw.normalize();
+      const dot = forwardVec.dot(toTw);
+      if(dot > 0.68){
+        minDist = dist;
+        closestTower = tw;
+      }
+    }
+  });
+
+  if(closestTower){
+    const proj = closestTower.pos.clone().project(camera);
+    if(proj.z > 0 && proj.z < 1.0 && Math.abs(proj.x) < 0.95 && Math.abs(proj.y) < 0.95){
+      const x = (proj.x * 0.5 + 0.5) * window.innerWidth;
+      const y = (-proj.y * 0.5 + 0.5) * window.innerHeight;
+      elTargetLock.style.left = x + 'px';
+      elTargetLock.style.top = y + 'px';
+      elTargetLock.style.display = 'block';
+      const dMeters = Math.round(minDist);
+      const pct = Math.max(0, Math.round((closestTower.health / closestTower.maxHealth) * 100));
+      elTargetLock.innerHTML = `🎯 KULE [ ${dMeters}m ] CAN: %${pct}`;
+      if(minDist < 75){
+        elTargetLock.style.borderColor = '#00ff88';
+        elTargetLock.style.color = '#00ff88';
+      } else {
+        elTargetLock.style.borderColor = '#ff4422';
+        elTargetLock.style.color = '#ff4422';
+      }
+      return;
+    }
+  }
+
+  elTargetLock.style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════════
+//  EJDERHA ÖZELLEŞTİRME SİSTEMİ & PALETLERİ
+// ═══════════════════════════════════════════════════
+const DRAGON_PALETTES = {
+  bordo: {
+    name: "Asil Bordo",
+    body: 0x480613, wings: 0x2c030c, belly: 0x600918, horns: 0xd6cba6,
+    fireHex: 0xff3b30, glowHex: 0xffa044,
+    badgeGlow: "drop-shadow(0 0 28px rgba(220,25,65,0.75)) drop-shadow(0 0 50px rgba(255,140,40,0.35))"
+  },
+  obsidian: {
+    name: "Obsidyen Gece",
+    body: 0x120d18, wings: 0x09060c, belly: 0x22182c, horns: 0xa860b8,
+    fireHex: 0xc838ff, glowHex: 0xd988ff,
+    badgeGlow: "drop-shadow(0 0 28px rgba(180,40,255,0.75)) drop-shadow(0 0 50px rgba(100,20,220,0.45))"
+  },
+  gold: {
+    name: "Antik Altın",
+    body: 0x9e7314, wings: 0x664a06, belly: 0xc49625, horns: 0xffe485,
+    fireHex: 0xff9900, glowHex: 0xffea75,
+    badgeGlow: "drop-shadow(0 0 28px rgba(255,170,0,0.85)) drop-shadow(0 0 50px rgba(255,220,80,0.45))"
+  },
+  sapphire: {
+    name: "Safir Gök Mavisi",
+    body: 0x103a6c, wings: 0x071e3b, belly: 0x18569c, horns: 0x8fe2ff,
+    fireHex: 0x00bfff, glowHex: 0x7be5ff,
+    badgeGlow: "drop-shadow(0 0 28px rgba(0,180,255,0.85)) drop-shadow(0 0 50px rgba(30,100,240,0.45))"
+  },
+  emerald: {
+    name: "Mistik Zümrüt",
+    body: 0x0d4a22, wings: 0x062812, belly: 0x156d33, horns: 0x90f0b0,
+    fireHex: 0x00ff88, glowHex: 0x68ffaa,
+    badgeGlow: "drop-shadow(0 0 28px rgba(0,230,120,0.85)) drop-shadow(0 0 50px rgba(10,140,50,0.45))"
+  },
+  silver: {
+    name: "Ay Gümüşü",
+    body: 0xb0bec8, wings: 0x7c8a95, belly: 0xdfe6ec, horns: 0xffffff,
+    fireHex: 0x99e6ff, glowHex: 0xffffff,
+    badgeGlow: "drop-shadow(0 0 28px rgba(200,235,255,0.85)) drop-shadow(0 0 50px rgba(255,255,255,0.5))"
+  }
+};
+
+let currentSpecies = 'meleys';
+let currentColorKey = 'bordo';
+let accArmor = false;
+let accWingEmbers = false;
+let accEyeGlow = false;
+let dragonBaseScale = 0.88;
+let isFirstPerson = true;
+
+const dragonRig = new THREE.Group();
+scene.add(dragonRig);
+
+// 1. ŞAHIS SÜVARİ DERİ DİZGİNLERİ (Orijinal estetik ve temiz süvari dizginleri)
+const reinsGroup = new THREE.Group();
+const matReins = new THREE.MeshStandardMaterial({ color: 0x3d120a, roughness: 0.4, metalness: 0.5 });
+const reinLeft = new THREE.Mesh(new THREE.CylinderGeometry(0.010, 0.012, 0.8, 6), matReins);
+reinLeft.position.set(-0.20, 0.12, 0.28);
+reinLeft.rotation.set(-0.95, -0.1, 0);
+reinsGroup.add(reinLeft);
+
+const reinRight = new THREE.Mesh(new THREE.CylinderGeometry(0.010, 0.012, 0.8, 6), matReins);
+reinRight.position.set(0.20, 0.12, 0.28);
+reinRight.rotation.set(-0.95, 0.1, 0);
+reinsGroup.add(reinRight);
+
+reinsGroup.position.set(0, 0.35, 0.35);
+dragonRig.add(reinsGroup);
+
+// Ağız İçi Ateş Işığı
+const fireLight = new THREE.PointLight(0xff6600, 0, 35);
+fireLight.position.set(0, 0.18, -1.85);
+dragonRig.add(fireLight);
+
+// Alev Parçacık Sistemi
+const FIRE_PARTICLES = 75;
+const fireGeo = new THREE.BufferGeometry();
+const firePos = new Float32Array(FIRE_PARTICLES * 3);
+const fireVel = [];
+for(let i=0; i<FIRE_PARTICLES; i++){
+  firePos[i*3] = 0; firePos[i*3+1] = 0; firePos[i*3+2] = 0;
+  fireVel.push(new THREE.Vector3());
+}
+fireGeo.setAttribute('position', new THREE.BufferAttribute(firePos, 3));
+const fireMat = new THREE.PointsMaterial({
+  color: 0xff6600,
+  size: 2.6,
+  transparent: true,
+  opacity: 0,
+  blending: THREE.AdditiveBlending
+});
+const fireParticles = new THREE.Points(fireGeo, fireMat);
+scene.add(fireParticles);
+
+let mixer = null;
+let realDragonScene = null;
+const dragonAccessoriesGroup = new THREE.Group();
+dragonRig.add(dragonAccessoriesGroup);
+let armorMesh = null;
+let saddleGroup = null;
+let hornGlowLight = null;
+let eyeGlowGroup = null;
+let eyeGlowMat = null;
+let wingEmbersPoints = null;
+const wingTrailVelocities = [];
+
+function createDragonAccessories(){
+  // DonanÄ±m Ã¶zellikleri kullanÄ±cÄ±nÄ±n isteÄŸi Ã¼zerine tamamen kaldÄ±rÄ±ldÄ±
+}
+
+let speciesMeshes = [];
+
+function clearSpeciesAnatomy(){
+  speciesMeshes.forEach(m => {
+    if(m.parent) m.parent.remove(m);
+    if(m.geometry) m.geometry.dispose();
+  });
+  speciesMeshes = [];
+
+  if(realDragonScene){
+    const head = realDragonScene.getObjectByName('Head');
+    if(head){ head.scale.set(1, 1, 1); head.rotation.set(0, 0, 0); }
+    const neck = realDragonScene.getObjectByName('Neck');
+    if(neck){ neck.scale.set(1, 1, 1); neck.rotation.set(0, 0, 0); }
+    const body = realDragonScene.getObjectByName('Body');
+    if(body){ body.scale.set(1, 1, 1); body.rotation.set(0, 0, 0); }
+  }
+}
+
+function buildSpeciesAnatomy(species, pal){
+  clearSpeciesAnatomy();
+  // Orijinal dragon.glb temiz ve estetik orijinal anatomisiyle korunur
+}
+
+function applyDragonCustomization(){
+  const pal = DRAGON_PALETTES[currentColorKey] || DRAGON_PALETTES['bordo'];
+
+  const sc = dragonBaseScale;
+  if(realDragonScene){
+    realDragonScene.scale.set(sc, sc, sc);
+    if(currentSpecies !== 'demon' && currentSpecies !== 'wyvern'){
+      // Orijinal bordo ejderha (dragon.glb) klasik backup renkleriyle parıldasın
+      realDragonScene.traverse((child) => {
+        if(child.isMesh && child.material){
+          const updateSingleMat = (m) => {
+            const matName = (m.name || '').toLowerCase();
+            if(matName.includes('wing')){
+              m.color.setHex(0x2d030b);
+              m.roughness = 0.65;
+              m.metalness = 0.05;
+            } else if(matName.includes('belly')){
+              m.color.setHex(0x560816);
+              m.roughness = 0.45;
+              m.metalness = 0.15;
+            } else if(matName.includes('claw') || matName.includes('horn')){
+              m.color.setHex(0xd4caa6);
+              m.roughness = 0.35;
+              m.metalness = 0.10;
+            } else {
+              m.color.setHex(0x460511);
+              m.roughness = 0.42;
+              m.metalness = 0.20;
+            }
+            m.needsUpdate = true;
+          };
+          if(Array.isArray(child.material)) child.material.forEach(updateSingleMat);
+          else updateSingleMat(child.material);
+        }
+      });
+    }
+    clearSpeciesAnatomy();
+  }
+
+  const isGlbModel = (currentSpecies === 'demon' || currentSpecies === 'wyvern');
+
+  if(reinsGroup){
+    reinsGroup.visible = (!isGlbModel && isFirstPerson);
+  }
+
+  if(fireMat) fireMat.color.setHex(pal.fireHex);
+  if(fireLight) fireLight.color.setHex(pal.glowHex);
+
+  if(armorMesh) armorMesh.visible = false;
+  if(eyeGlowGroup) eyeGlowGroup.visible = false;
+  if(wingEmbersPoints) wingEmbersPoints.visible = false;
+}
+
+function selectDragonSpecies(species, btn){
+  currentSpecies = species;
+  document.querySelectorAll('.cust-types .cust-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+
+  const titleEl = document.getElementById('splash-dragon-title');
+  if(species === 'meleys'){
+    dragonBaseScale = 0.88;
+    currentColorKey = 'bordo';
+    if(titleEl) titleEl.textContent = 'Asil Ejderha (Orijinal Bordo)';
+    switchDragonModel('meleys');
+  } else if(species === 'demon'){
+    dragonBaseScale = 8.2;
+    currentColorKey = 'obsidian';
+    if(titleEl) titleEl.textContent = 'Kadim İblis (Volkanik Obsidyen — 3D GLB)';
+    switchDragonModel('demon');
+  } else if(species === 'wyvern'){
+    dragonBaseScale = 0.0092;
+    currentColorKey = 'bordo';
+    if(titleEl) titleEl.textContent = 'Zırhlı Wyvern (3D GLB)';
+    switchDragonModel('wyvern');
+  }
+  applyDragonCustomization();
+}
+
+function selectDragonColor(colorKey){
+  currentColorKey = colorKey;
+  applyDragonCustomization();
+}
+
+function toggleAccessoryBtn(accName){
+  if(accName === 'armor') accArmor = !accArmor;
+  if(accName === 'wingembers') accWingEmbers = !accWingEmbers;
+  if(accName === 'eyeglow') accEyeGlow = !accEyeGlow;
+
+  const btnArmor = document.getElementById('acc-btn-armor');
+  const btnWing = document.getElementById('acc-btn-wingembers');
+  const btnEye = document.getElementById('acc-btn-eyeglow');
+  if(btnArmor) btnArmor.classList.toggle('active', accArmor);
+  if(btnWing) btnWing.classList.toggle('active', accWingEmbers);
+  if(btnEye) btnEye.classList.toggle('active', accEyeGlow);
+
+  applyDragonCustomization();
+}
+
+function toggleAccessory(accName, isChecked){
+  if(accName === 'armor') accArmor = isChecked;
+  if(accName === 'wingembers') accWingEmbers = isChecked;
+  if(accName === 'eyeglow') accEyeGlow = isChecked;
+
+  const btnArmor = document.getElementById('acc-btn-armor');
+  const btnWing = document.getElementById('acc-btn-wingembers');
+  const btnEye = document.getElementById('acc-btn-eyeglow');
+  if(btnArmor) btnArmor.classList.toggle('active', accArmor);
+  if(btnWing) btnWing.classList.toggle('active', accWingEmbers);
+  if(btnEye) btnEye.classList.toggle('active', accEyeGlow);
+
+  applyDragonCustomization();
+}
+
+// Aksesuarları oluştur
+createDragonAccessories();
+applyDragonCustomization();
+
+// ═══════════════════════════════════════════════════
+//  ASİL GERÇEK 3D EJDERHA MODELLERİ & YÜKLEME SİSTEMİ
+// ═══════════════════════════════════════════════════
+
+function base64ToArrayBuffer(base64) {
+  const binary_string = window.atob(base64);
+  const len = binary_string.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binary_string.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+const loadedDragonModels = {};
+const loadingDragonModels = {};
+
+function applyModelSpecificSettings(key, gltf){
+  if(key === 'demon'){
+    gltf.scene.rotation.y = Math.PI;
+    gltf.scene.position.set(0, -3.40, 0.20);
+    gltf.scene.scale.set(8.2, 8.2, 8.2);
+    gltf.flyClip = THREE.AnimationClip.findByName(gltf.animations, 'flying') || gltf.animations[0];
+
+    // 🐉 BAŞ VE BOYUN SALLANMASINI DÜZELT & STABİLİZE ET (Head Thrashing Dampener)
+    if(gltf.flyClip && !gltf.flyClip._headStabilized){
+      gltf.flyClip._headStabilized = true;
+      const dampFactor = 0.82; // %82 aşırı sarsıntıyı yumuşatıp asil ve dengeli ileri bakış sağlar
+      gltf.flyClip.tracks.forEach(track => {
+        const isHeadOrNeck = /neck|head|jaw|chin/i.test(track.name);
+        if(isHeadOrNeck){
+          if(track.name.endsWith('.quaternion')){
+            const q0 = new THREE.Quaternion(track.values[0], track.values[1], track.values[2], track.values[3]);
+            const qCur = new THREE.Quaternion();
+            for(let i = 0; i < track.values.length; i += 4){
+              qCur.set(track.values[i], track.values[i+1], track.values[i+2], track.values[i+3]);
+              qCur.slerp(q0, dampFactor);
+              track.values[i]   = qCur.x;
+              track.values[i+1] = qCur.y;
+              track.values[i+2] = qCur.z;
+              track.values[i+3] = qCur.w;
+            }
+          } else if(track.name.endsWith('.position')){
+            const p0 = new THREE.Vector3(track.values[0], track.values[1], track.values[2]);
+            for(let i = 0; i < track.values.length; i += 3){
+              track.values[i]   = THREE.MathUtils.lerp(track.values[i],   p0.x, dampFactor);
+              track.values[i+1] = THREE.MathUtils.lerp(track.values[i+1], p0.y, dampFactor);
+              track.values[i+2] = THREE.MathUtils.lerp(track.values[i+2], p0.z, dampFactor);
+            }
+          }
+        }
+      });
+    }
+
+    // 🎨 KULLANICININ İBLİS EJDERHASINI RENKLENDİR & BOYA (Volkanik Obsidyen, Koyu Bordo & Magma)
+    gltf.scene.traverse((child) => {
+      if(child.isMesh){
+        child.frustumCulled = false;
+        child.castShadow = true;
+        child.receiveShadow = true;
+        if(child.material){
+          child.material.color.setHex(0x380b13); // Koyu Asil Volkanik Bordo / Obsidyen
+          child.material.roughness = 0.38;
+          child.material.metalness = 0.65;
+          child.material.emissive.setHex(0x40070b); // İçten parlayan lav/magma alevi
+          child.material.emissiveIntensity = 0.45;
+          child.material.needsUpdate = true;
+        }
+      }
+    });
+
+    // İblis için parlayan kehribar alev gözler
+    let eyeL = gltf.scene.getObjectByName('l_eye.37_12');
+    let eyeR = gltf.scene.getObjectByName('r_eye.36_11');
+    if(!eyeL){
+      gltf.scene.traverse(c => {
+        if(!eyeL && c.name && c.name.includes('l_eye')) eyeL = c;
+        if(!eyeR && c.name && c.name.includes('r_eye')) eyeR = c;
+      });
+    }
+    const eyeGeo = new THREE.SphereGeometry(0.08, 8, 8);
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffaa00 });
+    [eyeL, eyeR].forEach(eyeBone => {
+      if(eyeBone && !eyeBone.userData.hasEyeGlow){
+        eyeBone.userData.hasEyeGlow = true;
+        const eyeMesh = new THREE.Mesh(eyeGeo, eyeMat);
+        const eyeLight = new THREE.PointLight(0xff6600, 1.2, 4.0);
+        eyeBone.add(eyeMesh);
+        eyeBone.add(eyeLight);
+      }
+    });
+
+  } else if(key === 'wyvern'){
+    gltf.scene.rotation.y = Math.PI / 2;
+    gltf.scene.position.set(0, -0.70, 0.10);
+    gltf.scene.scale.set(0.0092, 0.0092, 0.0092);
+    gltf.flyClip = THREE.AnimationClip.findByName(gltf.animations, 'GltfAnimation 0') || gltf.animations[0];
+    gltf.scene.traverse((child) => {
+      if(child.isMesh){
+        child.frustumCulled = false;
+        child.castShadow = true;
+        child.receiveShadow = true;
+        if(child.material){
+          const setSide = (m) => {
+            m.side = THREE.DoubleSide;
+          };
+          if(Array.isArray(child.material)) child.material.forEach(setSide);
+          else setSide(child.material);
+        }
+      }
+    });
+  } else {
+    // meleys (dragon.glb - Orijinal Asil Bordo Ejderha)
+    gltf.scene.rotation.y = Math.PI;
+    gltf.scene.position.set(0, -2.50, 0.10);
+    gltf.scene.scale.set(0.88, 0.88, 0.88);
+    gltf.flyClip = THREE.AnimationClip.findByName(gltf.animations, 'Dragon_Flying') || gltf.animations[0];
+
+    gltf.scene.traverse((child) => {
+      if(child.isMesh){
+        child.frustumCulled = false;
+        child.castShadow = true;
+        child.receiveShadow = true;
+        if(child.material){
+          const processMat = (mat) => {
+            const matName = (mat.name || '').toLowerCase();
+            const m = mat.clone();
+            if(matName.includes('wing')){
+              m.color.setHex(0x2d030b);
+              m.roughness = 0.65;
+              m.metalness = 0.05;
+            } else if(matName.includes('belly')){
+              m.color.setHex(0x560816);
+              m.roughness = 0.45;
+              m.metalness = 0.15;
+            } else if(matName.includes('claw') || matName.includes('horn')){
+              m.color.setHex(0xd4caa6);
+              m.roughness = 0.35;
+              m.metalness = 0.10;
+            } else {
+              m.color.setHex(0x460511);
+              m.roughness = 0.42;
+              m.metalness = 0.20;
+            }
+            return m;
+          };
+          if(Array.isArray(child.material)) child.material = child.material.map(processMat);
+          else child.material = processMat(child.material);
+        }
+      }
+    });
+  }
+}
+
+function activateDragonModel(key){
+  const modelData = loadedDragonModels[key];
+  if(!modelData) return;
+
+  if(realDragonScene && realDragonScene.parent === dragonRig){
+    dragonRig.remove(realDragonScene);
+  }
+
+  realDragonScene = modelData.scene;
+  dragonRig.add(realDragonScene);
+
+  if(modelData.flyClip){
+    mixer = new THREE.AnimationMixer(realDragonScene);
+    const action = mixer.clipAction(modelData.flyClip);
+    if(key === 'wyvern'){
+      action.timeScale = 0.35; // Uyumlu ve asil kanat çırpışı (hızlı çırpma engellendi)
+    } else if(key === 'demon'){
+      action.timeScale = 0.55; // Heybetli, güçlü kanat ritmi
+    } else {
+      action.timeScale = 0.85;
+    }
+    action.play();
+  }
+
+  applyDragonCustomization();
+}
+
+function switchDragonModel(speciesKey){
+  let modelTargetKey = 'default';
+  if(speciesKey === 'demon') modelTargetKey = 'demon';
+  else if(speciesKey === 'wyvern') modelTargetKey = 'wyvern';
+
+  if(loadedDragonModels[modelTargetKey]){
+    activateDragonModel(modelTargetKey);
+    return;
+  }
+
+  if(loadingDragonModels[modelTargetKey]) return;
+  loadingDragonModels[modelTargetKey] = true;
+
+  let glbPath = 'dragon.glb';
+  if(modelTargetKey === 'demon') glbPath = 'demon_dragon.glb';
+  else if(modelTargetKey === 'wyvern') glbPath = 'dragon_fly.glb';
+
+  gltfLoader.load(glbPath, (gltf) => {
+    loadingDragonModels[modelTargetKey] = false;
+    gltf.scene.traverse((child) => {
+      if(child.isMesh){
+        child.frustumCulled = false;
+        child.castShadow = true;
+        child.receiveShadow = true;
+        if(Array.isArray(child.material)){
+          child.material = child.material.map(m => m.clone());
+        } else if(child.material){
+          child.material = child.material.clone();
+        }
+      }
+    });
+
+    applyModelSpecificSettings(modelTargetKey, gltf);
+    loadedDragonModels[modelTargetKey] = gltf;
+
+    if((currentSpecies === 'demon' && modelTargetKey === 'demon') ||
+       (currentSpecies === 'wyvern' && modelTargetKey === 'wyvern') ||
+       (currentSpecies === 'meleys' && modelTargetKey === 'default')){
+      activateDragonModel(modelTargetKey);
+    }
+  }, undefined, (err) => {
+    loadingDragonModels[modelTargetKey] = false;
+    console.warn("Could not load " + glbPath + ", falling back to default dragon:", err);
+    if(modelTargetKey !== 'default'){
+      activateDragonModel('default');
+    }
+  });
+}
+
+function initDragonModel(gltf){
+  applyModelSpecificSettings('default', gltf);
+  loadedDragonModels['default'] = gltf;
+
+  createDragonAccessories();
+  activateDragonModel('default');
+
+  // Arka planda kullanıcının diğer 3D modellerini önceden hazırla
+  setTimeout(() => {
+    if(!loadedDragonModels['demon'] && !loadingDragonModels['demon']){
+      loadingDragonModels['demon'] = true;
+      gltfLoader.load('demon_dragon.glb', (dGltf) => {
+        loadingDragonModels['demon'] = false;
+        dGltf.scene.traverse((child) => {
+          if(child.isMesh){
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+        applyModelSpecificSettings('demon', dGltf);
+        loadedDragonModels['demon'] = dGltf;
+        if(currentSpecies === 'demon') activateDragonModel('demon');
+      }, undefined, () => { loadingDragonModels['demon'] = false; });
+    }
+    if(!loadedDragonModels['wyvern'] && !loadingDragonModels['wyvern']){
+      loadingDragonModels['wyvern'] = true;
+      gltfLoader.load('dragon_fly.glb', (wGltf) => {
+        loadingDragonModels['wyvern'] = false;
+        wGltf.scene.traverse((child) => {
+          if(child.isMesh){
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+        applyModelSpecificSettings('wyvern', wGltf);
+        loadedDragonModels['wyvern'] = wGltf;
+        if(currentSpecies === 'wyvern') activateDragonModel('wyvern');
+      }, undefined, () => { loadingDragonModels['wyvern'] = false; });
+    }
+  }, 100);
+}
+// gltfLoader yukarıda tanımlandı
+if(window.DRAGON_GLB_BASE64 && window.DRAGON_GLB_BASE64.length > 100){
+  try{
+    gltfLoader.parse(base64ToArrayBuffer(window.DRAGON_GLB_BASE64), '', initDragonModel);
+  }catch(e){
+    gltfLoader.load('dragon.glb', initDragonModel);
+  }
+} else {
+  gltfLoader.load('dragon.glb', initDragonModel);
+}
+
+// ═══════════════════════════════════════════════════
+//  SİMÜLASYON FİZİĞİ & UÇUŞ KONTROLLERİ
+// ═══════════════════════════════════════════════════
+const dragonPos = new THREE.Vector3(0, 95, 0);
+let yaw = 0, pitch = 0, roll = 0;
+let flightSpeed = 40.0;
+let mouseDX = 0, mouseDY = 0;
+let isFiring = false, fireStrength = 0;
+
+// Başlangıç Kamera Ayarı
+dragonRig.position.copy(dragonPos);
+camera.position.set(0.18, 95 + 1.48, 1.80);
+camera.lookAt(0, 95 + 1.55, -40);
+
+const keys = {};
+const elCamInd = document.getElementById('cam-mode-indicator');
+
+let barrelRollActive = false;
+let barrelRollAngle = 0;
+let barrelRollDir = 1;
+
+function triggerBarrelRoll(dir){
+  if(!gameActive || barrelRollActive) return;
+  barrelRollActive = true;
+  barrelRollAngle = 0;
+  barrelRollDir = dir;
+  flightSpeed = Math.min(flightSpeed + 16, 115);
+  playWhooshSound();
+
+  const pop = document.getElementById('ring-popup');
+  if(pop){
+    pop.textContent = (dir > 0) ? "🔄 SOLA FIÇI TAKLASI! +HIZ" : "🔄 SAĞA FIÇI TAKLASI! +HIZ";
+    pop.style.color = '#38bdf8';
+    pop.style.textShadow = '0 0 18px #0284c7';
+    pop.style.opacity = '1';
+    pop.style.transform = 'translate(-50%, -50%) scale(1.15)';
+    setTimeout(()=>{
+      pop.style.opacity = '0';
+      pop.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    }, 1200);
+  }
+}
+
+window.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  if(e.code === 'Space'){ e.preventDefault(); isFiring = true; }
+  if(e.code === 'ShiftLeft' || e.code === 'ShiftRight'){
+    triggerTurboRoar();
+  }
+  if(e.code === 'KeyQ'){
+    triggerBarrelRoll(1);
+  }
+  if(e.code === 'KeyE'){
+    triggerBarrelRoll(-1);
+  }
+  if(e.code === 'KeyV'){
+    isFirstPerson = !isFirstPerson;
+    if(reinsGroup) reinsGroup.visible = (currentSpecies === 'meleys' && isFirstPerson);
+    elCamInd.textContent = isFirstPerson ? '🎥 1. ŞAHIS KOKPİT (Sırt Üstü Bakış)' : '🎥 3. ŞAHIS (Takip Kamerası)';
+    elCamInd.style.opacity = '1';
+    setTimeout(()=>{ elCamInd.style.opacity = '0.35'; }, 2200);
+  }
+  if(e.code === 'KeyF'){
+    shootMegaFireball();
+  }
+  if(e.code === 'KeyG'){
+    toggleStormMode();
+  }
+  if(e.code === 'KeyT'){
+    toggleSkyMode();
+  }
+  if(e.code === 'KeyN'){
+    nextTrack();
+  }
+  if(e.code === 'KeyP' || e.code === 'KeyB'){
+    prevTrack();
+  }
+  if(e.code === 'KeyM'){
+    togglePlaylistMenu();
+  }
+});
+window.addEventListener('keyup', e => {
+  keys[e.code] = false;
+  if(e.code === 'Space') isFiring = false;
+});
+
+container.addEventListener('click', () => {
+  if(gameActive) {
+    document.body.requestPointerLock();
+    togglePlaylistMenu(false);
+  }
+});
+
+document.addEventListener('mousemove', e => {
+  if(document.pointerLockElement === document.body){
+    mouseDX += e.movementX;
+    mouseDY += e.movementY;
+  }
+});
+
+const elSpeed = document.getElementById('val-spd');
+const elAlt = document.getElementById('val-alt');
+const elHdg = document.getElementById('val-hdg');
+const elSpeedBar = document.getElementById('speed-bar');
+const elFireFX = document.getElementById('fire-fx');
+const elWindBlur = document.getElementById('wind-blur');
+const CARDINALS = ['K', 'KD', 'D', 'GD', 'G', 'GB', 'B', 'KB'];
+
+// ═══════════════════════════════════════════════════
+//  UÇUŞ RADAR MİNİ-HARİTASI (Minimap Renderer)
+// ═══════════════════════════════════════════════════
+const radarCanvas = document.getElementById('radar-canvas');
+const radarCtx = radarCanvas.getContext('2d');
+
+function updateRadar(){
+  if(!gameActive) return;
+  const w = radarCanvas.width;
+  const h = radarCanvas.height;
+  const cx = w / 2;
+  const cy = h / 2;
+  const radius = cx - 2;
+
+  radarCtx.clearRect(0, 0, w, h);
+
+  radarCtx.save();
+  radarCtx.beginPath();
+  radarCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+  radarCtx.fillStyle = 'rgba(12, 4, 9, 0.90)';
+  radarCtx.fill();
+  radarCtx.clip();
+
+  // Menzil halkaları
+  radarCtx.strokeStyle = 'rgba(255, 120, 150, 0.22)';
+  radarCtx.lineWidth = 1;
+  radarCtx.beginPath();
+  radarCtx.arc(cx, cy, radius * 0.35, 0, Math.PI * 2);
+  radarCtx.arc(cx, cy, radius * 0.68, 0, Math.PI * 2);
+  radarCtx.arc(cx, cy, radius * 0.97, 0, Math.PI * 2);
+  radarCtx.stroke();
+
+  // Eksen çizgileri
+  radarCtx.beginPath();
+  radarCtx.moveTo(cx, 4); radarCtx.lineTo(cx, h - 4);
+  radarCtx.moveTo(4, cy); radarCtx.lineTo(w - 4, cy);
+  radarCtx.stroke();
+
+  const scale = (radius * 0.92) / 2200;
+
+  // 1. Göl (Merkez)
+  radarCtx.fillStyle = 'rgba(18, 112, 158, 0.5)';
+  radarCtx.beginPath();
+  radarCtx.arc(cx, cy, 320 * scale, 0, Math.PI * 2);
+  radarCtx.fill();
+
+  // 2. Sık Orman Biyomları
+  radarCtx.fillStyle = 'rgba(28, 120, 48, 0.42)';
+  radarCtx.strokeStyle = 'rgba(45, 175, 75, 0.6)';
+  radarCtx.lineWidth = 1;
+  FOREST_BIOMES.forEach(b => {
+    const bx = cx + b.x * scale;
+    const by = cy + b.z * scale;
+    const br = b.radius * scale;
+    radarCtx.beginPath();
+    radarCtx.arc(bx, by, br, 0, Math.PI * 2);
+    radarCtx.fill();
+    radarCtx.stroke();
+  });
+
+  // 3. Altın Halka Noktaları
+  radarCtx.fillStyle = '#ffcc00';
+  rings.forEach(r => {
+    if(r.active){
+      const rx = cx + r.mesh.position.x * scale;
+      const ry = cy + r.mesh.position.z * scale;
+      if(Math.hypot(rx - cx, ry - cy) < radius - 3){
+        radarCtx.beginPath();
+        radarCtx.arc(rx, ry, 2.2, 0, Math.PI * 2);
+        radarCtx.fill();
+      }
+    }
+  });
+
+  // 3b. Dağ Şelalesi & Vadi Deresi
+  const wx = cx + (-620) * scale;
+  const wy = cy + 180 * scale;
+  radarCtx.fillStyle = '#00e5ff';
+  radarCtx.beginPath();
+  radarCtx.arc(wx, wy, 3.0, 0, Math.PI * 2);
+  radarCtx.fill();
+
+  // 3c. Kadim Ejderha Tapınağı (Megalith Altar)
+  const sx = cx + SANCTUARY_POS.x * scale;
+  const sy = cy + SANCTUARY_POS.z * scale;
+  radarCtx.fillStyle = '#da70d6';
+  radarCtx.strokeStyle = '#ffd700';
+  radarCtx.lineWidth = 1.4;
+  radarCtx.beginPath();
+  radarCtx.arc(sx, sy, 4.2, 0, Math.PI * 2);
+  radarCtx.fill();
+  radarCtx.stroke();
+
+  // 3d. Dağ Gözetleme Kuleleri (Destructible Watchtowers)
+  watchtowers.forEach(tw => {
+    const tx = cx + tw.pos.x * scale;
+    const ty = cy + tw.pos.z * scale;
+    if(Math.hypot(tx - cx, ty - cy) < radius - 3){
+      radarCtx.fillStyle = tw.alive ? '#ff4422' : '#555555';
+      radarCtx.beginPath();
+      radarCtx.arc(tx, ty, tw.alive ? 2.8 : 1.6, 0, Math.PI * 2);
+      radarCtx.fill();
+      if(tw.alive){
+        radarCtx.strokeStyle = 'rgba(255, 120, 50, 0.75)';
+        radarCtx.lineWidth = 1;
+        radarCtx.stroke();
+      }
+    }
+  });
+
+  // 4. Ejderha Konumu ve Baktığı Yön
+  const px = cx + dragonPos.x * scale;
+  const py = cy + dragonPos.z * scale;
+
+  radarCtx.save();
+  radarCtx.translate(px, py);
+  radarCtx.rotate(-yaw);
+
+  radarCtx.beginPath();
+  radarCtx.moveTo(0, -6.5);
+  radarCtx.lineTo(4.5, 5);
+  radarCtx.lineTo(0, 3);
+  radarCtx.lineTo(-4.5, 5);
+  radarCtx.closePath();
+  radarCtx.fillStyle = '#ff2b55';
+  radarCtx.fill();
+  radarCtx.strokeStyle = '#ffe4a0';
+  radarCtx.lineWidth = 1.2;
+  radarCtx.stroke();
+
+  radarCtx.beginPath();
+  radarCtx.arc(0, 0, 4.5, 0, Math.PI * 2);
+  radarCtx.fillStyle = 'rgba(255, 60, 90, 0.35)';
+  radarCtx.fill();
+
+  radarCtx.restore();
+
+  radarCtx.restore();
+}
+
+// ═══════════════════════════════════════════════════
+//  RENDER VE ANİMASYON DÖNGÜSÜ
+// ═══════════════════════════════════════════════════
+const clock = new THREE.Clock();
+
+function animate(){
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+
+  if(mixer){
+    mixer.timeScale = 1.0 + (flightSpeed / 98) * 0.75;
+    mixer.update(dt);
+  }
+
+  // Halka rotasyonu & Kadim Tapınak Rün Halkası
+  ringGroup.children.forEach(r => {
+    r.rotation.z += dt * 0.8;
+  });
+  if(typeof sanctuaryRing !== 'undefined' && sanctuaryRing){
+    sanctuaryRing.rotation.z += dt * 1.1;
+  }
+  if(typeof waterfallMat !== 'undefined' && waterfallMat){
+    waterfallMat.opacity = 0.74 + Math.sin(Date.now() * 0.005) * 0.08;
+  }
+
+  if(sanctuaryCooldown > 0) sanctuaryCooldown -= dt;
+  if(turboRoarCooldown > 0) turboRoarCooldown -= dt;
+  if(turboActiveTime > 0) turboActiveTime -= dt;
+
+  if(gameActive){
+    // 1. Dümen & Hız
+    yaw -= mouseDX * 0.0022;
+    pitch -= mouseDY * 0.0022;
+    pitch = Math.max(-Math.PI * 0.35, Math.min(Math.PI * 0.36, pitch));
+    mouseDX = 0; mouseDY = 0;
+
+    if(keys['KeyA'] || keys['ArrowLeft'])  yaw += 1.6 * dt;
+    if(keys['KeyD'] || keys['ArrowRight']) yaw -= 1.6 * dt;
+    if(keys['KeyW'] || keys['ArrowUp'])    flightSpeed = Math.min(flightSpeed + 30 * dt, 98);
+    if(keys['KeyS'] || keys['ArrowDown'])  flightSpeed = Math.max(flightSpeed - 25 * dt, 12);
+
+    const turnIntent = (keys['KeyA']||keys['ArrowLeft']) ? 1 : (keys['KeyD']||keys['ArrowRight']) ? -1 : 0;
+    roll = roll * 0.86 + turnIntent * 0.55 * 0.14;
+
+    // Fıçı Taklası (Barrel Roll - Q/E tuşları)
+    if(barrelRollActive){
+      const rollSpeed = Math.PI * 3.6;
+      const dRoll = rollSpeed * dt;
+      barrelRollAngle += dRoll;
+      roll += barrelRollDir * dRoll;
+      if(barrelRollAngle >= Math.PI * 2){
+        barrelRollActive = false;
+        barrelRollAngle = 0;
+      }
+    }
+
+    // Kombo Zaman Aşımı
+    if(ringComboTimer > 0){
+      ringComboTimer -= dt;
+      if(ringComboTimer <= 0){
+        ringCombo = 0;
+      }
+    }
+
+    // Dik Dalışta Yerçekimi Hızlandırması & Dinamik Ses Duvarı (Sonic Dive)
+    if(pitch < -0.30){
+      const diveFactor = Math.min(1.0, (-pitch - 0.30) / 0.5);
+      flightSpeed = Math.min(flightSpeed + diveFactor * dt * 45.0, 125);
+      camera.fov = THREE.MathUtils.lerp(camera.fov, 74, dt * 3.2);
+      camera.updateProjectionMatrix();
+      if(elWindBlur) elWindBlur.style.opacity = Math.min(0.85, (flightSpeed - 55) / 45).toFixed(2);
+    } else {
+      if(camera.fov > 60.05){
+        camera.fov = THREE.MathUtils.lerp(camera.fov, 60, dt * 2.5);
+        camera.updateProjectionMatrix();
+      }
+    }
+
+    // Alev Efekti
+    if(isFiring){
+      fireStrength = Math.min(fireStrength + dt * 6.0, 1.0);
+    } else {
+      fireStrength = Math.max(fireStrength - dt * 5.0, 0.0);
+    }
+    elFireFX.style.opacity = (fireStrength * 0.95).toFixed(2);
+    fireLight.intensity = fireStrength * 5.5;
+
+    if(windGain && audioCtx){
+      const targetGain = (0.03 + (flightSpeed / 98) * 0.16) * currentVolume;
+      windGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.1);
+    }
+
+    // 2. İleri Hareket
+    const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+    const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+    const forward = new THREE.Vector3(-sinY * cosP, sinP, -cosY * cosP);
+
+    dragonPos.addScaledVector(forward, flightSpeed * dt);
+
+    // Yumuşak Sınır Rüzgarı (Boundary Updraft)
+    const dCenter = Math.sqrt(dragonPos.x*dragonPos.x + dragonPos.z*dragonPos.z);
+    if(dCenter > 2200){
+      const targetAngle = Math.atan2(-dragonPos.x, -dragonPos.z);
+      let diff = targetAngle - yaw;
+      while(diff < -Math.PI) diff += Math.PI * 2;
+      while(diff > Math.PI) diff -= Math.PI * 2;
+      yaw += diff * dt * 0.75;
+    }
+
+    // Zemin & Su Seviyesi Koruma
+    const groundY = Math.max(-8.5, getTerrainHeight(dragonPos.x, dragonPos.z));
+    if(dragonPos.y < groundY + 12.0){
+      dragonPos.y += (groundY + 12.0 - dragonPos.y) * Math.min(1.0, dt * 5.0);
+      if(pitch < 0) pitch *= 0.85;
+    }
+    if(dragonPos.y > 420.0) dragonPos.y -= (dragonPos.y - 420.0) * 0.05;
+
+    // Çember ve Kadim Tapınak Çarpışma Kontrolleri
+    checkRingCollision(dragonPos);
+    if(typeof checkSanctuaryCollision === 'function'){
+      checkSanctuaryCollision(dragonPos);
+    }
+
+    // Dağ Gözetleme Kuleleri & Alevle İmha
+    const mouthOffset = new THREE.Vector3(0, 0.18, -1.85).applyQuaternion(dragonRig.quaternion);
+    const mouthPos = dragonPos.clone().add(mouthOffset);
+    checkTowerFireInteractions(mouthPos, forward, isFiring && fireStrength > 0.22, dt);
+    updateFireballs(dt);
+    updateTowerBallistas(dt);
+    updateTargetLockHUD(forward);
+
+    // FÄ±rtÄ±na YaÄŸmur & ÅimÅŸek DinamiÄŸi
+    if(isStormActive){
+      const rArr = rainGeo.attributes.position.array;
+      for(let i = 0; i < RAIN_COUNT; i++){
+        const idx = i * 3;
+        rArr[idx + 1] -= dt * 140;
+        if(rArr[idx + 1] < dragonPos.y - 30){
+          rArr[idx] = dragonPos.x + (Math.random() - 0.5) * 140;
+          rArr[idx + 1] = dragonPos.y + 45 + Math.random() * 35;
+          rArr[idx + 2] = dragonPos.z + (Math.random() - 0.5) * 140;
+        }
+      }
+      rainGeo.attributes.position.needsUpdate = true;
+
+      lightningTimer -= dt;
+      if(lightningTimer <= 0){
+        lightningTimer = 4.5 + Math.random() * 5.5;
+        lightningFlash = 0.28;
+        playThunderSound();
+      }
+      if(lightningFlash > 0){
+        lightningFlash -= dt;
+        sunLight.intensity = 3.8;
+        sunLight.color.setHex(0xeef6ff);
+        ambLight.color.setHex(0x556677);
+      } else {
+        sunLight.intensity = 0.45;
+        sunLight.color.setHex(0x3a4f66);
+        ambLight.color.setHex(0x1a2636);
+      }
+    }
+
+    updateRadar();
+
+    // HUD
+    const spdKm = Math.round(flightSpeed * 3.6);
+    elSpeed.textContent = spdKm;
+    elAlt.textContent = Math.max(0, Math.round(dragonPos.y - groundY));
+    elSpeedBar.style.width = ((flightSpeed / 98) * 100) + '%';
+    elWindBlur.style.opacity = Math.max(0.0, (flightSpeed - 65) / 33 * 0.6).toFixed(2);
+    const headingIdx = Math.floor(((((-yaw * 180 / Math.PI) % 360) + 360) % 360) / 45);
+    elHdg.textContent = CARDINALS[headingIdx % 8];
+
+    // 3. Ejderha Rig Konumu ve Rotasyonu
+    dragonRig.position.copy(dragonPos);
+    dragonRig.rotation.order = 'YXZ';
+    dragonRig.rotation.set(pitch, yaw, roll);
+
+    // 4. Alev Parçacıkları
+    const positions = fireParticles.geometry.attributes.position.array;
+    if(fireStrength > 0.05){
+      fireMat.opacity = fireStrength * 0.9;
+      const mouthOffset = new THREE.Vector3(0, 0.18, -1.85).applyQuaternion(dragonRig.quaternion);
+      const mouthPos = dragonPos.clone().add(mouthOffset);
+
+      for(let i=0; i<FIRE_PARTICLES; i++){
+        const idx = i*3;
+        if(positions[idx+2] === 0 || Math.random() < 0.18){
+          positions[idx]   = mouthPos.x + (Math.random()-0.5)*0.35;
+          positions[idx+1] = mouthPos.y + (Math.random()-0.5)*0.35;
+          positions[idx+2] = mouthPos.z + (Math.random()-0.5)*0.35;
+          fireVel[i].copy(forward).multiplyScalar(flightSpeed * 1.9 + Math.random()*22);
+          fireVel[i].x += (Math.random()-0.5)*5;
+          fireVel[i].y += (Math.random()-0.5)*5;
+          fireVel[i].z += (Math.random()-0.5)*5;
+        } else {
+          positions[idx]   += fireVel[i].x * dt;
+          positions[idx+1] += fireVel[i].y * dt;
+          positions[idx+2] += fireVel[i].z * dt;
+        }
+      }
+      fireParticles.geometry.attributes.position.needsUpdate = true;
+    } else {
+      fireMat.opacity = 0;
+    }
+
+    // 5. KAMERA POZİSYONLANDIRMASI (Ejderha Türü ve Cüssesine Göre Açık & Ferah Kokpit)
+    let camOffset;
+    if(isFirstPerson){
+      if(currentSpecies === 'meleys'){
+        // Asil Bordo Ejderha: Orijinal backup kokpit açısı (ferah, sırt ve boyun harika görünür)
+        camOffset = new THREE.Vector3(0, 0.98, 0.95);
+      } else if(currentSpecies === 'demon'){
+        // Kadim İblis: Sakinleşen heybetli boynuzların arkasında, dev obsidyen kanatlar arasında süvari kokpiti
+        camOffset = new THREE.Vector3(0, 0.60, 0.52);
+      } else if(currentSpecies === 'wyvern'){
+        // Zırhlı Wyvern: Dışarıdan, eyerin tam üstünden boyun ve boynuzlara bakan temiz süvari açısı
+        camOffset = new THREE.Vector3(0, 0.58, 0.22);
+      } else {
+        camOffset = new THREE.Vector3(0, 0.98, 0.95);
+      }
+    } else {
+      // 3. ŞAHIS: Modellerin cüssesine göre dinamik takip kamerası
+      if(currentSpecies === 'demon'){
+        camOffset = new THREE.Vector3(0, 3.8, 11.0);
+      } else if(currentSpecies === 'wyvern'){
+        camOffset = new THREE.Vector3(0, 2.2, 6.5);
+      } else {
+        camOffset = new THREE.Vector3(0, 3.5, 8.8);
+      }
+    }
+    camOffset.applyQuaternion(dragonRig.quaternion);
+    camera.position.copy(dragonPos).add(camOffset);
+
+    const lookDist = 40;
+    const lookTarget = dragonPos.clone().add(camOffset).addScaledVector(forward, lookDist);
+    if(isFirstPerson) {
+      if(currentSpecies === 'meleys'){
+        lookTarget.y -= 0.15;
+      } else if(currentSpecies === 'demon'){
+        lookTarget.y -= 0.10;
+      } else if(currentSpecies === 'wyvern'){
+        lookTarget.y -= 0.12;
+      } else {
+        lookTarget.y -= 0.15;
+      }
+    }
+    camera.lookAt(lookTarget);
+
+    // 6. Işık Takibi
+    sunLight.position.set(dragonPos.x + 400, 850, dragonPos.z + 300);
+  } else {
+    // ═══════════════════════════════════════════════════
+    //  MENÜ & BAŞLANGIÇ EKRANI CANLI 3D VİTRİN (Turntable Showcase)
+    // ═══════════════════════════════════════════════════
+    const t = Date.now() * 0.00075;
+    let orbitDist = 6.8;
+    let camY = 95 + 1.1;
+    if(currentSpecies === 'demon'){
+      orbitDist = 9.5;
+      camY = 95 + 1.7;
+    } else if(currentSpecies === 'wyvern'){
+      orbitDist = 7.5;
+      camY = 95 + 1.2;
+    } else {
+      orbitDist = 6.8;
+      camY = 95 + 1.1;
+    }
+    camera.position.set(
+      dragonPos.x + Math.sin(t) * orbitDist,
+      camY + Math.sin(t * 0.6) * 0.4,
+      dragonPos.z + Math.cos(t) * orbitDist
+    );
+    const centerTarget = dragonPos.clone().add(new THREE.Vector3(0, 0.1, 0));
+    camera.lookAt(centerTarget);
+  }
+
+  renderer.render(scene, camera);
+}
+
+// Başlat ve Çalma Listesini Hazırla
+initPlaylistUI();
+animate();
+
+// URL Parametreleri Desteği (Örn: ?species=demon&autostart=1 veya #autostart=1)
+const hrefStr = window.location.href;
+const urlParams = new URLSearchParams(window.location.search);
+
+let targetSpecies = urlParams.get('species');
+if(!targetSpecies){
+  if(hrefStr.includes('species=demon')) targetSpecies = 'demon';
+  else if(hrefStr.includes('species=wyvern')) targetSpecies = 'wyvern';
+  else if(hrefStr.includes('species=meleys')) targetSpecies = 'meleys';
+}
+if(targetSpecies){
+  const btn = document.getElementById('btn-species-' + targetSpecies);
+  selectDragonSpecies(targetSpecies, btn);
+}
+
+if(urlParams.get('autostart') === '1' || hrefStr.includes('autostart')){
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('splash').classList.add('hidden');
+  startExperience();
+  if(urlParams.get('cam') === '3' || hrefStr.includes('cam=3')){
+    isFirstPerson = false;
+    if(elCamInd) elCamInd.textContent = '🎥 3. ŞAHIS (Takip Kamerası)';
+  }
+}
+</script>
+</body>
+</html>
