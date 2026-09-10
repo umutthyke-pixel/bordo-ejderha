@@ -445,6 +445,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <!-- Yerel Kütüphaneler & Gerçek Model Verisi -->
 <script src="peerjs.min.js"></script>
 <script src="three.min.js"></script>
+<script src="SkeletonUtils.js"></script>
 <script src="GLTFLoader.js"></script>
 <script src="dragon_model_data.js"></script>
 </head>
@@ -624,9 +625,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   <button class="music-nav-btn" onclick="nextTrack()" title="Sonraki Şarkı (N)">⏭</button>
   <button id="music-btn" onclick="toggleMusic()">⏸ Duraklat</button>
   <div id="vol-wrap">
-    <span id="vol-icon" onclick="toggleMute()" title="Sesi Aç/Kapat">🔉</span>
-    <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0.50" oninput="setVolume(parseFloat(this.value))" title="Ses Seviyesi"/>
-    <span id="vol-percent">50%</span>
+    <span id="vol-icon" onclick="toggleMute()" title="Sesi Aç/Kapat">🔈</span>
+    <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0.25" oninput="setVolume(parseFloat(this.value))" title="Ses Seviyesi"/>
+    <span id="vol-percent">25%</span>
   </div>
 </div>
 
@@ -733,8 +734,8 @@ const PLAYLIST = [
 let currentTrackIdx = 75; // Başlangıç şarkısı: Candan Erçetin - Gamsız Hayat ("Ejderha üstünde gamsız hayat dinleme işi")
 const bgm = document.getElementById('bgm');
 let audioCtx = null, windGain = null;
-let currentVolume = 0.50;
-let prevVolume = 0.50;
+let currentVolume = 0.25;
+let prevVolume = 0.25;
 let isPlaylistOpen = false;
 let gameActive = false;
 
@@ -879,7 +880,7 @@ function toggleMute(){
     prevVolume = currentVolume;
     setVolume(0);
   } else {
-    setVolume(prevVolume > 0 ? prevVolume : 0.50);
+    setVolume(prevVolume > 0 ? prevVolume : 0.25);
   }
 }
 
@@ -1093,7 +1094,7 @@ function triggerTurboRoar(){
 }
 
 function startExperience(){
-  setVolume(0.50);
+  setVolume(0.25);
   bgm.play().then(()=>{
     document.getElementById('music-btn').textContent = '⏸ Duraklat';
   }).catch(()=>{
@@ -2705,12 +2706,52 @@ function switchDragonModel(speciesKey){
        (currentSpecies === 'meleys' && modelTargetKey === 'default')){
       activateDragonModel(modelTargetKey);
     }
+    if(typeof spawnRemoteDragon === 'function' && remoteSpecies === speciesKey && remotePlayer && remotePlayer.active){
+      spawnRemoteDragon(remoteSpecies, remoteColorKey);
+    }
   }, undefined, (err) => {
     loadingDragonModels[modelTargetKey] = false;
     console.warn("Could not load " + glbPath + ", falling back to default dragon:", err);
     if(modelTargetKey !== 'default'){
       activateDragonModel('default');
     }
+  });
+}
+
+function ensureDragonModelLoaded(speciesKey){
+  let modelTargetKey = 'default';
+  if(speciesKey === 'demon') modelTargetKey = 'demon';
+  else if(speciesKey === 'wyvern') modelTargetKey = 'wyvern';
+
+  if(loadedDragonModels[modelTargetKey] || loadingDragonModels[modelTargetKey]) return;
+  loadingDragonModels[modelTargetKey] = true;
+
+  let glbPath = 'dragon.glb';
+  if(modelTargetKey === 'demon') glbPath = 'demon_dragon.glb';
+  else if(modelTargetKey === 'wyvern') glbPath = 'dragon_fly.glb';
+
+  gltfLoader.load(glbPath, (gltf) => {
+    loadingDragonModels[modelTargetKey] = false;
+    gltf.scene.traverse((child) => {
+      if(child.isMesh){
+        child.frustumCulled = false;
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+
+    applyModelSpecificSettings(modelTargetKey, gltf);
+    loadedDragonModels[modelTargetKey] = gltf;
+
+    if(remoteSpecies === speciesKey && remotePlayer && remotePlayer.active){
+      spawnRemoteDragon(remoteSpecies, remoteColorKey);
+    }
+    if(currentSpecies === speciesKey){
+      activateDragonModel(modelTargetKey);
+    }
+  }, undefined, (err) => {
+    loadingDragonModels[modelTargetKey] = false;
+    console.warn("Could not load " + glbPath + ":", err);
   });
 }
 
@@ -2736,6 +2777,9 @@ function initDragonModel(gltf){
         applyModelSpecificSettings('demon', dGltf);
         loadedDragonModels['demon'] = dGltf;
         if(currentSpecies === 'demon') activateDragonModel('demon');
+        if(typeof spawnRemoteDragon === 'function' && remoteSpecies === 'demon' && remotePlayer && remotePlayer.active){
+          spawnRemoteDragon('demon', remoteColorKey);
+        }
       }, undefined, () => { loadingDragonModels['demon'] = false; });
     }
     if(!loadedDragonModels['wyvern'] && !loadingDragonModels['wyvern']){
@@ -2751,6 +2795,9 @@ function initDragonModel(gltf){
         applyModelSpecificSettings('wyvern', wGltf);
         loadedDragonModels['wyvern'] = wGltf;
         if(currentSpecies === 'wyvern') activateDragonModel('wyvern');
+        if(typeof spawnRemoteDragon === 'function' && remoteSpecies === 'wyvern' && remotePlayer && remotePlayer.active){
+          spawnRemoteDragon('wyvern', remoteColorKey);
+        }
       }, undefined, () => { loadingDragonModels['wyvern'] = false; });
     }
   }, 100);
@@ -2903,44 +2950,45 @@ let remoteFireParticles = null;
 let remoteFireMat = null;
 let remoteFireVel = [];
 
-let remoteTargetPos = new THREE.Vector3(0, 85, 0);
+let remoteTargetPos = new THREE.Vector3(0, 95, 0);
+let remoteTargetQuat = new THREE.Quaternion();
 let remoteTargetPitch = 0;
 let remoteTargetYaw = 0;
 let remoteTargetRoll = 0;
 let remoteTargetSpeed = 45;
 let remoteTargetFwd = new THREE.Vector3(0, 0, -1);
+let remoteIsFirstPacket = true;
+let isSpawningRemote = false;
 
-function cloneGltf(gltf) {
-  const clone = {
-    animations: gltf.animations,
-    scene: gltf.scene.clone(true)
-  };
-  const skinnedMeshes = {};
-  gltf.scene.traverse(node => {
-    if (node.isSkinnedMesh) skinnedMeshes[node.name] = node;
-  });
-  const cloneBones = {};
-  const cloneSkinnedMeshes = {};
-  clone.scene.traverse(node => {
-    if (node.isBone) cloneBones[node.name] = node;
-    if (node.isSkinnedMesh) cloneSkinnedMeshes[node.name] = node;
-  });
-  for (let name in skinnedMeshes) {
-    const skinnedMesh = skinnedMeshes[name];
-    const skeleton = skinnedMesh.skeleton;
-    const cloneSkinnedMesh = cloneSkinnedMeshes[name];
-    if (skeleton && cloneSkinnedMesh) {
-      const orderedCloneBones = [];
-      for (let i = 0; i < skeleton.bones.length; ++i) {
-        const b = skeleton.bones[i];
-        orderedCloneBones.push(cloneBones[b.name] || b);
-      }
-      cloneSkinnedMesh.bind(
-        new THREE.Skeleton(orderedCloneBones, skeleton.boneInverses),
-        cloneSkinnedMesh.matrixWorld
-      );
+const _camDirVec = new THREE.Vector3();
+const _toFriendVec = new THREE.Vector3();
+
+function cloneDragonGltf(sourceScene) {
+  if (THREE.SkeletonUtils && typeof THREE.SkeletonUtils.clone === 'function') {
+    return THREE.SkeletonUtils.clone(sourceScene);
+  }
+  const sourceLookup = new Map();
+  const cloneLookup = new Map();
+  const clone = sourceScene.clone();
+
+  function parallel(a, b) {
+    sourceLookup.set(b, a);
+    cloneLookup.set(a, b);
+    for (let i = 0; i < a.children.length; i++) {
+      parallel(a.children[i], b.children[i]);
     }
   }
+  parallel(sourceScene, clone);
+
+  clone.traverse(node => {
+    if (!node.isSkinnedMesh) return;
+    const sourceMesh = sourceLookup.get(node);
+    if (!sourceMesh || !sourceMesh.skeleton) return;
+    node.skeleton = sourceMesh.skeleton.clone();
+    node.bindMatrix.copy(sourceMesh.bindMatrix);
+    node.skeleton.bones = sourceMesh.skeleton.bones.map(b => cloneLookup.get(b) || b);
+    node.bind(node.skeleton, node.bindMatrix);
+  });
   return clone;
 }
 
@@ -2974,32 +3022,44 @@ function initRemoteDragonRig(){
 function applyRemoteDragonPalette(sceneObj, species, colorKey){
   const pal = DRAGON_PALETTES[colorKey] || DRAGON_PALETTES['bordo'];
   sceneObj.traverse(child => {
-    if(child.isMesh && child.material){
-      const processMat = m => {
-        const clonedM = m.clone();
-        const matName = (clonedM.name || '').toLowerCase();
-        if(species !== 'demon' && species !== 'wyvern'){
-          if(matName.includes('wing')){
-            clonedM.color.setHex(pal.wings);
-            clonedM.roughness = 0.65;
-          } else if(matName.includes('belly')){
-            clonedM.color.setHex(pal.belly);
-            clonedM.roughness = 0.45;
-          } else if(matName.includes('claw') || matName.includes('horn')){
-            clonedM.color.setHex(pal.horns);
-            clonedM.roughness = 0.35;
+    if(child.isMesh){
+      child.frustumCulled = false; // KRİTİK: Kameradan uzaklaşınca/dönerken yok olmasını kesinlikle önler!
+      child.castShadow = true;
+      child.receiveShadow = true;
+
+      if(child.material){
+        const processMat = m => {
+          const clonedM = m.clone();
+          const matName = (clonedM.name || '').toLowerCase();
+          if(species === 'demon'){
+            clonedM.color.setHex(0x380b13); // Koyu Asil Volkanik Bordo / Obsidyen
+            clonedM.roughness = 0.38;
+            clonedM.metalness = 0.65;
+            clonedM.emissive.setHex(0x40070b);
+            clonedM.emissiveIntensity = 0.45;
+          } else if(species === 'wyvern'){
+            clonedM.side = THREE.DoubleSide;
           } else {
-            clonedM.color.setHex(pal.body);
-            clonedM.roughness = 0.42;
+            if(matName.includes('wing')){
+              clonedM.color.setHex(pal.wings);
+              clonedM.roughness = 0.65;
+            } else if(matName.includes('belly')){
+              clonedM.color.setHex(pal.belly);
+              clonedM.roughness = 0.45;
+            } else if(matName.includes('claw') || matName.includes('horn')){
+              clonedM.color.setHex(pal.horns);
+              clonedM.roughness = 0.35;
+            } else {
+              clonedM.color.setHex(pal.body);
+              clonedM.roughness = 0.42;
+            }
           }
-        } else {
-          clonedM.color.setHex(pal.body);
-        }
-        clonedM.needsUpdate = true;
-        return clonedM;
-      };
-      if(Array.isArray(child.material)) child.material = child.material.map(processMat);
-      else child.material = processMat(child.material);
+          clonedM.needsUpdate = true;
+          return clonedM;
+        };
+        if(Array.isArray(child.material)) child.material = child.material.map(processMat);
+        else child.material = processMat(child.material);
+      }
     }
   });
 }
@@ -3009,38 +3069,67 @@ function spawnRemoteDragon(speciesKey, colorKey){
   remoteSpecies = speciesKey;
   remoteColorKey = colorKey;
 
+  let modelKey = 'default';
+  if(speciesKey === 'demon') modelKey = 'demon';
+  else if(speciesKey === 'wyvern') modelKey = 'wyvern';
+
+  let sourceGltf = loadedDragonModels[modelKey];
+  let isFallback = false;
+
+  if(!sourceGltf){
+    // İstenen model henüz yüklenmediyse arka planda hemen yüklet
+    ensureDragonModelLoaded(speciesKey);
+    // Geçici olarak eldeki varsayılan modeli göster
+    sourceGltf = loadedDragonModels['default'];
+    isFallback = true;
+  }
+
+  if(!sourceGltf){
+    // Henüz varsayılan model bile hazır değilse az sonra tekrar dene
+    if(!isSpawningRemote){
+      isSpawningRemote = true;
+      setTimeout(() => {
+        isSpawningRemote = false;
+        spawnRemoteDragon(speciesKey, colorKey);
+      }, 400);
+    }
+    return;
+  }
+
   if(remoteDragonScene && remoteDragonScene.parent === remoteDragonRig){
     remoteDragonRig.remove(remoteDragonScene);
     remoteDragonScene = null;
   }
 
-  let modelKey = 'default';
-  if(speciesKey === 'demon') modelKey = 'demon';
-  else if(speciesKey === 'wyvern') modelKey = 'wyvern';
+  remoteDragonScene = cloneDragonGltf(sourceGltf.scene);
 
-  const sourceGltf = loadedDragonModels[modelKey] || loadedDragonModels['default'];
-  if(!sourceGltf) {
-    setTimeout(() => spawnRemoteDragon(speciesKey, colorKey), 600);
-    return;
+  // Ölçek ve Konumlandırma:
+  // Eğer henüz asıl model yüklenmeyip fallback (default) gösteriliyorsa, default modelin kendi ölçeğini kullan!
+  // Yanlışlıkla Meleys'i wyvern (0.0092) veya demon (8.2) ölçeğine sokup görünmez veya dev yapma!
+  let actualSpeciesToStyle = isFallback ? 'meleys' : speciesKey;
+  let sc = 0.88;
+  let py = -2.50, pz = 0.10, ry = Math.PI;
+
+  if(actualSpeciesToStyle === 'demon'){
+    sc = 8.2;
+    py = -3.40; pz = 0.20; ry = Math.PI;
+  } else if(actualSpeciesToStyle === 'wyvern'){
+    sc = 0.0092;
+    py = -0.70; pz = 0.10; ry = Math.PI / 2;
   }
 
-  const cloned = cloneGltf(sourceGltf);
-  remoteDragonScene = cloned.scene;
-
-  let sc = 0.88;
-  if(speciesKey === 'demon') sc = 8.2;
-  else if(speciesKey === 'wyvern') sc = 0.0092;
   remoteDragonScene.scale.set(sc, sc, sc);
+  remoteDragonScene.position.set(0, py, pz);
+  remoteDragonScene.rotation.set(0, ry, 0);
 
-  applyRemoteDragonPalette(remoteDragonScene, speciesKey, colorKey);
+  applyRemoteDragonPalette(remoteDragonScene, actualSpeciesToStyle, colorKey);
   remoteDragonRig.add(remoteDragonScene);
 
   if(sourceGltf.flyClip){
     remoteMixer = new THREE.AnimationMixer(remoteDragonScene);
     const action = remoteMixer.clipAction(sourceGltf.flyClip);
-    if(speciesKey === 'wyvern') action.timeScale = 0.35;
-    else if(speciesKey === 'demon') action.timeScale = 0.55;
-    else action.timeScale = 0.85;
+    let baseRate = (actualSpeciesToStyle === 'wyvern' ? 0.35 : (actualSpeciesToStyle === 'demon' ? 0.55 : 0.85));
+    action.timeScale = baseRate;
     action.play();
   }
 
@@ -3054,20 +3143,15 @@ function updateRemotePlayerFlight(dt){
     return;
   }
 
+  // Pozisyon yumuşatma (lerp)
   remoteDragonRig.position.lerp(remoteTargetPos, Math.min(1.0, dt * 14.0));
 
-  let dPitch = remoteTargetPitch - remoteDragonRig.rotation.x;
-  let dYaw = remoteTargetYaw - remoteDragonRig.rotation.y;
-  let dRoll = remoteTargetRoll - remoteDragonRig.rotation.z;
-  while(dYaw < -Math.PI) dYaw += Math.PI * 2;
-  while(dYaw > Math.PI) dYaw -= Math.PI * 2;
-  remoteDragonRig.rotation.order = 'YXZ';
-  remoteDragonRig.rotation.x += dPitch * Math.min(1.0, dt * 12.0);
-  remoteDragonRig.rotation.y += dYaw * Math.min(1.0, dt * 12.0);
-  remoteDragonRig.rotation.z += dRoll * Math.min(1.0, dt * 12.0);
+  // Kuaterniyon rotasyon yumuşatma (slerp) - Euler taklaları ve gimballock bozulmalarını sıfırlar!
+  remoteDragonRig.quaternion.slerp(remoteTargetQuat, Math.min(1.0, dt * 14.0));
 
   if(remoteMixer){
-    remoteMixer.timeScale = 1.0 + (remoteTargetSpeed / 98) * 0.75;
+    let baseRate = (remoteSpecies === 'wyvern' ? 0.35 : (remoteSpecies === 'demon' ? 0.55 : 0.85));
+    remoteMixer.timeScale = baseRate * (0.8 + (remoteTargetSpeed / 98) * 0.6);
     remoteMixer.update(dt);
   }
 
@@ -3127,9 +3211,16 @@ function updateRemotePlayerHUD(){
 
   _tempVec1.copy(remoteDragonRig.position);
   _tempVec1.y += (remoteSpecies === 'demon' ? 5.5 : 2.2);
+
+  // Kameranın önünde mi kontrolü (Doğru vektörel izdüşüm)
+  camera.getWorldDirection(_camDirVec);
+  _toFriendVec.subVectors(_tempVec1, camera.position);
+  const dotCam = _toFriendVec.dot(_camDirVec);
+
   _tempVec2.copy(_tempVec1).project(camera);
 
-  const isInView = (_tempVec2.z > 0 && _tempVec2.z < 1.0 && Math.abs(_tempVec2.x) < 0.90 && Math.abs(_tempVec2.y) < 0.90);
+  const isInFront = (dotCam > 0.05);
+  const isInView = (isInFront && Math.abs(_tempVec2.x) <= 0.88 && Math.abs(_tempVec2.y) <= 0.88);
 
   if(isInView){
     const sx = (_tempVec2.x * 0.5 + 0.5) * window.innerWidth;
@@ -3146,7 +3237,7 @@ function updateRemotePlayerHUD(){
     if(elFriendPointer){
       let sx = _tempVec2.x;
       let sy = -_tempVec2.y;
-      if(_tempVec2.z > 1.0 || _tempVec2.z < 0){
+      if(!isInFront){
         sx = -sx;
         sy = -sy;
       }
@@ -3171,15 +3262,26 @@ function handleRemotePacket(data){
     remotePlayer.active = true;
 
     remoteTargetPos.set(data.p[0], data.p[1], data.p[2]);
-    remoteTargetPitch = data.r[0];
-    remoteTargetYaw = data.r[1];
-    remoteTargetRoll = data.r[2];
+
+    if(data.q && data.q.length === 4){
+      remoteTargetQuat.set(data.q[0], data.q[1], data.q[2], data.q[3]);
+    } else if(data.r){
+      remoteTargetQuat.setFromEuler(new THREE.Euler(data.r[0], data.r[1], data.r[2], 'YXZ'));
+    }
+
+    if(remoteIsFirstPacket){
+      remoteIsFirstPacket = false;
+      if(remoteDragonRig){
+        remoteDragonRig.position.copy(remoteTargetPos);
+        remoteDragonRig.quaternion.copy(remoteTargetQuat);
+      }
+    }
+
     remoteTargetSpeed = data.s || 45;
     remoteIsFiring = !!data.f;
 
-    const cosY = Math.cos(remoteTargetYaw), sinY = Math.sin(remoteTargetYaw);
-    const cosP = Math.cos(remoteTargetPitch), sinP = Math.sin(remoteTargetPitch);
-    remoteTargetFwd.set(-sinY * cosP, sinP, -cosY * cosP).normalize();
+    // Alev saçılımı için ileri yön
+    remoteTargetFwd.set(0, 0, -1).applyQuaternion(remoteTargetQuat);
 
     if(data.sp && (data.sp !== remoteSpecies || data.c !== remoteColorKey || !remoteDragonScene)){
       spawnRemoteDragon(data.sp, data.c || 'bordo');
@@ -3380,6 +3482,7 @@ function setupNetworkSendLoop(){
       activeConnection.send({
         t: 's',
         p: [dragonPos.x, dragonPos.y, dragonPos.z],
+        q: [dragonRig.quaternion.x, dragonRig.quaternion.y, dragonRig.quaternion.z, dragonRig.quaternion.w],
         r: [pitch, yaw, roll],
         s: flightSpeed,
         f: (isFiring && fireStrength > 0.05),
