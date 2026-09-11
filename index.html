@@ -392,12 +392,81 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   text-transform:uppercase;text-shadow:0 0 8px rgba(0,243,255,0.7);
 }
 #photo-mode-hint{
-  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
   background:rgba(15,8,12,0.88);border:1px solid rgba(255,215,0,0.6);
   color:#fef08a;font-size:0.85rem;font-weight:700;padding:8px 22px;border-radius:24px;
   z-index:100;pointer-events:none;display:none;backdrop-filter:blur(12px);
   box-shadow:0 0 25px rgba(0,0,0,0.8), 0 0 15px rgba(255,215,0,0.25);
 }
+#photo-mode-controls{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  display:none;align-items:center;gap:12px;z-index:100;
+}
+.photo-btn{
+  background:rgba(20,10,25,0.92);border:1.5px solid rgba(255,215,0,0.8);
+  color:#fef08a;font-size:0.85rem;font-weight:700;padding:10px 22px;border-radius:24px;
+  cursor:pointer;backdrop-filter:blur(12px);display:flex;align-items:center;gap:8px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.7), 0 0 15px rgba(255,215,0,0.3);
+  transition:all 0.2s ease;user-select:none;
+}
+.photo-btn:hover{
+  background:rgba(40,18,50,0.96);border-color:#00f3ff;color:#fff;
+  transform:scale(1.05);box-shadow:0 8px 24px rgba(0,0,0,0.8), 0 0 20px rgba(0,243,255,0.45);
+}
+.photo-btn.snap{
+  background:linear-gradient(135deg, #ffd700, #ff8800);
+  color:#110515;border-color:#fff;font-weight:900;
+}
+.photo-btn.snap:hover{
+  background:linear-gradient(135deg, #ffe555, #ffa020);
+}
+#polaroid-modal{
+  position:fixed;inset:0;background:rgba(5,2,8,0.78);backdrop-filter:blur(10px);
+  z-index:200;display:none;align-items:center;justify-content:center;
+}
+.polaroid-card{
+  background:#fbfbfb;padding:16px 16px 22px 16px;border-radius:6px;
+  box-shadow:0 24px 70px rgba(0,0,0,0.95), 0 0 35px rgba(255,215,0,0.25);
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  max-width:92vw;max-height:92vh;transform:rotate(-1.5deg);
+  animation:polaroidPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes polaroidPop{
+  0%{transform:scale(0.7) rotate(6deg);opacity:0;}
+  100%{transform:scale(1) rotate(-1.5deg);opacity:1;}
+}
+.polaroid-img-wrap{
+  width:100%;max-width:560px;background:#0d0510;overflow:hidden;border-radius:3px;
+  box-shadow:inset 0 0 10px rgba(0,0,0,0.5);
+}
+.polaroid-img-wrap img{
+  width:100%;height:auto;display:block;
+}
+.polaroid-footer{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:4px 8px 0 8px;color:#2c1b18;
+}
+.polaroid-caption{
+  font-size:1.15rem;font-weight:bold;font-style:italic;font-family:Georgia, serif;
+}
+.polaroid-date{
+  font-size:0.8rem;color:#776660;font-family:monospace;font-weight:600;
+}
+.polaroid-actions{
+  display:flex;gap:12px;margin-top:4px;
+}
+.btn-polaroid-save{
+  background:#22c55e;color:#fff;border:none;padding:9px 20px;border-radius:20px;
+  font-weight:800;font-size:0.85rem;cursor:pointer;box-shadow:0 4px 14px rgba(34,197,94,0.45);
+  display:flex;align-items:center;gap:6px;transition:transform 0.15s;
+}
+.btn-polaroid-save:hover{background:#16a34a;transform:scale(1.04);}
+.btn-polaroid-close{
+  background:#ef4444;color:#fff;border:none;padding:9px 18px;border-radius:20px;
+  font-weight:800;font-size:0.85rem;cursor:pointer;box-shadow:0 4px 14px rgba(239,68,68,0.4);
+  display:flex;align-items:center;gap:6px;transition:transform 0.15s;
+}
+.btn-polaroid-close:hover{background:#dc2626;transform:scale(1.04);}
 
 /* ── Çok Oyunculu Lobi Paneli (Modern Glassmorphic) ── */
 .lobby-box{
@@ -592,6 +661,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <div id="cam-mode-indicator">🎥 1. ŞAHIS KOKPİT (Sırt Üstü Bakış)</div>
 <div id="ring-popup">✨ HALKA GEÇİLDİ! +HIZ ✨</div>
 <div id="photo-mode-hint">📸 FOTOĞRAF MODU: Fareyle 360° Açı Ayarla [C ile Çık]</div>
+<div id="photo-mode-controls">
+  <button class="photo-btn snap" id="btn-take-photo" onclick="takePolaroidPhoto()">📷 &nbsp;FOTOĞRAF ÇEK [Boşluk]</button>
+  <button class="photo-btn" id="btn-exit-photo" onclick="togglePhotoMode()">✖ &nbsp;Kapat [C]</button>
+</div>
+
+<!-- Polaroid Fotoğraf Modal Kartı -->
+<div id="polaroid-modal">
+  <div class="polaroid-card">
+    <div class="polaroid-img-wrap">
+      <img id="polaroid-img" src="" alt="Bordo Ejderha Anı Fotoğrafı">
+    </div>
+    <div class="polaroid-footer">
+      <div class="polaroid-caption">🐉 Bordo Ejderha — Chill Uçuş</div>
+      <div class="polaroid-date" id="polaroid-date-txt">11 Eylül 2026</div>
+    </div>
+    <div class="polaroid-actions">
+      <button class="btn-polaroid-save" onclick="downloadPolaroidPhoto()">💾 Bilgisayara İndir (PNG)</button>
+      <button class="btn-polaroid-close" onclick="closePolaroidModal()">✖ Kapat</button>
+    </div>
+  </div>
+</div>
+
 <div id="emote-container" style="position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden;"></div>
 <div id="tower-target-lock" style="display:none;"></div>
 <div id="incoming-warning" style="display:none;"></div>
@@ -620,9 +711,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
     <div class="pill"><b>E:</b> 🦅 Kon/Kalk</div>
     <div class="pill"><b>F:</b> 🤝 Formasyon</div>
     <div class="pill"><b>1-4:</b> 💬 Emote</div>
-    <div class="pill"><b>C:</b> 📸 Foto</div>
+    <div class="pill"><b>C:</b> 📸 Foto [Boşluk: Çek]</div>
     <div class="pill"><b>V:</b> 🎥 Kamera</div>
-    <div class="pill"><b>T:</b> 🌅 Zaman</div>
+    <div class="pill"><b>T:</b> 🌌 Gün/Gece/Aurora</div>
     <div class="pill"><b>N:</b> ⏭ Şarkı</div>
   </div>
   <div id="hud-flight">
@@ -1179,12 +1270,14 @@ const skyDay = new THREE.Color(0x64b0eb);
 const fogDay = new THREE.Color(0x8dc5ec);
 const skySunset = new THREE.Color(0x2a1638);
 const fogSunset = new THREE.Color(0xb85038);
+const skyNight = new THREE.Color(0x060914);
+const fogNight = new THREE.Color(0x0a1024);
 
 scene.background = skyDay.clone();
 scene.fog = new THREE.FogExp2(fogDay, 0.00062);
 
 const camera = new THREE.PerspectiveCamera(76, window.innerWidth / window.innerHeight, 0.02, 5500);
-const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance', preserveDrawingBuffer: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1219,20 +1312,16 @@ scene.add(sunLight);
 const ambLight = new THREE.AmbientLight(0xd7f0dd, 0.42);
 scene.add(ambLight);
 
-// Gökyüzü Modu
+// Gökyüzü Modu (0: Gündüz, 1: Gün Batımı, 2: Büyülü Gece & Aurora)
+let skyModeState = 0;
 let isSunset = false;
+
 function toggleSkyMode(){
-  isSunset = !isSunset;
+  skyModeState = (skyModeState + 1) % 3;
+  isSunset = (skyModeState === 1);
   const ind = document.getElementById('cam-mode-indicator');
-  if(isSunset){
-    scene.background.copy(skySunset);
-    scene.fog.color.copy(fogSunset);
-    sunLight.color.setHex(0xff7c38);
-    sunLight.intensity = 1.6;
-    hemiLight.color.setHex(0xff9e7a);
-    hemiLight.groundColor.setHex(0x401815);
-    ind.textContent = '🌅 GÜN BATIMI & ALTIN SAAT MODU';
-  } else {
+  
+  if(skyModeState === 0){
     scene.background.copy(skyDay);
     scene.fog.color.copy(fogDay);
     sunLight.color.setHex(0xfffaea);
@@ -1240,10 +1329,189 @@ function toggleSkyMode(){
     hemiLight.color.setHex(0xdcf0ff);
     hemiLight.groundColor.setHex(0x1e6618);
     ind.textContent = '☀️ CANLI GÜNDÜZ MODU';
+  } else if(skyModeState === 1){
+    scene.background.copy(skySunset);
+    scene.fog.color.copy(fogSunset);
+    sunLight.color.setHex(0xff7c38);
+    sunLight.intensity = 1.6;
+    hemiLight.color.setHex(0xff9e7a);
+    hemiLight.groundColor.setHex(0x401815);
+    ind.textContent = '🌅 GÜN BATIMI & ALTIN SAAT MODU';
+  } else if(skyModeState === 2){
+    scene.background.copy(skyNight);
+    scene.fog.color.copy(fogNight);
+    sunLight.color.setHex(0x8ba6e8);
+    sunLight.intensity = 0.42;
+    hemiLight.color.setHex(0x1b2848);
+    hemiLight.groundColor.setHex(0x060c18);
+    ind.textContent = '🌌 BÜYÜLÜ GECE & KUZEY IŞIKLARI (AURORA) MODU';
   }
   ind.style.opacity = '1';
-  setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+  setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2400);
 }
+
+// ═══════════════════════════════════════════════════
+//  KUZEY IŞIKLARI (AURORA BOREALIS) & TAKIMYILDIZLARI
+// ═══════════════════════════════════════════════════
+function createAuroraTexture(){
+  const canvas = document.createElement('canvas');
+  canvas.width = 512; canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  
+  const grad = ctx.createLinearGradient(0, 0, 0, 128);
+  grad.addColorStop(0.0, 'rgba(168, 85, 247, 0)');
+  grad.addColorStop(0.18, 'rgba(168, 85, 247, 0.75)');
+  grad.addColorStop(0.50, 'rgba(6, 182, 212, 0.92)');
+  grad.addColorStop(0.82, 'rgba(16, 185, 129, 0.88)');
+  grad.addColorStop(1.0, 'rgba(16, 185, 129, 0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 512, 128);
+  
+  return new THREE.CanvasTexture(canvas);
+}
+const auroraTex = createAuroraTexture();
+auroraTex.wrapS = THREE.RepeatWrapping;
+auroraTex.wrapT = THREE.ClampToEdgeWrapping;
+
+const auroraGroup = new THREE.Group();
+const auroraBands = [];
+const AURORA_SEG_X = 64;
+const AURORA_SEG_Y = 8;
+
+for(let b = 0; b < 3; b++){
+  const geo = new THREE.PlaneGeometry(1600, 170, AURORA_SEG_X, AURORA_SEG_Y);
+  const posArr = geo.attributes.position.array;
+  const arcRadius = 920 + b * 170;
+  const angleSpan = Math.PI * 0.72;
+
+  for(let i = 0; i <= AURORA_SEG_X; i++){
+    const u = (i / AURORA_SEG_X - 0.5) * angleSpan;
+    const px = Math.sin(u) * arcRadius;
+    const pz = -Math.cos(u) * arcRadius + 180;
+    for(let j = 0; j <= AURORA_SEG_Y; j++){
+      const idx = (j * (AURORA_SEG_X + 1) + i) * 3;
+      posArr[idx] = px;
+      posArr[idx + 2] = pz;
+    }
+  }
+  geo.computeVertexNormals();
+
+  const mat = new THREE.MeshBasicMaterial({
+    map: auroraTex,
+    transparent: true,
+    opacity: 0.15,
+    blending: THREE.AdditiveBlending,
+    side: THREE.DoubleSide,
+    depthWrite: false
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.set(0, 460 + b * 40, 0);
+  mesh.frustumCulled = false;
+  auroraGroup.add(mesh);
+
+  auroraBands.push({
+    mesh: mesh,
+    basePos: Float32Array.from(posArr),
+    speed: 0.7 + b * 0.3,
+    freq: 0.0032 + b * 0.001
+  });
+}
+scene.add(auroraGroup);
+
+let auroraTime = 0;
+function updateAurora(dt){
+  auroraTime += dt;
+  const isNightTime = (skyModeState === 2);
+  const targetOp = isNightTime ? 0.88 : (skyModeState === 1 ? 0.42 : 0.12);
+
+  for(let b = 0; b < auroraBands.length; b++){
+    const band = auroraBands[b];
+    band.mesh.material.opacity += (targetOp - band.mesh.material.opacity) * Math.min(1.0, dt * 2.8);
+    if(band.mesh.material.opacity < 0.02) continue;
+
+    const pos = band.mesh.geometry.attributes.position.array;
+    const base = band.basePos;
+    const t = auroraTime * band.speed;
+
+    for(let i = 0; i < pos.length; i += 3){
+      const bx = base[i];
+      const bz = base[i + 2];
+      const wave = Math.sin(bx * band.freq + t) * 20 + Math.cos(bz * (band.freq * 1.2) + t * 0.7) * 15;
+      pos[i + 1] = base[i + 1] + wave;
+    }
+    band.mesh.geometry.attributes.position.needsUpdate = true;
+  }
+
+  // Takımyıldızları Parlaması
+  const constellationTargetOp = isNightTime ? 0.95 : (skyModeState === 1 ? 0.45 : 0.0);
+  cStarMat.opacity += (constellationTargetOp - cStarMat.opacity) * Math.min(1.0, dt * 3.0);
+  cLineMat.opacity = cStarMat.opacity * 0.48;
+}
+
+// ── Gece Takımyıldızları (Ejderha Draco & Anka Phoenix) ──
+const constellationGroup = new THREE.Group();
+const dracoStars = [
+  [-220, 820, -920], [-170, 850, -940], [-110, 880, -910], [-40, 870, -880],
+  [20, 900, -900], [90, 930, -870], [150, 920, -830], [180, 880, -800],
+  [220, 890, -760], [260, 930, -770], [280, 900, -730], [230, 860, -720]
+];
+const dracoLines = [
+  0,1, 1,2, 2,3, 3,4, 4,5, 5,6, 6,7, 7,8, 8,9, 9,10, 10,11, 11,8
+];
+
+const phoenixStars = [
+  [-680, 860, -520], [-630, 900, -500], [-570, 930, -540],
+  [-510, 890, -510], [-570, 850, -470], [-570, 790, -440],
+  [-740, 880, -550], [-420, 870, -490]
+];
+const phoenixLines = [
+  0,1, 1,2, 2,3, 1,4, 4,5, 0,6, 3,7
+];
+
+const cStarPositions = [];
+dracoStars.forEach(p => cStarPositions.push(...p));
+phoenixStars.forEach(p => cStarPositions.push(...p));
+
+const cStarGeo = new THREE.BufferGeometry();
+cStarGeo.setAttribute('position', new THREE.Float32BufferAttribute(cStarPositions, 3));
+const cStarMat = new THREE.PointsMaterial({
+  color: 0xe0f7ff,
+  size: 6.8,
+  transparent: true,
+  opacity: 0.0,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+const cStarPoints = new THREE.Points(cStarGeo, cStarMat);
+cStarPoints.frustumCulled = false;
+constellationGroup.add(cStarPoints);
+
+const cLinePositions = [];
+for(let i = 0; i < dracoLines.length; i += 2){
+  const p1 = dracoStars[dracoLines[i]];
+  const p2 = dracoStars[dracoLines[i+1]];
+  cLinePositions.push(p1[0], p1[1], p1[2], p2[0], p2[1], p2[2]);
+}
+for(let i = 0; i < phoenixLines.length; i += 2){
+  const p1 = phoenixStars[phoenixLines[i]];
+  const p2 = phoenixStars[phoenixLines[i+1]];
+  cLinePositions.push(p1[0], p1[1], p1[2], p2[0], p2[1], p2[2]);
+}
+
+const cLineGeo = new THREE.BufferGeometry();
+cLineGeo.setAttribute('position', new THREE.Float32BufferAttribute(cLinePositions, 3));
+const cLineMat = new THREE.LineBasicMaterial({
+  color: 0x67e8f9,
+  transparent: true,
+  opacity: 0.0,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+const cLineMesh = new THREE.LineSegments(cLineGeo, cLineMat);
+cLineMesh.frustumCulled = false;
+constellationGroup.add(cLineMesh);
+
+scene.add(constellationGroup);
 
 // ── Fırtına & Şimşek Modu (G tuşu) ──
 let isStormActive = false;
@@ -1576,6 +1844,421 @@ function updateLakeWhale(dt){
       sPos[pIdx + 2] = whaleGroup.position.z + (Math.random() - 0.5) * 14;
       const vIdx = Math.floor(pIdx / 3);
       sprayVel[vIdx].set((Math.random() - 0.5) * 10, 5.5 + Math.random() * 4.5, (Math.random() - 0.5) * 10);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  CANLI DOĞA: SAKURA VADİSİ YAPRAKLARI & KARLI ZİRVELER
+// ═══════════════════════════════════════════════════
+function createPetalTexture(){
+  const canvas = document.createElement('canvas');
+  canvas.width = 64; canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  ctx.translate(32, 32);
+  ctx.rotate(Math.PI / 4);
+  
+  ctx.beginPath();
+  ctx.moveTo(0, -22);
+  ctx.bezierCurveTo(18, -18, 22, 10, 0, 24);
+  ctx.bezierCurveTo(-22, 10, -18, -18, 0, -22);
+  ctx.closePath();
+
+  const grad = ctx.createRadialGradient(0, 0, 2, 0, 0, 24);
+  grad.addColorStop(0, 'rgba(255, 235, 245, 0.98)');
+  grad.addColorStop(0.5, 'rgba(255, 140, 185, 0.88)');
+  grad.addColorStop(1, 'rgba(244, 114, 182, 0.25)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+  return new THREE.CanvasTexture(canvas);
+}
+const petalTex = createPetalTexture();
+
+const SAKURA_COUNT = 220;
+const sakuraGeo = new THREE.BufferGeometry();
+const sakuraPositions = new Float32Array(SAKURA_COUNT * 3);
+const sakuraVel = [];
+for(let i = 0; i < SAKURA_COUNT; i++){
+  sakuraPositions[i * 3] = (Math.random() - 0.5) * 360;
+  sakuraPositions[i * 3 + 1] = 40 + Math.random() * 85;
+  sakuraPositions[i * 3 + 2] = (Math.random() - 0.5) * 360;
+  sakuraVel.push({
+    vx: (Math.random() - 0.3) * 3.2,
+    vy: -1.2 - Math.random() * 1.5,
+    vz: (Math.random() - 0.5) * 2.8
+  });
+}
+sakuraGeo.setAttribute('position', new THREE.BufferAttribute(sakuraPositions, 3));
+const sakuraMat = new THREE.PointsMaterial({
+  map: petalTex,
+  size: 4.2,
+  transparent: true,
+  opacity: 0.88,
+  depthWrite: false,
+  blending: THREE.NormalBlending
+});
+const sakuraPoints = new THREE.Points(sakuraGeo, sakuraMat);
+sakuraPoints.frustumCulled = false;
+scene.add(sakuraPoints);
+
+// Karlı Zirve Parçacıkları (İrtifa > 175m)
+const SNOW_COUNT = 280;
+const snowGeo = new THREE.BufferGeometry();
+const snowPositions = new Float32Array(SNOW_COUNT * 3);
+const snowVel = [];
+for(let i = 0; i < SNOW_COUNT; i++){
+  snowPositions[i * 3] = (Math.random() - 0.5) * 130;
+  snowPositions[i * 3 + 1] = Math.random() * 90;
+  snowPositions[i * 3 + 2] = (Math.random() - 0.5) * 130;
+  snowVel.push({
+    vx: (Math.random() - 0.5) * 2.5,
+    vy: -2.8 - Math.random() * 3.2,
+    vz: (Math.random() - 0.5) * 2.5
+  });
+}
+snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPositions, 3));
+const snowMat = new THREE.PointsMaterial({
+  color: 0xffffff,
+  size: 2.4,
+  transparent: true,
+  opacity: 0.0,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+const snowPoints = new THREE.Points(snowGeo, snowMat);
+snowPoints.frustumCulled = false;
+scene.add(snowPoints);
+
+function updatePetalsAndSnow(dt){
+  // 1. Sakura Yaprakları
+  const sPos = sakuraGeo.attributes.position.array;
+  for(let i = 0; i < SAKURA_COUNT; i++){
+    const idx = i * 3;
+    const v = sakuraVel[i];
+    sPos[idx] += v.vx * dt;
+    sPos[idx + 1] += v.vy * dt;
+    sPos[idx + 2] += v.vz * dt;
+
+    sPos[idx] += Math.sin(Date.now() * 0.002 + i) * 0.08;
+
+    if(sPos[idx + 1] < 26 || Math.abs(sPos[idx]) > 260 || Math.abs(sPos[idx + 2]) > 260){
+      sPos[idx] = (Math.random() - 0.5) * 360;
+      sPos[idx + 1] = 110 + Math.random() * 30;
+      sPos[idx + 2] = (Math.random() - 0.5) * 360;
+    }
+  }
+  sakuraGeo.attributes.position.needsUpdate = true;
+
+  // 2. Karlı Zirveler
+  const isHighAltitude = (dragonPos.y > 175);
+  const targetSnowOp = isHighAltitude ? Math.min(0.85, (dragonPos.y - 175) / 50 * 0.85) : 0.0;
+  snowMat.opacity += (targetSnowOp - snowMat.opacity) * Math.min(1.0, dt * 4.0);
+
+  if(snowMat.opacity > 0.02){
+    snowPoints.position.copy(dragonPos);
+    const snPos = snowGeo.attributes.position.array;
+    for(let i = 0; i < SNOW_COUNT; i++){
+      const idx = i * 3;
+      const sv = snowVel[i];
+      snPos[idx] += sv.vx * dt;
+      snPos[idx + 1] += sv.vy * dt;
+      snPos[idx + 2] += sv.vz * dt;
+
+      if(snPos[idx + 1] < -45){
+        snPos[idx] = (Math.random() - 0.5) * 130;
+        snPos[idx + 1] = 45;
+        snPos[idx + 2] = (Math.random() - 0.5) * 130;
+      }
+    }
+    snowGeo.attributes.position.needsUpdate = true;
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  CANLI DOĞA: DEV GÖKYÜZÜ VATOZLARI (Sky Rays)
+// ═══════════════════════════════════════════════════
+function createSkyRayMesh(){
+  const rayGroup = new THREE.Group();
+
+  const rayGeo = new THREE.BufferGeometry();
+  const rVerts = new Float32Array([
+    0, 0.6, -14,   -4.5, 0.4, -4,    4.5, 0.4, -4,
+    -4.5, 0.4, -4,   -3.5, 0.2, 8,     4.5, 0.4, -4,
+    4.5, 0.4, -4,    -3.5, 0.2, 8,     3.5, 0.2, 8,
+    -4.5, 0.4, -4,   -18.0, 0.8, 1.0,  -3.5, 0.2, 8,
+    -18.0, 0.8, 1.0, -22.5, 1.2, 3.5,  -10.0, 0.3, 7.5,
+    4.5, 0.4, -4,    3.5, 0.2, 8,      18.0, 0.8, 1.0,
+    18.0, 0.8, 1.0,  10.0, 0.3, 7.5,   22.5, 1.2, 3.5,
+    0, -0.8, -10,    4.0, -0.2, 2,     -4.0, -0.2, 2,
+    -4.0, -0.2, 2,   4.0, -0.2, 2,     0, -0.4, 10
+  ]);
+  rayGeo.setAttribute('position', new THREE.BufferAttribute(rVerts, 3));
+  rayGeo.computeVertexNormals();
+
+  const rayMat = new THREE.MeshStandardMaterial({
+    color: 0x1e3a5f,
+    emissive: 0x00e5ff,
+    emissiveIntensity: 0.35,
+    roughness: 0.4,
+    metalness: 0.2,
+    side: THREE.DoubleSide,
+    flatShading: true
+  });
+  const bodyMesh = new THREE.Mesh(rayGeo, rayMat);
+  rayGroup.add(bodyMesh);
+
+  const spineGeo = new THREE.BufferGeometry();
+  const sVerts = new Float32Array([
+    0, 0.9, -12,  0, 0.7, -4,
+    0, 0.7, -4,   0, 0.5, 4,
+    0, 0.5, 4,    0, 0.4, 11
+  ]);
+  spineGeo.setAttribute('position', new THREE.BufferAttribute(sVerts, 3));
+  const spineMat = new THREE.LineBasicMaterial({
+    color: 0x00f3ff,
+    linewidth: 3,
+    transparent: true,
+    opacity: 0.9
+  });
+  const spineLine = new THREE.LineSegments(spineGeo, spineMat);
+  rayGroup.add(spineLine);
+
+  const tailGeo = new THREE.BufferGeometry();
+  const tVerts = new Float32Array([
+    -1.5, 0.2, 11,   -2.2, -0.5, 24,   -3.0, -1.2, 38,
+     1.5, 0.2, 11,    2.2, -0.5, 24,    3.0, -1.2, 38
+  ]);
+  tailGeo.setAttribute('position', new THREE.BufferAttribute(tVerts, 3));
+  const tailMat = new THREE.LineBasicMaterial({
+    color: 0x67e8f9,
+    linewidth: 2,
+    transparent: true,
+    opacity: 0.75
+  });
+  const tailLine = new THREE.Line(tailGeo, tailMat);
+  rayGroup.add(tailLine);
+
+  return {
+    group: rayGroup,
+    body: bodyMesh,
+    tail: tailLine,
+    baseVerts: Float32Array.from(rVerts)
+  };
+}
+
+const skyRays = [];
+for(let i = 0; i < 2; i++){
+  const r = createSkyRayMesh();
+  scene.add(r.group);
+  skyRays.push({
+    meshData: r,
+    altitude: i === 0 ? 255 : 325,
+    radiusX: i === 0 ? 480 : 640,
+    radiusZ: i === 0 ? 400 : 530,
+    speed: i === 0 ? 0.052 : 0.038,
+    angle: i * Math.PI,
+    wingFreq: 1.3
+  });
+}
+
+let skyRayAmbientSoundCooldown = 0;
+function updateSkyRays(dt){
+  const now = Date.now() * 0.001;
+  let closestRayDist = 9999;
+
+  for(let i = 0; i < skyRays.length; i++){
+    const ray = skyRays[i];
+    ray.angle += ray.speed * dt;
+
+    const rx = Math.cos(ray.angle) * ray.radiusX;
+    const rz = Math.sin(ray.angle) * ray.radiusZ;
+    const ry = ray.altitude + Math.sin(now * 0.4 + i * 2.0) * 8.0;
+
+    const nextX = Math.cos(ray.angle + 0.02) * ray.radiusX;
+    const nextZ = Math.sin(ray.angle + 0.02) * ray.radiusZ;
+    const heading = Math.atan2(nextX - rx, nextZ - rz);
+
+    ray.meshData.group.position.set(rx, ry, rz);
+    ray.meshData.group.rotation.y = heading + Math.PI;
+    ray.meshData.group.rotation.z = Math.sin(ray.angle) * 0.18;
+
+    const verts = ray.meshData.body.geometry.attributes.position.array;
+    const base = ray.meshData.baseVerts;
+    const flapPhase = now * ray.wingFreq + i * 1.5;
+
+    for(let v = 0; v < verts.length; v += 3){
+      const bx = base[v];
+      const distFromCenter = Math.abs(bx);
+      const flap = Math.sin(flapPhase - distFromCenter * 0.08) * (distFromCenter * 0.14);
+      verts[v + 1] = base[v + 1] + flap;
+    }
+    ray.meshData.body.geometry.attributes.position.needsUpdate = true;
+
+    const d = dragonPos.distanceTo(ray.meshData.group.position);
+    if(d < closestRayDist) closestRayDist = d;
+  }
+
+  if(closestRayDist < 65 && skyRayAmbientSoundCooldown <= 0){
+    playSkyRayHum();
+    skyRayAmbientSoundCooldown = 7.5;
+  }
+  if(skyRayAmbientSoundCooldown > 0) skyRayAmbientSoundCooldown -= dt;
+}
+
+// ═══════════════════════════════════════════════════
+//  CANLI DOĞA: DAĞ KEMERLERİNDE MELODİK RÜZGAR ÇANLARI
+// ═══════════════════════════════════════════════════
+const WIND_CHIME_ARCHES = [
+  { x: 0, y: 112, z: -120, name: 'Büyük Tapınak Kemeri' },
+  { x: 210, y: 122, z: 75, name: 'Doğu Sırtı Geçidi' },
+  { x: -175, y: 108, z: -155, name: 'Fısıltılı Kanyon Kemeri' }
+];
+
+const windChimeMeshes = [];
+for(let a = 0; a < WIND_CHIME_ARCHES.length; a++){
+  const arch = WIND_CHIME_ARCHES[a];
+  const chimeGroup = new THREE.Group();
+  chimeGroup.position.set(arch.x, arch.y, arch.z);
+
+  const ringGeo = new THREE.TorusGeometry(1.6, 0.12, 8, 24);
+  const ringMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.8, roughness: 0.25 });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 2;
+  chimeGroup.add(ring);
+
+  const tubeMat = new THREE.MeshStandardMaterial({
+    color: 0x99f6e4,
+    emissive: 0x14b8a6,
+    emissiveIntensity: 0.45,
+    metalness: 0.9,
+    roughness: 0.15
+  });
+  const tubes = [];
+  for(let i = 0; i < 5; i++){
+    const ang = (i / 5) * Math.PI * 2;
+    const len = 2.2 + i * 0.4;
+    const tubeGeo = new THREE.CylinderGeometry(0.1, 0.1, len, 8);
+    const tube = new THREE.Mesh(tubeGeo, tubeMat);
+    tube.position.set(Math.cos(ang) * 1.2, -len / 2 - 0.2, Math.sin(ang) * 1.2);
+    chimeGroup.add(tube);
+    tubes.push(tube);
+  }
+
+  const pendGeo = new THREE.CylinderGeometry(0.4, 0.4, 0.08, 12);
+  const pendMat = new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x0f766e, emissiveIntensity: 0.5 });
+  const pendulum = new THREE.Mesh(pendGeo, pendMat);
+  pendulum.position.set(0, -2.8, 0);
+  chimeGroup.add(pendulum);
+
+  scene.add(chimeGroup);
+  windChimeMeshes.push({
+    group: chimeGroup,
+    pos: new THREE.Vector3(arch.x, arch.y, arch.z),
+    tubes: tubes,
+    pendulum: pendulum,
+    cooldown: 0
+  });
+}
+
+let audioCtx = null;
+function getAudioContext(){
+  if(!audioCtx){
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if(AudioContextClass) audioCtx = new AudioContextClass();
+  }
+  if(audioCtx && audioCtx.state === 'suspended'){
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+const CHIME_FREQS = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+
+function playWindChimeChord(x, y, z){
+  const ctx = getAudioContext();
+  if(!ctx) return;
+
+  const now = ctx.currentTime;
+  const noteCount = 3 + Math.floor(Math.random() * 2);
+  for(let n = 0; n < noteCount; n++){
+    const noteTime = now + n * 0.14;
+    const freq = CHIME_FREQS[Math.floor(Math.random() * CHIME_FREQS.length)];
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, noteTime);
+
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(freq * 2.02, noteTime);
+
+    gain.gain.setValueAtTime(0.001, noteTime);
+    gain.gain.linearRampToValueAtTime(0.18, noteTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 2.2);
+
+    gain2.gain.setValueAtTime(0.001, noteTime);
+    gain2.gain.linearRampToValueAtTime(0.05, noteTime + 0.02);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, noteTime + 1.4);
+
+    osc.connect(gain);
+    osc2.connect(gain2);
+    gain.connect(ctx.destination);
+    gain2.connect(ctx.destination);
+
+    osc.start(noteTime);
+    osc2.start(noteTime);
+    osc.stop(noteTime + 2.3);
+    osc2.stop(noteTime + 1.5);
+  }
+
+  const ind = document.getElementById('cam-mode-indicator');
+  if(ind){
+    ind.textContent = '🎐 RÜZGAR ÇANLARI EZGİSİ ÇALDI 🎐';
+    ind.style.opacity = '1';
+    setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+  }
+}
+
+function playSkyRayHum(){
+  const ctx = getAudioContext();
+  if(!ctx) return;
+  const now = ctx.currentTime;
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(120, now);
+  osc.frequency.exponentialRampToValueAtTime(160, now + 2.5);
+  osc.frequency.exponentialRampToValueAtTime(110, now + 5.0);
+
+  gain.gain.setValueAtTime(0.001, now);
+  gain.gain.linearRampToValueAtTime(0.12, now + 1.8);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 5.5);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + 5.6);
+}
+
+function updateWindChimes(dt){
+  const now = Date.now() * 0.001;
+  for(let i = 0; i < windChimeMeshes.length; i++){
+    const chime = windChimeMeshes[i];
+    if(chime.cooldown > 0) chime.cooldown -= dt;
+
+    chime.pendulum.rotation.z = Math.sin(now * 2.2 + i) * 0.18;
+    chime.pendulum.rotation.x = Math.cos(now * 1.8 + i) * 0.15;
+    for(let t = 0; t < chime.tubes.length; t++){
+      chime.tubes[t].rotation.z = Math.sin(now * 2.5 + t) * 0.08;
+    }
+
+    const dist = dragonPos.distanceTo(chime.pos);
+    if(dist < 24 && chime.cooldown <= 0){
+      playWindChimeChord(chime.pos.x, chime.pos.y, chime.pos.z);
+      chime.cooldown = 4.0;
     }
   }
 }
@@ -1932,7 +2615,7 @@ function toggleStormMode(){
   } else {
     scene.fog.density = 0.00062;
     rainPoints.visible = false;
-    if(isSunset){
+    if(skyModeState === 1){
       scene.background.copy(skySunset);
       scene.fog.color.copy(fogSunset);
       sunLight.color.setHex(0xff7c38);
@@ -1940,6 +2623,14 @@ function toggleStormMode(){
       hemiLight.color.setHex(0xff9e7a);
       hemiLight.groundColor.setHex(0x401815);
       ind.textContent = '🌅 GÜN BATIMI MODU';
+    } else if(skyModeState === 2){
+      scene.background.copy(skyNight);
+      scene.fog.color.copy(fogNight);
+      sunLight.color.setHex(0x8ba6e8);
+      sunLight.intensity = 0.42;
+      hemiLight.color.setHex(0x1b2848);
+      hemiLight.groundColor.setHex(0x060c18);
+      ind.textContent = '🌌 BÜYÜLÜ GECE & KUZEY IŞIKLARI MODU';
     } else {
       scene.background.copy(skyDay);
       scene.fog.color.copy(fogDay);
@@ -3226,8 +3917,21 @@ window.addEventListener('keydown', e => {
   if(e.code === 'KeyE'){
     toggleLanding();
   }
-  if((e.code === 'Space' || e.code === 'KeyW') && isLanded){
+  if(e.code === 'Space'){
+    if(isPhotoMode){
+      e.preventDefault();
+      takePolaroidPhoto();
+      return;
+    }
+    if(isLanded){
+      takeoffLanding();
+    }
+  }
+  if(e.code === 'KeyW' && isLanded){
     takeoffLanding();
+  }
+  if(e.code === 'Escape'){
+    closePolaroidModal();
   }
   if(e.code === 'KeyF'){
     toggleFormationFlight();
@@ -3746,10 +4450,76 @@ function toggleFormationFlight(){
   }
 }
 
+let currentPolaroidDataUrl = null;
+
+function takePolaroidPhoto(){
+  if(!isPhotoMode || !gameActive) return;
+
+  const topBar = document.getElementById('top-bar');
+  const photoControls = document.getElementById('photo-mode-controls');
+  const photoHint = document.getElementById('photo-mode-hint');
+  const camInd = document.getElementById('cam-mode-indicator');
+
+  // UI'ı geçici gizle (Tertemiz 3D Render)
+  if(topBar) topBar.style.display = 'none';
+  if(photoControls) photoControls.style.display = 'none';
+  if(photoHint) photoHint.style.display = 'none';
+  if(camInd) camInd.style.display = 'none';
+
+  // Temiz kareyi çizdir
+  renderer.render(scene, camera);
+
+  // WebGL çıktısını data URL olarak al
+  try {
+    currentPolaroidDataUrl = renderer.domElement.toDataURL('image/png');
+  } catch(err){
+    console.error('Polaroid capture error:', err);
+  }
+
+  // UI'ı geri getir
+  if(photoControls) photoControls.style.display = 'flex';
+
+  if(currentPolaroidDataUrl){
+    const modal = document.getElementById('polaroid-modal');
+    const imgEl = document.getElementById('polaroid-img');
+    const dateEl = document.getElementById('polaroid-date-txt');
+
+    if(imgEl) imgEl.src = currentPolaroidDataUrl;
+    if(dateEl){
+      const d = new Date();
+      dateEl.textContent = d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+    if(modal) modal.style.display = 'flex';
+  }
+}
+
+function closePolaroidModal(){
+  const modal = document.getElementById('polaroid-modal');
+  if(modal) modal.style.display = 'none';
+}
+
+function downloadPolaroidPhoto(){
+  if(!currentPolaroidDataUrl) return;
+  const link = document.createElement('a');
+  link.download = 'bordo-ejderha-ani-' + Date.now() + '.png';
+  link.href = currentPolaroidDataUrl;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  const ind = document.getElementById('cam-mode-indicator');
+  if(ind){
+    ind.textContent = '💾 Fotoğraf Bilgisayarına İndirildi!';
+    ind.style.opacity = '1';
+    setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+  }
+}
+
 function togglePhotoMode(){
   if(!gameActive) return;
   isPhotoMode = !isPhotoMode;
   const hint = document.getElementById('photo-mode-hint');
+  const controls = document.getElementById('photo-mode-controls');
   const topBar = document.getElementById('top-bar');
   const miniMap = document.getElementById('radar-canvas');
   const speedBar = document.getElementById('speed-gauge-wrap');
@@ -3765,10 +4535,12 @@ function togglePhotoMode(){
   if(lobbyBox) lobbyBox.style.display = displayVal;
   if(crosshair) crosshair.style.display = displayVal;
 
-  if(hint){
-    hint.style.display = isPhotoMode ? 'block' : 'none';
-  }
-  if(isPhotoMode){
+  if(hint) hint.style.display = isPhotoMode ? 'block' : 'none';
+  if(controls) controls.style.display = isPhotoMode ? 'flex' : 'none';
+
+  if(!isPhotoMode){
+    closePolaroidModal();
+  } else {
     photoCamAngleX = yaw;
     photoCamAngleY = 0.22;
   }
@@ -4476,6 +5248,10 @@ function animate(){
     updateBirdFlock(dt);
     updateLakeWhale(dt);
     updateLocalSkywriting(dt);
+    updateAurora(dt);
+    updatePetalsAndSnow(dt);
+    updateSkyRays(dt);
+    updateWindChimes(dt);
 
     // 4. Alev Parçacıkları (Vektör Havuzu)
     const positions = fireParticles.geometry.attributes.position.array;
@@ -4581,6 +5357,9 @@ function animate(){
     camera.lookAt(_lookTarget);
     updateBirdFlock(dt);
     updateLakeWhale(dt);
+    updateAurora(dt);
+    updatePetalsAndSnow(dt);
+    updateSkyRays(dt);
   }
 
   // 3D Takip Eden Emote Baloncukları Güncellemesi
