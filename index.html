@@ -17,48 +17,81 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   transition:opacity 0.8s ease,visibility 0.8s;
   padding:20px;
 }
-#splash.hidden{opacity:0;visibility:hidden;pointer-events:none}
-
 .splash-card{
-  max-width:560px;width:92%;
-  background:rgba(22,6,13,0.76);
-  border:1px solid rgba(255,100,135,0.32);
-  box-shadow:0 30px 80px rgba(0,0,0,0.88), 0 0 60px rgba(180,20,50,0.25);
+  max-width:620px;width:92%;
+  background:rgba(20,5,12,0.85);
+  border:1.5px solid rgba(255,100,135,0.35);
+  box-shadow:0 30px 80px rgba(0,0,0,0.92), 0 0 60px rgba(180,20,50,0.25);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border-radius:28px;padding:32px 28px;
+  border-radius:28px;padding:24px 26px;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   position:relative;
 }
 
+.splash-header{
+  display:flex;align-items:center;justify-content:center;gap:14px;width:100%;
+}
 .dragon-badge-img{
-  width:145px;height:auto;max-height:180px;object-fit:contain;margin-bottom:12px;
-  filter:drop-shadow(0 0 28px rgba(220,25,65,0.75)) drop-shadow(0 0 50px rgba(255,140,40,0.35));
+  width:78px;height:auto;max-height:90px;object-fit:contain;
+  filter:drop-shadow(0 0 22px rgba(220,25,65,0.75)) drop-shadow(0 0 40px rgba(255,140,40,0.35));
   animation:dragonFloat 3.6s ease-in-out infinite;
   pointer-events:none;
 }
 @keyframes dragonFloat{
   0%,100%{transform:translateY(0) scale(1) rotate(-1.2deg)}
-  50%{transform:translateY(-12px) scale(1.025) rotate(1.2deg)}
+  50%{transform:translateY(-8px) scale(1.02) rotate(1.2deg)}
 }
-
+.splash-title-group{text-align:left;}
 .splash-card h1{
-  font-size:clamp(2.0rem,5.2vw,3.2rem);font-weight:900;letter-spacing:4px;
-  text-transform:uppercase;margin:0;
+  font-size:clamp(1.6rem,3.8vw,2.2rem);font-weight:900;letter-spacing:3px;
+  text-transform:uppercase;margin:0;line-height:1.15;
   background:linear-gradient(135deg,#fff4d0 0%,#f7b731 35%,#e83350 70%,#941026 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 4px 20px rgba(180,20,50,0.5));
+  filter:drop-shadow(0 3px 14px rgba(180,20,50,0.5));
 }
 .splash-card .sub{
-  color:#f7ccd3;font-size:.88rem;letter-spacing:2.2px;margin-top:6px;
+  color:#f7ccd3;font-size:.78rem;letter-spacing:1.5px;margin-top:3px;
   text-transform:uppercase;font-weight:600;opacity:.9;
+}
+
+/* ── Modern Sekmeli Menü Sistemi ── */
+.menu-tabs{
+  display:flex;gap:6px;margin:14px 0 12px 0;width:100%;max-width:560px;
+  background:rgba(0,0,0,0.40);padding:5px;border-radius:16px;
+  border:1px solid rgba(255,100,135,0.22);
+}
+.menu-tab-btn{
+  flex:1;background:transparent;border:none;color:#dfc3cb;
+  padding:8px 8px;border-radius:12px;font-size:.71rem;font-weight:700;
+  cursor:pointer;transition:all .18s ease;display:flex;align-items:center;
+  justify-content:center;gap:5px;user-select:none;outline:none;white-space:nowrap;
+}
+.menu-tab-btn:hover{
+  background:rgba(255,255,255,0.08);color:#fff;
+}
+.menu-tab-btn.active{
+  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(200,50,30,0.7));
+  color:#fff;border:1px solid rgba(255,150,175,0.4);
+  box-shadow:0 0 14px rgba(220,30,60,0.55);
+}
+
+.tab-pane{
+  display:none;width:100%;max-width:540px;
+}
+.tab-pane.active{
+  display:block;animation:paneFade .22s ease;
+}
+@keyframes paneFade{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
 /* ── Ejderha Özelleştirme & Atölye Paneli (Modern Glassmorphic Tasarım) ── */
 .customizer-box{
-  margin-top:14px;width:100%;max-width:530px;
+  width:100%;
   background:rgba(14,5,9,0.72);border:1px solid rgba(255,100,130,0.30);
   box-shadow:0 12px 32px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12);
-  border-radius:20px;padding:13px 18px;display:flex;flex-direction:column;gap:11px;
+  border-radius:20px;padding:12px 16px;display:flex;flex-direction:column;gap:10px;
   backdrop-filter:blur(14px);
 }
 .cust-row{
@@ -136,22 +169,61 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   mix-blend-mode:screen;transition:opacity .15s ease;
 }
 
-/* Başlangıç Şarkı Seçici */
+/* ── Tab 3: Müzik & Gökyüzü Paneli ── */
+.sky-music-box{
+  width:100%;background:rgba(14,5,9,0.72);border:1px solid rgba(255,100,130,0.30);
+  box-shadow:0 12px 32px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12);
+  border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;
+  backdrop-filter:blur(14px);
+}
 .song-picker-splash{
-  display:inline-flex;align-items:center;gap:10px;margin-top:18px;
-  padding:8px 18px;border-radius:25px;
+  display:inline-flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:8px 16px;border-radius:16px;
   background:rgba(120,12,35,0.4);border:1px solid rgba(255,130,160,0.4);
-  box-shadow:0 4px 18px rgba(0,0,0,0.45);max-width:92%;
+  box-shadow:0 4px 18px rgba(0,0,0,0.45);width:100%;
 }
 .song-picker-splash select{
-  background:transparent;border:none;color:#ffebef;font-size:.88rem;
-  font-weight:700;font-family:inherit;cursor:pointer;outline:none;max-width:260px;
+  flex:1;background:transparent;border:none;color:#ffebef;font-size:.84rem;
+  font-weight:700;font-family:inherit;cursor:pointer;outline:none;
 }
 .song-picker-splash select option{background:#16040b;color:#ffebef}
 
+.sky-time-picker{display:flex;flex-direction:column;gap:8px;text-align:left;}
+.sky-time-label{font-size:.74rem;color:#ffc5d3;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;}
+.sky-time-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.sky-time-btn{
+  flex:1;min-width:130px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  color:#ead5da;padding:8px 10px;border-radius:12px;font-size:.73rem;font-weight:700;
+  cursor:pointer;transition:all .18s ease;outline:none;text-align:center;
+}
+.sky-time-btn:hover{background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.3);}
+.sky-time-btn.active{
+  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(255,120,30,0.65));
+  border-color:#ff99b0;color:#fff;box-shadow:0 0 14px rgba(225,35,70,0.6);
+}
+
+/* ── Tab 4: Kontroller Tablosu ── */
+.splash-keys-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  width:100%;background:rgba(14,5,9,0.72);border:1px solid rgba(255,100,130,0.30);
+  border-radius:20px;padding:12px 14px;max-height:220px;overflow-y:auto;
+  box-shadow:0 10px 30px rgba(0,0,0,0.65);backdrop-filter:blur(14px);
+}
+.splash-keys-grid::-webkit-scrollbar{width:4px;}
+.splash-keys-grid::-webkit-scrollbar-thumb{background:rgba(255,100,130,0.4);border-radius:4px;}
+.splash-key-item{
+  display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:5px 8px;
+  font-size:.72rem;color:#f3d4dc;text-align:left;
+}
+
+/* ── Menü Alt Bölümü (Başlat Butonu & İpucu) ── */
+.splash-footer{
+  display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:12px;
+}
 #startBtn{
-  margin-top:22px;padding:14px 44px;font-size:1.2rem;font-weight:800;
-  letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;border-radius:50px;
+  padding:12px 42px;font-size:1.15rem;font-weight:800;
+  letter-spacing:2.2px;text-transform:uppercase;cursor:pointer;border-radius:50px;
   background:linear-gradient(135deg,#840d24 0%,#d81e44 50%,#840d24 100%);
   color:#fff;border:2px solid #ff7a94;
   box-shadow:0 0 35px rgba(216,30,68,0.7),0 6px 20px rgba(0,0,0,0.6);
@@ -162,13 +234,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   box-shadow:0 0 55px rgba(255,60,100,0.95),0 10px 28px rgba(0,0,0,0.7);
   border-color:#fff;
 }
-.splash-card .keys-hint{
-  margin-top:20px;display:flex;gap:7px;flex-wrap:wrap;justify-content:center;
-  color:#caa2ab;font-size:.76rem;letter-spacing:.6px;
+.splash-footer-hint{
+  font-size:.73rem;color:#d8b0bb;letter-spacing:.6px;
 }
+.splash-footer-hint b{color:#ffd044;}
+
 .k-badge{
   background:rgba(255,255,255,0.08);border:1px solid rgba(255,160,185,0.22);
-  padding:3px 7px;border-radius:6px;color:#ffe6eb;font-family:monospace;font-size:.78rem;
+  padding:3px 7px;border-radius:6px;color:#ffe6eb;font-family:monospace;font-size:.74rem;white-space:nowrap;
 }
 
 /* ── HUD ── */
@@ -187,19 +260,72 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 #speed-bar-wrap{width:110px;height:7px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
 #speed-bar{width:40%;height:100%;background:linear-gradient(90deg,#e02444,#ffbb00);border-radius:4px;transition:width .1s}
 
-/* ── Üst Bilgi Barı (Sol Üst Köşe - Asla Müzik Kartıyla Çakışmaz) ── */
+/* ── Üst Bilgi Barı (Sol Üst Köşe - Asla Müzik Kartıyla Çakışmaz, Tek Satır) ── */
 #top-bar{
   position:fixed;top:16px;left:18px;
-  display:flex;gap:7px;align-items:center;flex-wrap:wrap;
-  max-width:calc(100vw - 440px);pointer-events:none;z-index:60;
+  display:flex;gap:8px;align-items:center;flex-wrap:nowrap;
+  max-width:calc(100vw - 440px);overflow-x:auto;scrollbar-width:none;
+  pointer-events:none;z-index:60;
 }
+#top-bar::-webkit-scrollbar{display:none;}
 .pill{
   background:rgba(14,6,10,0.86);border:1px solid rgba(255,130,160,0.25);
-  color:#edd2d9;padding:5px 11px;border-radius:18px;font-size:.70rem;
+  color:#edd2d9;padding:6px 12px;border-radius:18px;font-size:.72rem;
   letter-spacing:.6px;font-weight:600;backdrop-filter:blur(10px);
-  box-shadow:0 4px 16px rgba(0,0,0,0.5);
+  box-shadow:0 4px 16px rgba(0,0,0,0.5);white-space:nowrap;flex-shrink:0;
+  pointer-events:auto;user-select:none;
 }
 .pill b{color:#f7b731}
+.pill-btn{
+  cursor:pointer;background:linear-gradient(135deg,rgba(160,20,50,0.7),rgba(60,10,25,0.85));
+  border:1px solid rgba(255,120,150,0.5);color:#fff;
+  transition:all .18s cubic-bezier(0.2,0.8,0.2,1);
+}
+.pill-btn:hover{
+  background:linear-gradient(135deg,rgba(215,25,65,0.9),rgba(120,15,40,0.95));
+  border-color:#ff99b0;transform:scale(1.05);box-shadow:0 0 16px rgba(220,30,60,0.6);
+}
+
+/* ── Oyun İçi Tuş Kılavuzu & Yardım Paneli ([H] Tuşu) ── */
+#help-panel{
+  position:fixed;top:60px;left:18px;width:370px;max-width:calc(100vw - 36px);
+  background:rgba(15,5,12,0.95);border:1.5px solid rgba(255,100,135,0.45);
+  box-shadow:0 18px 50px rgba(0,0,0,0.85), 0 0 30px rgba(200,20,60,0.3);
+  border-radius:20px;padding:16px 18px;backdrop-filter:blur(22px);
+  z-index:115;display:none;flex-direction:column;gap:12px;
+  pointer-events:auto;
+}
+#help-panel.open{
+  display:flex;animation:helpSlide .2s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+}
+@keyframes helpSlide{
+  from{opacity:0;transform:translateY(-8px) scale(0.96)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.help-header{
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:10px;
+}
+.help-title{font-size:.84rem;font-weight:800;color:#ffc5d3;letter-spacing:1px;display:flex;align-items:center;gap:6px;}
+.help-close{
+  cursor:pointer;color:#bbb;font-size:1.1rem;padding:2px 7px;border-radius:6px;
+  background:rgba(255,255,255,0.06);transition:all .15s;border:1px solid rgba(255,255,255,0.1);
+}
+.help-close:hover{color:#fff;background:rgba(220,30,60,0.6);border-color:#ff4a68;}
+.help-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:360px;overflow-y:auto;padding-right:2px;
+}
+.help-grid::-webkit-scrollbar{width:4px;}
+.help-grid::-webkit-scrollbar-thumb{background:rgba(255,100,130,0.4);border-radius:4px;}
+.help-item{
+  display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px 9px;
+}
+.help-k{
+  font-family:monospace;font-size:.72rem;background:rgba(255,255,255,0.12);
+  color:#ffd044;padding:2px 6px;border-radius:5px;font-weight:700;white-space:nowrap;
+}
+.help-desc{font-size:.72rem;color:#f0d0d8;font-weight:600;}
 
 /* ── Müzik & Ses Kontrol Kartı (Sağ Üst Köşe) ── */
 #music-card{
@@ -551,104 +677,194 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 
 <div id="splash">
   <div class="splash-card">
-    <img src="dragon_badge_user.png" class="dragon-badge-img" id="splash-dragon-badge" alt="Asil Ejderha"/>
-    <h1 id="splash-dragon-title">Asil Kan Ejderhası (Meleys)</h1>
-    <div class="sub">Gamsız Hayat — House of the Dragon Sinematik Süvari Bakışı</div>
-
-    <!-- EJDERHA ATÖLYESİ (DRAGON CUSTOMIZER) -->
-    <div class="customizer-box">
-      <!-- 1. Tür & Irk -->
-      <div class="cust-row">
-        <span class="cust-label">
-          <svg class="cust-label-icon" viewBox="0 0 24 24"><path d="M12 2l2.5 5 5.5.8-4 3.9 1 5.3-5-2.6-5 2.6 1-5.3-4-3.9 5.5-.8z"/></svg>
-          Tür & Irk:
-        </span>
-        <div class="cust-types">
-          <button type="button" class="cust-btn active" id="btn-species-meleys" onclick="selectDragonSpecies('meleys', this)">
-            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
-            Asil Ejderha (Orijinal Bordo)
-          </button>
-          <button type="button" class="cust-btn" id="btn-species-demon" onclick="selectDragonSpecies('demon', this)">
-            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4.1 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
-            Kadim İblis (Volkanik Obsidyen)
-          </button>
-          <button type="button" class="cust-btn" id="btn-species-wyvern" onclick="selectDragonSpecies('wyvern', this)">
-            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 7v5m-3-2.5h6"/></svg>
-            Zırhlı Wyvern (3D GLB)
-          </button>
-        </div>
+    <div class="splash-header">
+      <img src="dragon_badge_user.png" class="dragon-badge-img" id="splash-dragon-badge" alt="Asil Ejderha"/>
+      <div class="splash-title-group">
+        <h1 id="splash-dragon-title">Asil Ejderha (Bordo)</h1>
+        <div class="sub">House of the Dragon Sinematik Chill Uçuş Simülasyonu</div>
       </div>
     </div>
 
-    <!-- ÇOK OYUNCULU LOBİ (MULTIPLAYER LOBBY) -->
-    <div class="lobby-box">
-      <div class="lobby-header">
-        <span class="lobby-title">
-          <svg class="cust-label-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-          Çok Oyunculu Uçuş:
-        </span>
-        <div class="lobby-mode-pills">
-          <button type="button" class="lobby-pill-btn active" id="btn-mode-solo" onclick="setLobbyMode('solo')">🎮 Tek Başına</button>
-          <button type="button" class="lobby-pill-btn" id="btn-mode-host" onclick="setLobbyMode('host')">👑 Oda Kur</button>
-          <button type="button" class="lobby-pill-btn" id="btn-mode-join" onclick="setLobbyMode('join')">🤝 Odaya Katıl</button>
-        </div>
-      </div>
+    <!-- Menü Sekme Başlıkları -->
+    <div class="menu-tabs">
+      <button type="button" class="menu-tab-btn active" onclick="switchSplashTab('dragon', this)">
+        <span>🐉</span> Ejderha Atölyesi
+      </button>
+      <button type="button" class="menu-tab-btn" onclick="switchSplashTab('lobby', this)">
+        <span>🌐</span> Çok Oyunculu
+      </button>
+      <button type="button" class="menu-tab-btn" onclick="switchSplashTab('music', this)">
+        <span>🎵</span> Şarkı & Gökyüzü
+      </button>
+      <button type="button" class="menu-tab-btn" onclick="switchSplashTab('controls', this)">
+        <span>⌨️</span> Kontroller
+      </button>
+    </div>
 
-      <div class="lobby-body" id="lobby-view-solo">
-        <div class="lobby-status-msg">
-          <span>🏔️ Şarkılar eşliğinde huzurlu ve serbest uçuş modu.</span>
-        </div>
-      </div>
-
-      <div class="lobby-body" id="lobby-view-host" style="display:none;">
-        <div class="room-code-display">
-          <div>
-            <span style="font-size:.65rem;color:#fca5a5;display:block;letter-spacing:1px;font-weight:700;">ODA KODUN:</span>
-            <span class="room-code-text" id="host-room-code-val">EJDER-49</span>
-          </div>
-          <div style="display:flex;gap:6px;">
-            <button type="button" class="lobby-action-btn" onclick="copyRoomCode()">📋 Kopyala</button>
-            <button type="button" class="lobby-action-btn" onclick="copyInviteLink()">🔗 Davet Linki</button>
+    <!-- TAB 1: EJDERHA ATÖLYESİ -->
+    <div class="tab-pane active" id="tab-dragon">
+      <div class="customizer-box">
+        <!-- 1. Tür & Irk -->
+        <div class="cust-row">
+          <span class="cust-label">
+            <svg class="cust-label-icon" viewBox="0 0 24 24"><path d="M12 2l2.5 5 5.5.8-4 3.9 1 5.3-5-2.6-5 2.6 1-5.3-4-3.9 5.5-.8z"/></svg>
+            Tür & Irk:
+          </span>
+          <div class="cust-types">
+            <button type="button" class="cust-btn active" id="btn-species-meleys" onclick="selectDragonSpecies('meleys', this)">
+              <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+              Asil Ejderha (Bordo)
+            </button>
+            <button type="button" class="cust-btn" id="btn-species-demon" onclick="selectDragonSpecies('demon', this)">
+              <svg class="cust-svg" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4.1 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
+              Kadim İblis (Obsidyen)
+            </button>
+            <button type="button" class="cust-btn" id="btn-species-wyvern" onclick="selectDragonSpecies('wyvern', this)">
+              <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 7v5m-3-2.5h6"/></svg>
+              Zırhlı Wyvern (3D GLB)
+            </button>
           </div>
         </div>
-        <div class="lobby-status-msg waiting" id="host-status-msg">
-          <span class="pulse-dot"></span> Arkadaşının katılması bekleniyor... (Odayı kurup direkt uçabilirsin!)
-        </div>
-      </div>
 
-      <div class="lobby-body" id="lobby-view-join" style="display:none;">
-        <div class="lobby-input-row">
-          <input type="text" class="lobby-input" id="input-room-code" placeholder="ÖRN: EJDER-49" maxlength="15" />
-          <button type="button" class="lobby-action-btn" style="padding:9px 16px;" onclick="joinRoomByCode()">Bağlan 🚀</button>
+        <!-- 2. Renk Paleti -->
+        <div class="cust-row">
+          <span class="cust-label">
+            <svg class="cust-label-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
+            Ejderha Rengi:
+          </span>
+          <div class="color-chips">
+            <div class="color-chip active" style="background:#550818;" title="Asil Bordo" onclick="selectDragonColor('bordo', this)"></div>
+            <div class="color-chip" style="background:#1a1222;" title="Obsidyen Gece" onclick="selectDragonColor('obsidian', this)"></div>
+            <div class="color-chip" style="background:#a37817;" title="Antik Altın" onclick="selectDragonColor('gold', this)"></div>
+            <div class="color-chip" style="background:#13447d;" title="Safir Gök Mavisi" onclick="selectDragonColor('sapphire', this)"></div>
+            <div class="color-chip" style="background:#105728;" title="Mistik Zümrüt" onclick="selectDragonColor('emerald', this)"></div>
+            <div class="color-chip" style="background:#cad5de;" title="Ay Gümüşü" onclick="selectDragonColor('silver', this)"></div>
+          </div>
         </div>
-        <div class="lobby-status-msg" id="join-status-msg">
-          Arkadaşından aldığın oda kodunu buraya gir ve bağlan.
+
+        <!-- 3. Aksesuarlar & Donanım -->
+        <div class="cust-row">
+          <span class="cust-label">
+            <svg class="cust-label-icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Donanım:
+          </span>
+          <div class="accessory-toggles">
+            <button type="button" class="acc-toggle-btn" id="acc-btn-armor" onclick="toggleAccessoryBtn('armor')">
+              <span class="acc-status-dot"></span> 🛡️ Ejderha Zırhı
+            </button>
+            <button type="button" class="acc-toggle-btn" id="acc-btn-wingembers" onclick="toggleAccessoryBtn('wingembers')">
+              <span class="acc-status-dot"></span> ✨ Kanat Kıvılcımları
+            </button>
+            <button type="button" class="acc-toggle-btn" id="acc-btn-eyeglow" onclick="toggleAccessoryBtn('eyeglow')">
+              <span class="acc-status-dot"></span> 🔥 Göz Parıltısı
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="song-picker-splash">
-      <span>🎵 Başlangıç Şarkısı:</span>
-      <select id="splash-song-select" onchange="loadTrack(parseInt(this.value), false)">
-        <!-- JavaScript ile doldurulur -->
-      </select>
+    <!-- TAB 2: ÇOK OYUNCULU LOBİ -->
+    <div class="tab-pane" id="tab-lobby">
+      <div class="lobby-box">
+        <div class="lobby-header">
+          <span class="lobby-title">
+            <svg class="cust-label-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Uçuş Modu:
+          </span>
+          <div class="lobby-mode-pills">
+            <button type="button" class="lobby-pill-btn active" id="btn-mode-solo" onclick="setLobbyMode('solo')">🎮 Tek Başına</button>
+            <button type="button" class="lobby-pill-btn" id="btn-mode-host" onclick="setLobbyMode('host')">👑 Oda Kur</button>
+            <button type="button" class="lobby-pill-btn" id="btn-mode-join" onclick="setLobbyMode('join')">🤝 Odaya Katıl</button>
+          </div>
+        </div>
+
+        <div class="lobby-body" id="lobby-view-solo">
+          <div class="lobby-status-msg">
+            <span>🏔️ Şarkılar eşliğinde tek başına huzurlu ve serbest uçuş modu.</span>
+          </div>
+        </div>
+
+        <div class="lobby-body" id="lobby-view-host" style="display:none;">
+          <div class="room-code-display">
+            <div>
+              <span style="font-size:.65rem;color:#fca5a5;display:block;letter-spacing:1px;font-weight:700;">ODA KODUN:</span>
+              <span class="room-code-text" id="host-room-code-val">EJDER-49</span>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button type="button" class="lobby-action-btn" onclick="copyRoomCode()">📋 Kopyala</button>
+              <button type="button" class="lobby-action-btn" onclick="copyInviteLink()">🔗 Davet Linki</button>
+            </div>
+          </div>
+          <div class="lobby-status-msg waiting" id="host-status-msg">
+            <span class="pulse-dot"></span> Arkadaşının katılması bekleniyor... (Odayı kurup direkt uçabilirsin!)
+          </div>
+        </div>
+
+        <div class="lobby-body" id="lobby-view-join" style="display:none;">
+          <div class="lobby-input-row">
+            <input type="text" class="lobby-input" id="input-room-code" placeholder="ÖRN: EJDER-49" maxlength="15" />
+            <button type="button" class="lobby-action-btn" style="padding:9px 16px;" onclick="joinRoomByCode()">Bağlan 🚀</button>
+          </div>
+          <div class="lobby-status-msg" id="join-status-msg">
+            Arkadaşından aldığın oda kodunu buraya gir ve bağlan.
+          </div>
+        </div>
+      </div>
     </div>
-    <button id="startBtn" onclick="startExperience()">▶ &nbsp;UÇUŞA BAŞLA</button>
-    <div class="keys-hint">
-      <span><span class="k-badge">🖱️ FARE</span> Yönlendir</span>
-      <span><span class="k-badge">W / S</span> Hız</span>
-      <span><span class="k-badge">A / D</span> Yatış / Dönüş</span>
-      <span><span class="k-badge">E</span> 🦅 Yere Kon / Kalk</span>
-      <span><span class="k-badge">F</span> 🤝 Formasyon</span>
-      <span><span class="k-badge">R</span> 🎨 Gökyüzü Çizimi</span>
-      <span><span class="k-badge">Y</span> 🌈 Çizim Rengi</span>
-      <span><span class="k-badge">X</span> 🧹 Çizimi Sil</span>
-      <span><span class="k-badge">1 - 4</span> 💬 Emote (❤️🎵👋✨)</span>
-      <span><span class="k-badge">C</span> 📸 Fotoğraf Modu</span>
-      <span><span class="k-badge">SHIFT</span> 🚀 Süzülüş</span>
-      <span><span class="k-badge">V</span> 🎥 Kamera</span>
-      <span><span class="k-badge">T / G</span> 🌅 Zaman / Fırtına</span>
-      <span><span class="k-badge">N / P</span> 🎶 Şarkı</span>
+
+    <!-- TAB 3: ŞARKI & GÖKYÜZÜ -->
+    <div class="tab-pane" id="tab-music">
+      <div class="sky-music-box">
+        <div class="song-picker-splash">
+          <span style="font-size:.78rem;font-weight:700;color:#fcd0dc;">🎵 Başlangıç Şarkısı:</span>
+          <select id="splash-song-select" onchange="loadTrack(parseInt(this.value), false)">
+            <!-- JavaScript ile doldurulur -->
+          </select>
+        </div>
+
+        <div class="sky-time-picker">
+          <div class="sky-time-label">🌅 Başlangıç Gökyüzü Atmosferi:</div>
+          <div class="sky-time-btns">
+            <button type="button" class="sky-time-btn active" id="sky-btn-0" onclick="selectStartSkyMode(0)">
+              ☀️ Canlı Gündüz
+            </button>
+            <button type="button" class="sky-time-btn" id="sky-btn-1" onclick="selectStartSkyMode(1)">
+              🌅 Altın Gün Batımı
+            </button>
+            <button type="button" class="sky-time-btn" id="sky-btn-2" onclick="selectStartSkyMode(2)">
+              🌌 Büyülü Gece & Aurora
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: KONTROLLER -->
+    <div class="tab-pane" id="tab-controls">
+      <div class="splash-keys-grid">
+        <div class="splash-key-item"><span class="k-badge">🖱️ FARE</span><span>Yönlendir / Bakış Açısı</span></div>
+        <div class="splash-key-item"><span class="k-badge">W / S</span><span>Hızlan / Fren Yap</span></div>
+        <div class="splash-key-item"><span class="k-badge">A / D</span><span>Yatış & Keskin Dönüş</span></div>
+        <div class="splash-key-item"><span class="k-badge">SHIFT</span><span>Süzülüş & Turbo Kükreme</span></div>
+        <div class="splash-key-item"><span class="k-badge">E / SPACE</span><span>🦅 Yere Kon / Havalan</span></div>
+        <div class="splash-key-item"><span class="k-badge">F</span><span>🤝 Formasyon / Takip Uçuşu</span></div>
+        <div class="splash-key-item"><span class="k-badge">R</span><span>🎨 Gökyüzü Çizimi (Aç/Kapa)</span></div>
+        <div class="splash-key-item"><span class="k-badge">Y</span><span>🌈 Çizim Rengi Değiştir</span></div>
+        <div class="splash-key-item"><span class="k-badge">X</span><span>🧹 Gökyüzü Çizimini Sil</span></div>
+        <div class="splash-key-item"><span class="k-badge">1 - 4</span><span>💬 Emote (❤️🎵👋✨)</span></div>
+        <div class="splash-key-item"><span class="k-badge">C</span><span>📸 Foto Modu [Boşluk: Çek]</span></div>
+        <div class="splash-key-item"><span class="k-badge">V</span><span>🎥 Kamera (1. / 3. Şahıs)</span></div>
+        <div class="splash-key-item"><span class="k-badge">T</span><span>🌌 Gündüz / Günbatımı / Aurora</span></div>
+        <div class="splash-key-item"><span class="k-badge">G</span><span>⚡ Fırtına & Şimşek Efekti</span></div>
+        <div class="splash-key-item"><span class="k-badge">N / P</span><span>🎶 Sonraki / Önceki Şarkı</span></div>
+        <div class="splash-key-item"><span class="k-badge">M</span><span>📜 Şarkı Listesi Menüsü</span></div>
+      </div>
+    </div>
+
+    <!-- Menü Alt Bölümü (Başlat Butonu & İpucu) -->
+    <div class="splash-footer">
+      <button id="startBtn" onclick="startExperience()">▶ &nbsp;UÇUŞA BAŞLA</button>
+      <div class="splash-footer-hint">💡 Uçuş esnasında kontrolleri görmek için <b>[H]</b> tuşuna basabilirsin</div>
     </div>
   </div>
 </div>
@@ -704,17 +920,36 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
     <div class="pill" id="multiplayer-hud-pill" style="border-color: rgba(0,229,255,0.5); background: rgba(5,20,30,0.85);">🌐 <b>Lobi:</b> <span id="val-lobby-status" style="color:#00e5ff; font-weight:bold;">Tek Kişilik</span></div>
     <div class="pill" id="friend-hud-pill" style="display:none; border-color: #00ffaa; background: rgba(5,30,20,0.85);">📍 <b>Arkadaşın:</b> <span id="val-friend-dist" style="color:#00ffaa; font-weight:bold;">--</span></div>
     <div class="pill" id="music-sync-pill" style="border-color: rgba(244,114,182,0.6); background: rgba(30,10,25,0.85);">📻 <b>Ortak Radyo:</b> <span id="val-sync-status" style="color:#f472b6; font-weight:bold;">Senkronize</span></div>
-    <div class="pill" id="skywrite-hud-pill" style="border-color: rgba(255,215,0,0.6); background: rgba(30,25,5,0.85);"><b>R:</b> 🎨 Çizim: <span id="val-draw-status" style="color:#ffd700; font-weight:bold;">Kapalı</span></div>
-    <div class="pill"><b>Y:</b> 🌈 Renk</div>
-    <div class="pill"><b>X:</b> 🧹 Sil</div>
+    <div class="pill" id="skywrite-hud-pill" style="border-color: rgba(255,215,0,0.6); background: rgba(30,25,5,0.85);">🎨 <b>Çizim:</b> <span id="val-draw-status" style="color:#ffd700; font-weight:bold;">Kapalı</span></div>
     <div class="pill">⭐ <b>Halka:</b> <span id="val-rings">0</span></div>
-    <div class="pill"><b>E:</b> 🦅 Kon/Kalk</div>
-    <div class="pill"><b>F:</b> 🤝 Formasyon</div>
-    <div class="pill"><b>1-4:</b> 💬 Emote</div>
-    <div class="pill"><b>C:</b> 📸 Foto [Boşluk: Çek]</div>
-    <div class="pill"><b>V:</b> 🎥 Kamera</div>
-    <div class="pill"><b>T:</b> 🌌 Gün/Gece/Aurora</div>
-    <div class="pill"><b>N:</b> ⏭ Şarkı</div>
+    <div class="pill pill-btn" id="help-toggle-btn" onclick="toggleHelpPanel()">⌨️ <b>Kılavuz [H]</b></div>
+  </div>
+
+  <!-- Oyun İçi Açılır Kontrol Kılavuzu (H Tuşu ile Açılır/Kapanır) -->
+  <div id="help-panel">
+    <div class="help-header">
+      <span class="help-title">⌨️ Kontrol Kılavuzu & Kısayollar</span>
+      <span class="help-close" onclick="toggleHelpPanel(false)">✖</span>
+    </div>
+    <div class="help-grid">
+      <div class="help-item"><span class="help-k">🖱️ FARE</span><span class="help-desc">Yönlendir / Bakış</span></div>
+      <div class="help-item"><span class="help-k">W / S</span><span class="help-desc">Hızlan / Fren Yap</span></div>
+      <div class="help-item"><span class="help-k">A / D</span><span class="help-desc">Yatış & Keskin Dönüş</span></div>
+      <div class="help-item"><span class="help-k">SHIFT</span><span class="help-desc">Süzülüş & Kükreme</span></div>
+      <div class="help-item"><span class="help-k">E / SPACE</span><span class="help-desc">🦅 Yere Kon / Havalan</span></div>
+      <div class="help-item"><span class="help-k">F</span><span class="help-desc">🤝 Formasyon Uçuşu</span></div>
+      <div class="help-item"><span class="help-k">R</span><span class="help-desc">🎨 Çizim Aç / Kapat</span></div>
+      <div class="help-item"><span class="help-k">Y</span><span class="help-desc">🌈 Çizim Rengi Değiştir</span></div>
+      <div class="help-item"><span class="help-k">X</span><span class="help-desc">🧹 Çizimi Temizle</span></div>
+      <div class="help-item"><span class="help-k">1 - 4</span><span class="help-desc">💬 Emote (❤️🎵👋✨)</span></div>
+      <div class="help-item"><span class="help-k">C</span><span class="help-desc">📸 Foto Modu [Boşluk: Çek]</span></div>
+      <div class="help-item"><span class="help-k">V</span><span class="help-desc">🎥 Kamera (1./3. Şahıs)</span></div>
+      <div class="help-item"><span class="help-k">T</span><span class="help-desc">🌌 Gündüz / Günbatımı / Aurora</span></div>
+      <div class="help-item"><span class="help-k">G</span><span class="help-desc">⚡ Fırtına Efekti</span></div>
+      <div class="help-item"><span class="help-k">N / P</span><span class="help-desc">🎵 Şarkı İleri / Geri</span></div>
+      <div class="help-item"><span class="help-k">M</span><span class="help-desc">📜 Şarkı Menüsü</span></div>
+      <div class="help-item"><span class="help-k">H</span><span class="help-desc">⌨️ Kılavuzu Kapat</span></div>
+    </div>
   </div>
   <div id="hud-flight">
     <div class="hud-cell">
@@ -960,6 +1195,27 @@ function togglePlaylistMenu(forceState){
   } else {
     menu.classList.remove('open');
   }
+}
+
+let isHelpPanelOpen = false;
+function toggleHelpPanel(forceState){
+  const panel = document.getElementById('help-panel');
+  if(!panel) return;
+  isHelpPanelOpen = typeof forceState === 'boolean' ? forceState : !isHelpPanelOpen;
+  if(isHelpPanelOpen){
+    panel.classList.add('open');
+    if(document.pointerLockElement) document.exitPointerLock();
+  } else {
+    panel.classList.remove('open');
+  }
+}
+
+function switchSplashTab(tabName, btn){
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.menu-tab-btn').forEach(b => b.classList.remove('active'));
+  const targetPane = document.getElementById('tab-' + tabName);
+  if(targetPane) targetPane.classList.add('active');
+  if(btn) btn.classList.add('active');
 }
 
 function initAudio(){
@@ -1316,8 +1572,8 @@ scene.add(ambLight);
 let skyModeState = 0;
 let isSunset = false;
 
-function toggleSkyMode(){
-  skyModeState = (skyModeState + 1) % 3;
+function setSkyMode(mode, showIndicator = true){
+  skyModeState = mode % 3;
   isSunset = (skyModeState === 1);
   const ind = document.getElementById('cam-mode-indicator');
   
@@ -1328,7 +1584,7 @@ function toggleSkyMode(){
     sunLight.intensity = 1.45;
     hemiLight.color.setHex(0xdcf0ff);
     hemiLight.groundColor.setHex(0x1e6618);
-    ind.textContent = '☀️ CANLI GÜNDÜZ MODU';
+    if(ind && showIndicator) ind.textContent = '☀️ CANLI GÜNDÜZ MODU';
   } else if(skyModeState === 1){
     scene.background.copy(skySunset);
     scene.fog.color.copy(fogSunset);
@@ -1336,7 +1592,7 @@ function toggleSkyMode(){
     sunLight.intensity = 1.6;
     hemiLight.color.setHex(0xff9e7a);
     hemiLight.groundColor.setHex(0x401815);
-    ind.textContent = '🌅 GÜN BATIMI & ALTIN SAAT MODU';
+    if(ind && showIndicator) ind.textContent = '🌅 GÜN BATIMI & ALTIN SAAT MODU';
   } else if(skyModeState === 2){
     scene.background.copy(skyNight);
     scene.fog.color.copy(fogNight);
@@ -1344,10 +1600,23 @@ function toggleSkyMode(){
     sunLight.intensity = 0.42;
     hemiLight.color.setHex(0x1b2848);
     hemiLight.groundColor.setHex(0x060c18);
-    ind.textContent = '🌌 BÜYÜLÜ GECE & KUZEY IŞIKLARI (AURORA) MODU';
+    if(ind && showIndicator) ind.textContent = '🌌 BÜYÜLÜ GECE & KUZEY IŞIKLARI (AURORA) MODU';
   }
-  ind.style.opacity = '1';
-  setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2400);
+  if(ind && showIndicator){
+    ind.style.opacity = '1';
+    setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2400);
+  }
+  document.querySelectorAll('.sky-time-btn').forEach((b, idx) => {
+    b.classList.toggle('active', idx === skyModeState);
+  });
+}
+
+function toggleSkyMode(){
+  setSkyMode((skyModeState + 1) % 3, true);
+}
+
+function selectStartSkyMode(mode){
+  setSkyMode(mode, false);
 }
 
 // ═══════════════════════════════════════════════════
@@ -1901,25 +2170,40 @@ const sakuraPoints = new THREE.Points(sakuraGeo, sakuraMat);
 sakuraPoints.frustumCulled = false;
 scene.add(sakuraPoints);
 
-// Karlı Zirve Parçacıkları (İrtifa > 175m)
-const SNOW_COUNT = 280;
+// Karlı Zirve Parçacıkları (Yumuşak Dairesel Kar Tanesi / Yıldız Tozu)
+function createSoftFlakeTexture(){
+  const canvas = document.createElement('canvas');
+  canvas.width = 32; canvas.height = 32;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createRadialGradient(16, 16, 0, 16, 16, 15);
+  grad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+  grad.addColorStop(0.35, 'rgba(255, 255, 255, 0.45)');
+  grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 32, 32);
+  return new THREE.CanvasTexture(canvas);
+}
+const softFlakeTex = createSoftFlakeTexture();
+
+const SNOW_COUNT = 160;
 const snowGeo = new THREE.BufferGeometry();
 const snowPositions = new Float32Array(SNOW_COUNT * 3);
 const snowVel = [];
 for(let i = 0; i < SNOW_COUNT; i++){
-  snowPositions[i * 3] = (Math.random() - 0.5) * 130;
-  snowPositions[i * 3 + 1] = Math.random() * 90;
-  snowPositions[i * 3 + 2] = (Math.random() - 0.5) * 130;
+  snowPositions[i * 3] = (Math.random() - 0.5) * 120;
+  snowPositions[i * 3 + 1] = Math.random() * 80;
+  snowPositions[i * 3 + 2] = (Math.random() - 0.5) * 120;
   snowVel.push({
-    vx: (Math.random() - 0.5) * 2.5,
-    vy: -2.8 - Math.random() * 3.2,
-    vz: (Math.random() - 0.5) * 2.5
+    vx: (Math.random() - 0.5) * 2.0,
+    vy: -2.2 - Math.random() * 2.5,
+    vz: (Math.random() - 0.5) * 2.0
   });
 }
 snowGeo.setAttribute('position', new THREE.BufferAttribute(snowPositions, 3));
 const snowMat = new THREE.PointsMaterial({
+  map: softFlakeTex,
   color: 0xffffff,
-  size: 2.4,
+  size: 2.6,
   transparent: true,
   opacity: 0.0,
   blending: THREE.AdditiveBlending,
@@ -1949,10 +2233,10 @@ function updatePetalsAndSnow(dt){
   }
   sakuraGeo.attributes.position.needsUpdate = true;
 
-  // 2. Karlı Zirveler
-  const isHighAltitude = (dragonPos.y > 175);
-  const targetSnowOp = isHighAltitude ? Math.min(0.85, (dragonPos.y - 175) / 50 * 0.85) : 0.0;
-  snowMat.opacity += (targetSnowOp - snowMat.opacity) * Math.min(1.0, dt * 4.0);
+  // 2. Karlı Zirveler (Yalnızca yüksek karlı dağ irtifasında yumuşak parıltı)
+  const isMountainPeak = (dragonPos.y > 185 && dragonPos.y < 350);
+  const targetSnowOp = isMountainPeak ? Math.min(0.40, (dragonPos.y - 185) / 75 * 0.40) : 0.0;
+  snowMat.opacity += (targetSnowOp - snowMat.opacity) * Math.min(1.0, dt * 3.5);
 
   if(snowMat.opacity > 0.02){
     snowPoints.position.copy(dragonPos);
@@ -1964,10 +2248,10 @@ function updatePetalsAndSnow(dt){
       snPos[idx + 1] += sv.vy * dt;
       snPos[idx + 2] += sv.vz * dt;
 
-      if(snPos[idx + 1] < -45){
-        snPos[idx] = (Math.random() - 0.5) * 130;
-        snPos[idx + 1] = 45;
-        snPos[idx + 2] = (Math.random() - 0.5) * 130;
+      if(snPos[idx + 1] < -40){
+        snPos[idx] = (Math.random() - 0.5) * 120;
+        snPos[idx + 1] = 40;
+        snPos[idx + 2] = (Math.random() - 0.5) * 120;
       }
     }
     snowGeo.attributes.position.needsUpdate = true;
@@ -3493,8 +3777,10 @@ function selectDragonSpecies(species, btn){
   applyDragonCustomization();
 }
 
-function selectDragonColor(colorKey){
+function selectDragonColor(colorKey, btn){
   currentColorKey = colorKey;
+  document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('active'));
+  if(btn) btn.classList.add('active');
   applyDragonCustomization();
 }
 
@@ -3931,6 +4217,11 @@ window.addEventListener('keydown', e => {
   }
   if(e.code === 'Escape'){
     closePolaroidModal();
+    toggleHelpPanel(false);
+    togglePlaylistMenu(false);
+  }
+  if(e.code === 'KeyH'){
+    toggleHelpPanel();
   }
   if(e.code === 'KeyF'){
     toggleFormationFlight();
@@ -3960,6 +4251,7 @@ container.addEventListener('click', () => {
   if(gameActive) {
     document.body.requestPointerLock();
     togglePlaylistMenu(false);
+    toggleHelpPanel(false);
   }
 });
 
