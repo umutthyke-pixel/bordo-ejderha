@@ -1377,18 +1377,27 @@ function updateDynamicDayCycle(dt){
 // ═══════════════════════════════════════════════════
 //  CANLI DOĞA: GÖÇMEN KUŞ SÜRÜSÜ (Flock of Birds)
 // ═══════════════════════════════════════════════════
-const BIRD_COUNT = 55;
+const BIRD_COUNT = 48;
 const birdGeo = new THREE.BufferGeometry();
+// Geniş kanatlı, belirgin ve zarif beyaz martı/kartal geometrisi
 const bVerts = new Float32Array([
-  -1.4, 0.2, 0.4,   0, 0, -0.6,   0, 0, 0.6,
-   1.4, 0.2, 0.4,   0, 0, 0.6,    0, 0, -0.6
+  // Sol Kanat
+  -2.6, 0.4, 0.3,   0, 0.1, -1.2,   0, 0.1, 0.8,
+  // Sağ Kanat
+   2.6, 0.4, 0.3,   0, 0.1, 0.8,    0, 0.1, -1.2,
+  // Kuyruk
+   0, 0.1, 1.6,     -0.6, 0.1, 0.6,  0.6, 0.1, 0.6,
+  // Baş / Gaga
+   0, 0.3, -1.8,    -0.4, 0.1, -0.9, 0.4, 0.1, -0.9
 ]);
 birdGeo.setAttribute('position', new THREE.BufferAttribute(bVerts, 3));
 birdGeo.computeVertexNormals();
 
 const birdMat = new THREE.MeshStandardMaterial({
-  color: 0xe6f4ff,
-  roughness: 0.5,
+  color: 0xffffff,
+  emissive: 0x99ccff,
+  emissiveIntensity: 0.45,
+  roughness: 0.35,
   metalness: 0.1,
   side: THREE.DoubleSide
 });
@@ -1399,32 +1408,33 @@ scene.add(birdInstMesh);
 
 const birdData = [];
 const _dummyBird = new THREE.Object3D();
-const _flockCenter = new THREE.Vector3(0, 95, -150);
+const _flockCenter = new THREE.Vector3(0, 95, -80);
 
 for(let i = 0; i < BIRD_COUNT; i++){
   birdData.push({
     pos: new THREE.Vector3(
-      (Math.random() - 0.5) * 120,
-      85 + Math.random() * 45,
-      (Math.random() - 0.5) * 120
+      (Math.random() - 0.5) * 80,
+      90 + Math.random() * 30,
+      -80 + (Math.random() - 0.5) * 80
     ),
-    vel: new THREE.Vector3((Math.random() - 0.5) * 10, 0, (Math.random() - 0.5) * 10).normalize().multiplyScalar(22 + Math.random() * 8),
+    vel: new THREE.Vector3((Math.random() - 0.5) * 10, 0, -15).normalize().multiplyScalar(24 + Math.random() * 6),
     phase: Math.random() * Math.PI * 2,
-    wingSpeed: 9 + Math.random() * 5
+    wingSpeed: 9 + Math.random() * 4
   });
 }
 
 let birdEscortTimer = 0;
 
 function updateBirdFlock(dt){
-  const t = Date.now() * 0.00032;
-  _flockCenter.set(Math.sin(t) * 480, 115 + Math.sin(t * 1.8) * 35, Math.cos(t) * 480);
+  const t = Date.now() * 0.00065;
+  // Sürü oyuncunun başlangıç noktasının tam önünde, vadi koridorunda (130m yarıçapta) süzülür
+  _flockCenter.set(Math.sin(t) * 130, 98 + Math.sin(t * 1.8) * 24, -80 + Math.cos(t) * 130);
 
   const distToDragon = dragonPos.distanceTo(_flockCenter);
-  const isEscortingDragon = (distToDragon < 95);
+  const isEscortingDragon = (distToDragon < 160);
 
   if(isEscortingDragon){
-    birdEscortTimer = Math.min(birdEscortTimer + dt * 2.0, 1.0);
+    birdEscortTimer = Math.min(birdEscortTimer + dt * 2.2, 1.0);
   } else {
     birdEscortTimer = Math.max(birdEscortTimer - dt * 0.8, 0.0);
   }
@@ -1434,22 +1444,22 @@ function updateBirdFlock(dt){
     b.phase += dt * b.wingSpeed;
 
     let targetPos = _flockCenter;
-    if(birdEscortTimer > 0.08){
+    if(birdEscortTimer > 0.06){
       const wingSide = (i % 2 === 0 ? 1 : -1);
-      const wingOffset = wingSide * (12 + (i * 0.55));
-      _tempVec1.set(wingOffset, 2.0 + Math.sin(i) * 2.5, 9 + i * 1.1).applyQuaternion(dragonRig.quaternion).add(dragonPos);
+      const wingOffset = wingSide * (10 + (i * 0.45));
+      _tempVec1.set(wingOffset, 1.8 + Math.sin(i) * 2.2, 8 + i * 0.9).applyQuaternion(dragonRig.quaternion).add(dragonPos);
       targetPos = _tempVec1;
     }
 
-    _tempVec2.subVectors(targetPos, b.pos).normalize().multiplyScalar(26);
-    b.vel.lerp(_tempVec2, Math.min(1.0, dt * (isEscortingDragon ? 4.5 : 1.8)));
+    _tempVec2.subVectors(targetPos, b.pos).normalize().multiplyScalar(28);
+    b.vel.lerp(_tempVec2, Math.min(1.0, dt * (isEscortingDragon ? 4.8 : 2.0)));
     b.pos.addScaledVector(b.vel, dt);
 
     _dummyBird.position.copy(b.pos);
     _dummyBird.rotation.y = Math.atan2(-b.vel.x, -b.vel.z);
-    _dummyBird.rotation.x = Math.max(-0.6, Math.min(0.6, b.vel.y / 28));
-    _dummyBird.rotation.z = Math.sin(b.phase) * 0.45;
-    _dummyBird.scale.set(1.5, 1.5 + Math.sin(b.phase) * 0.35, 1.5);
+    _dummyBird.rotation.x = Math.max(-0.55, Math.min(0.55, b.vel.y / 26));
+    _dummyBird.rotation.z = Math.sin(b.phase) * 0.5;
+    _dummyBird.scale.set(1.6, 1.6 + Math.sin(b.phase) * 0.4, 1.6);
     _dummyBird.updateMatrix();
 
     birdInstMesh.setMatrixAt(i, _dummyBird.matrix);
@@ -1461,7 +1471,8 @@ function updateBirdFlock(dt){
 //  CANLI DOĞA: MİSTİK GÖL CANLISI (Lakeside Creature Breach)
 // ═══════════════════════════════════════════════════
 const whaleGroup = new THREE.Group();
-whaleGroup.position.set(40, -22, 120);
+whaleGroup.position.set(40, -40, 120);
+whaleGroup.visible = false; // Su altındayken asla görünmesin
 
 const whaleMat = new THREE.MeshStandardMaterial({
   color: 0x162c42,
@@ -1511,26 +1522,32 @@ whaleGroup.add(ridgeMesh);
 
 scene.add(whaleGroup);
 
-let whaleBreachTimer = 6.0;
+let whaleBreachTimer = 8.0;
 let whaleProgress = -1;
 
 function updateLakeWhale(dt){
   if(whaleProgress < 0){
     whaleBreachTimer -= dt;
     if(whaleBreachTimer <= 0){
-      whaleBreachTimer = 24.0 + Math.random() * 8.0;
+      whaleBreachTimer = 26.0 + Math.random() * 8.0;
       whaleProgress = 0.0;
+      whaleGroup.visible = true;
+    } else {
+      whaleGroup.visible = false;
+      whaleGroup.position.y = -50;
+      return;
     }
-    whaleGroup.position.y = -22;
-    return;
   }
 
   whaleProgress += dt * 0.38;
   if(whaleProgress >= 1.0){
     whaleProgress = -1;
+    whaleGroup.visible = false;
+    whaleGroup.position.y = -50;
     return;
   }
 
+  whaleGroup.visible = true;
   const arcY = Math.sin(whaleProgress * Math.PI) * 26.0 - 6.0;
   const forwardZ = 120 + whaleProgress * 70;
   whaleGroup.position.set(40 + Math.sin(whaleProgress * Math.PI) * 15, arcY, forwardZ);
@@ -1552,8 +1569,23 @@ function updateLakeWhale(dt){
 }
 
 // ═══════════════════════════════════════════════════
-//  GÖKYÜZÜ ÇİZİMİ (SKYWRITING): YAZI, KALP & DESENLER
+//  GÖKYÜZÜ ÇİZİMİ (SKYWRITING): YUMUŞAK AKICI PARILTI ŞERİDİ
 // ═══════════════════════════════════════════════════
+function createGlowSmokeTexture(){
+  const canvas = document.createElement('canvas');
+  canvas.width = 64; canvas.height = 64;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createRadialGradient(32, 32, 1, 32, 32, 31);
+  grad.addColorStop(0, 'rgba(255,255,255,1)');
+  grad.addColorStop(0.3, 'rgba(255,255,255,0.85)');
+  grad.addColorStop(0.7, 'rgba(255,255,255,0.22)');
+  grad.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(canvas);
+}
+const glowSmokeTex = createGlowSmokeTexture();
+
 let isSkywriting = false;
 let currentDrawColorIdx = 0;
 const DRAW_COLORS = [
@@ -1563,7 +1595,7 @@ const DRAW_COLORS = [
   { name: 'Bulut Beyazı ☁️', hex: 0xffffff, str: '#ffffff' }
 ];
 
-const MAX_TRAIL_PTS = 1400;
+const MAX_TRAIL_PTS = 1600;
 const drawGeo = new THREE.BufferGeometry();
 const drawPositions = new Float32Array(MAX_TRAIL_PTS * 3);
 const drawColors = new Float32Array(MAX_TRAIL_PTS * 3);
@@ -1577,11 +1609,14 @@ for(let i = 0; i < MAX_TRAIL_PTS; i++){
 }
 drawGeo.setAttribute('position', new THREE.BufferAttribute(drawPositions, 3));
 drawGeo.setAttribute('color', new THREE.BufferAttribute(drawColors, 3));
+
 const drawMat = new THREE.PointsMaterial({
+  map: glowSmokeTex,
   vertexColors: true,
-  size: 3.2,
+  size: 5.2,
   transparent: true,
-  opacity: 0.88,
+  opacity: 0.90,
+  depthWrite: false,
   blending: THREE.AdditiveBlending
 });
 const skywritePoints = new THREE.Points(drawGeo, drawMat);
@@ -1606,11 +1641,15 @@ scene.add(remoteDrawPoints);
 let localTrailHead = 0;
 let remoteTrailHead = 0;
 let lastDrawEmitTime = 0;
-const _lastLocalPt = new THREE.Vector3(0, -9999, 0);
+let hasLastLocalPt = false;
+const _lastLocalPt = new THREE.Vector3();
+const _interpPt = new THREE.Vector3();
 
 function toggleSkywriting(){
   if(!gameActive) return;
   isSkywriting = !isSkywriting;
+  hasLastLocalPt = false;
+
   const statusEl = document.getElementById('val-draw-status');
   if(statusEl){
     statusEl.textContent = isSkywriting ? 'Açık (' + DRAW_COLORS[currentDrawColorIdx].name + ')' : 'Kapalı';
@@ -1647,6 +1686,7 @@ function clearSkywriting(){
   }
   drawGeo.attributes.position.needsUpdate = true;
   localTrailHead = 0;
+  hasLastLocalPt = false;
 
   if(activeConnection && activeConnection.open){
     activeConnection.send({ t: 'dr_clr' });
@@ -1687,33 +1727,56 @@ function addRemoteDrawPoint(x, y, z, colorHex){
   remoteDrawGeo.attributes.color.needsUpdate = true;
 }
 
+function addSingleLocalPuff(pt, curColor){
+  const pos = drawGeo.attributes.position.array;
+  const col = drawGeo.attributes.color.array;
+  const idx = localTrailHead * 3;
+
+  pos[idx] = pt.x;
+  pos[idx + 1] = pt.y;
+  pos[idx + 2] = pt.z;
+
+  const cObj = new THREE.Color(curColor.hex);
+  col[idx] = cObj.r;
+  col[idx + 1] = cObj.g;
+  col[idx + 2] = cObj.b;
+
+  localTrailHead = (localTrailHead + 1) % MAX_TRAIL_PTS;
+}
+
 function updateLocalSkywriting(dt){
-  if(!isSkywriting || !gameActive) return;
+  if(!isSkywriting || !gameActive){
+    hasLastLocalPt = false;
+    return;
+  }
 
   _tempVec1.set(0, 0.4, 2.8).applyQuaternion(dragonRig.quaternion).add(dragonPos);
-  if(_lastLocalPt.distanceTo(_tempVec1) > 2.0){
+  const curColor = DRAW_COLORS[currentDrawColorIdx];
+
+  if(!hasLastLocalPt){
+    hasLastLocalPt = true;
+    _lastLocalPt.copy(_tempVec1);
+    addSingleLocalPuff(_tempVec1, curColor);
+    drawGeo.attributes.position.needsUpdate = true;
+    drawGeo.attributes.color.needsUpdate = true;
+    return;
+  }
+
+  const dist = _lastLocalPt.distanceTo(_tempVec1);
+  if(dist > 0.65){
+    const steps = Math.min(6, Math.max(1, Math.floor(dist / 0.65)));
+    for(let s = 1; s <= steps; s++){
+      const alpha = s / steps;
+      _interpPt.lerpVectors(_lastLocalPt, _tempVec1, alpha);
+      addSingleLocalPuff(_interpPt, curColor);
+    }
     _lastLocalPt.copy(_tempVec1);
 
-    const pos = drawGeo.attributes.position.array;
-    const col = drawGeo.attributes.color.array;
-    const idx = localTrailHead * 3;
-
-    pos[idx] = _tempVec1.x;
-    pos[idx + 1] = _tempVec1.y;
-    pos[idx + 2] = _tempVec1.z;
-
-    const curColor = DRAW_COLORS[currentDrawColorIdx];
-    const cObj = new THREE.Color(curColor.hex);
-    col[idx] = cObj.r;
-    col[idx + 1] = cObj.g;
-    col[idx + 2] = cObj.b;
-
-    localTrailHead = (localTrailHead + 1) % MAX_TRAIL_PTS;
     drawGeo.attributes.position.needsUpdate = true;
     drawGeo.attributes.color.needsUpdate = true;
 
     const now = Date.now();
-    if(now - lastDrawEmitTime > 65 && activeConnection && activeConnection.open){
+    if(now - lastDrawEmitTime > 60 && activeConnection && activeConnection.open){
       lastDrawEmitTime = now;
       activeConnection.send({
         t: 'dr',
@@ -2199,102 +2262,6 @@ const waterfallMesh = new THREE.Mesh(waterfallGeo, waterfallMat);
 waterfallMesh.position.set(-620, 48, 180);
 waterfallMesh.rotation.set(0.3, -Math.PI / 3, 0);
 scene.add(waterfallMesh);
-
-// ═══════════════════════════════════════════════════
-//  YÜZEN GÖKYÜZÜ ADALARI & DOĞAL TAŞ KEMERLER
-// ═══════════════════════════════════════════════════
-const worldFeaturesGroup = new THREE.Group();
-scene.add(worldFeaturesGroup);
-
-const islandStoneMat = new THREE.MeshStandardMaterial({
-  color: 0x48403a,
-  roughness: 0.88,
-  metalness: 0.05,
-  flatShading: true
-});
-const islandGrassMat = new THREE.MeshStandardMaterial({
-  color: 0x2e8b28,
-  roughness: 0.80,
-  metalness: 0.02
-});
-const crystalGlowMat = new THREE.MeshStandardMaterial({
-  color: 0x00f3ff,
-  emissive: 0x0099cc,
-  emissiveIntensity: 1.25,
-  roughness: 0.15,
-  metalness: 0.5
-});
-
-const FLOATING_ISLANDS_DATA = [
-  { x: -380, y: 225, z: -460, r: 48, h: 42, crystalCol: 0x00f3ff },
-  { x: 540,  y: 195, z: 290,  r: 58, h: 46, crystalCol: 0xffd700 },
-  { x: 140,  y: 270, z: -210, r: 40, h: 36, crystalCol: 0xd946ef }
-];
-
-FLOATING_ISLANDS_DATA.forEach(data => {
-  const isGrp = new THREE.Group();
-  isGrp.position.set(data.x, data.y, data.z);
-
-  // Alt kaya gövdesi (Ters koni / piramit şekli)
-  const rockGeo = new THREE.CylinderGeometry(data.r, data.r * 0.18, data.h, 12, 3);
-  rockGeo.translate(0, -data.h * 0.5, 0);
-  const rPos = rockGeo.attributes.position;
-  for(let i = 0; i < rPos.count; i++){
-    if(rPos.getY(i) < 0){
-      rPos.setX(i, rPos.getX(i) + (Math.sin(i * 3.7) * 4.5));
-      rPos.setZ(i, rPos.getZ(i) + (Math.cos(i * 4.2) * 4.5));
-    }
-  }
-  rockGeo.computeVertexNormals();
-  const rockMesh = new THREE.Mesh(rockGeo, islandStoneMat);
-  isGrp.add(rockMesh);
-
-  // Üst yeşil çimenlik plato
-  const topGeo = new THREE.CylinderGeometry(data.r + 1.2, data.r, 4.5, 14);
-  topGeo.translate(0, 1.2, 0);
-  const topMesh = new THREE.Mesh(topGeo, islandGrassMat);
-  isGrp.add(topMesh);
-
-  // Mistik parıldayan kristal kule
-  const cMat = crystalGlowMat.clone();
-  cMat.color.setHex(data.crystalCol);
-  cMat.emissive.setHex(data.crystalCol);
-  const crysGeo = new THREE.OctahedronGeometry(6.5, 0);
-  crysGeo.scale(1.0, 2.2, 1.0);
-  crysGeo.translate(0, 12, 0);
-  const crysMesh = new THREE.Mesh(crysGeo, cMat);
-  isGrp.add(crysMesh);
-
-  const cLight = new THREE.PointLight(data.crystalCol, 3.2, 85);
-  cLight.position.set(0, 14, 0);
-  isGrp.add(cLight);
-
-  // Altından sarkan asılı taş dikitler
-  for(let k = 0; k < 4; k++){
-    const spikeGeo = new THREE.ConeGeometry(3.5, 14, 5);
-    spikeGeo.translate(0, -7, 0);
-    const spike = new THREE.Mesh(spikeGeo, islandStoneMat);
-    const ang = (k / 4) * Math.PI * 2;
-    spike.position.set(Math.cos(ang) * (data.r * 0.45), -data.h + 5, Math.sin(ang) * (data.r * 0.45));
-    isGrp.add(spike);
-  }
-
-  worldFeaturesGroup.add(isGrp);
-});
-
-// Doğal Dev Taş Kemerler (İçinden uçulabilir doğal kaya kapıları)
-const ARCH_DATA = [
-  { x: -160, y: 68, z: 420, r: 36, tube: 8.5, rotY: 0.4 },
-  { x: 380,  y: 88, z: -440, r: 38, tube: 9.0, rotY: -0.7 }
-];
-ARCH_DATA.forEach(ad => {
-  const archGeo = new THREE.TorusGeometry(ad.r, ad.tube, 8, 26, Math.PI);
-  const archMesh = new THREE.Mesh(archGeo, islandStoneMat);
-  archMesh.position.set(ad.x, ad.y, ad.z);
-  archMesh.rotation.y = ad.rotY;
-  archMesh.rotation.z = Math.PI; // Kemer yukarı baksın
-  worldFeaturesGroup.add(archMesh);
-});
 
 // ═══════════════════════════════════════════════════
 //  GERÇEK 3D DAĞ GÖZETLEME KULELERİ (MEDIEVAL & VASHLOVANI GLB)
