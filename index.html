@@ -432,23 +432,42 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 .pl-item-title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pl-item-wave{font-size:.75rem;color:#00ffaa}
 
-/* ── Uçuş Radar Mini-Haritası ── */
+/* ── Uçuş Fantezi Pusulası & Modern Mini-Harita ── */
 #radar-wrap{
-  position:fixed;bottom:22px;left:20px;width:125px;height:125px;
-  border-radius:50%;background:rgba(12,4,9,0.88);
-  border:2px solid rgba(255,130,60,0.55);
-  box-shadow:0 8px 30px rgba(0,0,0,0.75), inset 0 0 20px rgba(180,20,50,0.3);
-  backdrop-filter:blur(12px);z-index:55;pointer-events:none;
-  overflow:hidden;
+  position:fixed;bottom:22px;left:20px;width:136px;height:136px;
+  border-radius:24px;background:rgba(8,14,24,0.78);
+  border:1.5px solid rgba(240,195,95,0.55);
+  box-shadow:0 10px 32px rgba(0,0,0,0.75), inset 0 0 22px rgba(0,210,255,0.12);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  z-index:55;
+  transition:transform .2s ease, opacity .2s ease, box-shadow .2s ease;
+  user-select:none;
 }
-#radar-canvas{width:100%;height:100%;display:block;border-radius:50%}
+#radar-wrap:hover{
+  border-color:rgba(255,225,130,0.85);
+  box-shadow:0 14px 40px rgba(0,0,0,0.85), inset 0 0 26px rgba(0,229,255,0.22);
+}
+#radar-canvas{width:100%;height:100%;display:block;border-radius:22px;pointer-events:none}
 #radar-n,#radar-s,#radar-w,#radar-e{
-  position:absolute;font-family:monospace;font-weight:800;font-size:9px;color:#f7b731;pointer-events:none;
+  position:absolute;font-family:system-ui,-apple-system,sans-serif;font-weight:900;font-size:10px;color:#f0c050;pointer-events:none;
+  text-shadow:0 0 6px rgba(0,0,0,0.9);
 }
-#radar-n{top:3px;left:50%;transform:translateX(-50%);color:#ff3b60}
-#radar-s{bottom:3px;left:50%;transform:translateX(-50%)}
-#radar-w{left:4px;top:50%;transform:translateY(-50%)}
-#radar-e{right:4px;top:50%;transform:translateY(-50%)}
+#radar-n{top:6px;left:50%;transform:translateX(-50%);color:#ff4466}
+#radar-s{bottom:6px;left:50%;transform:translateX(-50%)}
+#radar-w{left:7px;top:50%;transform:translateY(-50%)}
+#radar-e{right:7px;top:50%;transform:translateY(-50%)}
+#radar-close-btn{
+  position:absolute;top:5px;right:6px;width:18px;height:18px;border-radius:50%;
+  background:rgba(255,255,255,0.14);border:none;color:#e2e8f0;font-size:10px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all .15s ease;z-index:60;line-height:1;
+}
+#radar-close-btn:hover{background:rgba(255,60,80,0.8);color:#fff;transform:scale(1.15)}
+#radar-toggle-hint{
+  position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);
+  font-size:9px;font-weight:700;color:rgba(255,255,255,0.5);white-space:nowrap;
+  pointer-events:none;letter-spacing:0.5px;
+}
 
 
 /* ── Efekt Katmanları ── */
@@ -917,13 +936,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <div id="friend-tag" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-100%);background:rgba(15,5,12,0.88);border:1px solid #00e5ff;color:#e0f7ff;font-size:0.75rem;font-weight:800;padding:4px 10px;border-radius:8px;box-shadow:0 0 15px rgba(0,229,255,0.45);white-space:nowrap;">🐉 <span id="friend-tag-name">Arkadaşın</span> [<span id="friend-tag-dist">--</span>m]</div>
 <div id="friend-offscreen-pointer" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-50%);color:#00e5ff;font-size:0.80rem;font-weight:900;text-shadow:0 0 12px #00ffff;background:rgba(10,5,15,0.88);border:1px solid #00e5ff;padding:4px 12px;border-radius:20px;box-shadow:0 0 16px rgba(0,229,255,0.5);">◀ 🐉 Arkadaşın (<span id="friend-offscreen-dist">--</span>m)</div>
 
-<!-- Mini Harita / Radar HUD -->
+<!-- Mini Harita / Fantezi Pusula HUD -->
 <div id="radar-wrap">
-  <canvas id="radar-canvas" width="125" height="125"></canvas>
+  <button id="radar-close-btn" onclick="toggleRadarVisibility(false)" title="Haritayı Gizle (M)">✕</button>
+  <canvas id="radar-canvas" width="136" height="136"></canvas>
   <div id="radar-n">K</div>
   <div id="radar-s">G</div>
   <div id="radar-w">B</div>
   <div id="radar-e">D</div>
+  <div id="radar-toggle-hint">[M] Harita</div>
 </div>
 
 <div id="hud">
@@ -934,6 +955,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
     <div class="pill" id="music-sync-pill" style="border-color: rgba(244,114,182,0.6); background: rgba(30,10,25,0.85);">📻 <b>Ortak Radyo:</b> <span id="val-sync-status" style="color:#f472b6; font-weight:bold;">Senkronize</span></div>
     <div class="pill" id="skywrite-hud-pill" style="border-color: rgba(255,215,0,0.6); background: rgba(30,25,5,0.85);">🎨 <b>Çizim:</b> <span id="val-draw-status" style="color:#ffd700; font-weight:bold;">Kapalı</span></div>
     <div class="pill">⭐ <b>Halka:</b> <span id="val-rings">0</span></div>
+    <div class="pill pill-btn" id="map-toggle-btn" onclick="toggleRadarVisibility()" style="border-color: rgba(240,195,95,0.6); background: rgba(25,20,10,0.85);">🗺️ <b>Harita [M]:</b> <span id="val-map-status" style="color:#00ffaa; font-weight:bold;">Açık</span></div>
     <div class="pill pill-btn" id="help-toggle-btn" onclick="toggleHelpPanel()">⌨️ <b>Kılavuz [H]</b></div>
   </div>
 
@@ -951,6 +973,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <div class="help-item"><span class="help-k">CTRL / Q</span><span class="help-desc">⬇️ Alçal & Süzülerek Dal</span></div>
       <div class="help-item"><span class="help-k">E</span><span class="help-desc">🦅 Yere Kon / Havalan</span></div>
       <div class="help-item"><span class="help-k">SHIFT</span><span class="help-desc">⚡ Turbo Kükreme</span></div>
+      <div class="help-item"><span class="help-k">M</span><span class="help-desc">🗺️ Haritayı Aç / Kapat</span></div>
       <div class="help-item"><span class="help-k">F</span><span class="help-desc">🤝 Formasyon Uçuşu</span></div>
       <div class="help-item"><span class="help-k">R</span><span class="help-desc">🎨 Çizim Aç / Kapat</span></div>
       <div class="help-item"><span class="help-k">Y</span><span class="help-desc">🌈 Çizim Rengi Değiştir</span></div>
@@ -1221,6 +1244,19 @@ function toggleHelpPanel(forceState){
     if(document.pointerLockElement) document.exitPointerLock();
   } else {
     panel.classList.remove('open');
+  }
+}
+
+let isRadarVisible = true;
+function toggleRadarVisibility(forceState){
+  const wrap = document.getElementById('radar-wrap');
+  if(!wrap) return;
+  isRadarVisible = typeof forceState === 'boolean' ? forceState : !isRadarVisible;
+  wrap.style.display = isRadarVisible ? 'block' : 'none';
+  const val = document.getElementById('val-map-status');
+  if(val){
+    val.textContent = isRadarVisible ? 'Açık' : 'Gizli';
+    val.style.color = isRadarVisible ? '#00ffaa' : '#888888';
   }
 }
 
@@ -3771,6 +3807,123 @@ waterfallMesh.rotation.set(0.3, -Math.PI / 3, 0);
 scene.add(waterfallMesh);
 
 // ═══════════════════════════════════════════════════
+//  UÇAN GÖKYÜZÜ ADALARI (Floating Sky Islands - Sıfır Lag, Merged Buffer)
+// ═══════════════════════════════════════════════════
+const SKY_ISLANDS = [
+  { x: -360, y: 440, z: -320, name: "Aetheria Gök Adası", color: 0x2e8b57, stoneCol: 0x48525a, lightCol: 0x00ffcc },
+  { x: 680, y: 560, z: -720, name: "Kadim Ayaz Gök Adası", color: 0xeef4fa, stoneCol: 0x5a6875, lightCol: 0x66ddff }
+];
+
+const skyIslandsGroup = new THREE.Group();
+const skyIslandCrystals = [];
+
+SKY_ISLANDS.forEach((isl) => {
+  const grp = new THREE.Group();
+  grp.position.set(isl.x, isl.y, isl.z);
+
+  // 1. Üst Düzlük / Ada Gövdesi (Plateau)
+  const topGeo = new THREE.CylinderGeometry(28, 34, 12, 9);
+  topGeo.translate(0, 0, 0);
+  // 2. Alt Sivri Sarkıt Kaya (Inverted Rock Spire)
+  const botGeo = new THREE.ConeGeometry(32, 42, 9);
+  botGeo.rotateX(Math.PI);
+  botGeo.translate(0, -25, 0);
+  // 3. Yan Kaya Çıkıntıları (Rock crags)
+  const crag1 = new THREE.DodecahedronGeometry(12, 0);
+  crag1.translate(18, -6, 12);
+  const crag2 = new THREE.DodecahedronGeometry(10, 0);
+  crag2.translate(-16, -8, -14);
+
+  const islandMeshGeo = mergeGeometriesWithColors([
+    { geo: topGeo, color: isl.color },
+    { geo: botGeo, color: isl.stoneCol },
+    { geo: crag1, color: isl.stoneCol },
+    { geo: crag2, color: isl.stoneCol }
+  ]);
+  const islandMat = new THREE.MeshStandardMaterial({
+    vertexColors: true, roughness: 0.8, metalness: 0.05, flatShading: true
+  });
+  const islandMesh = new THREE.Mesh(islandMeshGeo, islandMat);
+  grp.add(islandMesh);
+
+  // 4. Ada Üstü Kadim Harabe Sütunları
+  const archMat = new THREE.MeshStandardMaterial({ color: 0x6e7882, roughness: 0.85 });
+  for(let p = 0; p < 4; p++){
+    const ang = (p / 4) * Math.PI * 2;
+    const col = new THREE.Mesh(new THREE.BoxGeometry(2.4, 10.0, 2.4), archMat);
+    col.position.set(Math.cos(ang) * 14, 11, Math.sin(ang) * 14);
+    grp.add(col);
+  }
+
+  // 5. Merkezde Süzülen Aether Kristali
+  const aetherGeo = new THREE.OctahedronGeometry(2.6, 0);
+  const aetherMat = new THREE.MeshStandardMaterial({
+    color: isl.lightCol, emissive: isl.lightCol, emissiveIntensity: 1.4, roughness: 0.2, metalness: 0.4, transparent: true, opacity: 0.92
+  });
+  const aetherCrystal = new THREE.Mesh(aetherGeo, aetherMat);
+  aetherCrystal.position.set(0, 14, 0);
+  grp.add(aetherCrystal);
+
+  // 6. Parlayan Işık
+  const aetherLight = new THREE.PointLight(isl.lightCol, 3.2, 95);
+  aetherLight.position.set(0, 15, 0);
+  grp.add(aetherLight);
+
+  skyIslandCrystals.push(aetherCrystal);
+  skyIslandsGroup.add(grp);
+});
+scene.add(skyIslandsGroup);
+
+// ═══════════════════════════════════════════════════
+//  MİSTİK ORMAN ATEŞBÖCEKLERİ (Enchanted Forest Fireflies)
+// ═══════════════════════════════════════════════════
+const FIREFLY_COUNT = 380;
+const fireflyGeo = new THREE.BufferGeometry();
+const fireflyPositions = new Float32Array(FIREFLY_COUNT * 3);
+const fireflyBase = [];
+
+for(let i = 0; i < FIREFLY_COUNT; i++){
+  const ang = Math.random() * Math.PI * 2;
+  const dist = 100 + Math.random() * 950;
+  const fx = Math.cos(ang) * dist;
+  const fz = Math.sin(ang) * dist;
+  const gy = Math.max(-5, getTerrainHeight(fx, fz));
+  const fy = gy + 3.5 + Math.random() * 20.0;
+
+  fireflyPositions[i * 3] = fx;
+  fireflyPositions[i * 3 + 1] = fy;
+  fireflyPositions[i * 3 + 2] = fz;
+
+  fireflyBase.push({ x: fx, y: fy, z: fz, speed: 0.6 + Math.random() * 0.8, seed: Math.random() * 100 });
+}
+fireflyGeo.setAttribute('position', new THREE.BufferAttribute(fireflyPositions, 3));
+const fireflyMat = new THREE.PointsMaterial({
+  color: 0xffe875,
+  size: 3.2,
+  transparent: true,
+  opacity: 0.85,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+const fireflyPoints = new THREE.Points(fireflyGeo, fireflyMat);
+scene.add(fireflyPoints);
+
+function updateFireflies(dt){
+  const time = clock.getElapsedTime();
+  const arr = fireflyGeo.attributes.position.array;
+  for(let i = 0; i < FIREFLY_COUNT; i++){
+    const b = fireflyBase[i];
+    const idx = i * 3;
+    arr[idx]     = b.x + Math.sin(time * b.speed + b.seed) * 3.5;
+    arr[idx + 1] = b.y + Math.cos(time * (b.speed * 0.8) + b.seed) * 2.0;
+    arr[idx + 2] = b.z + Math.cos(time * b.speed + b.seed * 1.5) * 3.5;
+  }
+  fireflyGeo.attributes.position.needsUpdate = true;
+  const isNight = (typeof skyModeState !== 'undefined' && skyModeState === 2);
+  fireflyMat.opacity = isNight ? 0.92 : ((typeof skyModeState !== 'undefined' && skyModeState === 1) ? 0.75 : 0.40);
+}
+
+// ═══════════════════════════════════════════════════
 //  GERÇEK 3D DAĞ GÖZETLEME KULELERİ (MEDIEVAL & VASHLOVANI GLB)
 // ═══════════════════════════════════════════════════
 const gltfLoader = new THREE.GLTFLoader();
@@ -4706,6 +4859,9 @@ window.addEventListener('keydown', e => {
   }
   if(e.code === 'KeyH'){
     toggleHelpPanel();
+  }
+  if(e.code === 'KeyM'){
+    toggleRadarVisibility();
   }
   if(e.code === 'KeyF'){
     toggleFormationFlight();
@@ -5676,28 +5832,28 @@ function copyInviteLink(){
 const radarCanvas = document.getElementById('radar-canvas');
 const radarCtx = radarCanvas.getContext('2d');
 const radarBgCanvas = document.createElement('canvas');
-radarBgCanvas.width = 125;
-radarBgCanvas.height = 125;
+radarBgCanvas.width = 136;
+radarBgCanvas.height = 136;
 const radarBgCtx = radarBgCanvas.getContext('2d');
 let radarBgReady = false;
 let radarFrameTick = 0;
 
 function renderRadarStaticBg(){
-  const w = 125, h = 125;
+  const w = 136, h = 136;
   const cx = w / 2, cy = h / 2;
-  const radius = cx - 2;
-  const scale = (radius * 0.92) / 2200;
+  const radius = cx - 3;
+  const scale = (radius * 0.90) / 2200;
 
   radarBgCtx.clearRect(0, 0, w, h);
   radarBgCtx.save();
   radarBgCtx.beginPath();
   radarBgCtx.arc(cx, cy, radius, 0, Math.PI * 2);
-  radarBgCtx.fillStyle = 'rgba(12, 4, 9, 0.92)';
+  radarBgCtx.fillStyle = 'rgba(8, 14, 24, 0.94)';
   radarBgCtx.fill();
   radarBgCtx.clip();
 
-  // Menzil halkaları
-  radarBgCtx.strokeStyle = 'rgba(255, 120, 150, 0.22)';
+  // Zarif Fantezi İnce Pusula Halkaları
+  radarBgCtx.strokeStyle = 'rgba(230, 195, 105, 0.22)';
   radarBgCtx.lineWidth = 1;
   radarBgCtx.beginPath();
   radarBgCtx.arc(cx, cy, radius * 0.35, 0, Math.PI * 2);
@@ -5705,21 +5861,22 @@ function renderRadarStaticBg(){
   radarBgCtx.arc(cx, cy, radius * 0.97, 0, Math.PI * 2);
   radarBgCtx.stroke();
 
-  // Eksen çizgileri
+  // Eksen çizgileri (Hafif altın)
+  radarBgCtx.strokeStyle = 'rgba(230, 195, 105, 0.16)';
   radarBgCtx.beginPath();
-  radarBgCtx.moveTo(cx, 4); radarBgCtx.lineTo(cx, h - 4);
-  radarBgCtx.moveTo(4, cy); radarBgCtx.lineTo(w - 4, cy);
+  radarBgCtx.moveTo(cx, 6); radarBgCtx.lineTo(cx, h - 6);
+  radarBgCtx.moveTo(6, cy); radarBgCtx.lineTo(w - 6, cy);
   radarBgCtx.stroke();
 
-  // 1. Göl (Merkez)
-  radarBgCtx.fillStyle = 'rgba(18, 112, 158, 0.5)';
+  // 1. Göl (Merkez - Derin Turkuaz)
+  radarBgCtx.fillStyle = 'rgba(20, 130, 185, 0.55)';
   radarBgCtx.beginPath();
   radarBgCtx.arc(cx, cy, 320 * scale, 0, Math.PI * 2);
   radarBgCtx.fill();
 
-  // 2. Karlı Zirveler & Buzul Biyomları (Minimapte açık buz mavisi alanlar)
-  radarBgCtx.fillStyle = 'rgba(215, 238, 255, 0.38)';
-  radarBgCtx.strokeStyle = 'rgba(160, 220, 255, 0.65)';
+  // 2. Karlı Zirveler & Buzul Biyomları (Açık buzlu gök mavisi)
+  radarBgCtx.fillStyle = 'rgba(215, 238, 255, 0.35)';
+  radarBgCtx.strokeStyle = 'rgba(160, 220, 255, 0.60)';
   radarBgCtx.lineWidth = 1;
   SNOW_BIOMES.forEach(b => {
     const bx = cx + b.x * scale;
@@ -5732,8 +5889,8 @@ function renderRadarStaticBg(){
   });
 
   // 3. Sık Orman Biyomları (Zümrüt Yeşili)
-  radarBgCtx.fillStyle = 'rgba(28, 120, 48, 0.42)';
-  radarBgCtx.strokeStyle = 'rgba(45, 175, 75, 0.6)';
+  radarBgCtx.fillStyle = 'rgba(34, 138, 58, 0.38)';
+  radarBgCtx.strokeStyle = 'rgba(55, 185, 85, 0.55)';
   radarBgCtx.lineWidth = 1;
   FOREST_BIOMES.forEach(b => {
     const bx = cx + b.x * scale;
@@ -5746,8 +5903,8 @@ function renderRadarStaticBg(){
   });
 
   // 4. Bahar Kiraz Çiçeği Vadileri (Pembe Vadi Biyomları)
-  radarBgCtx.fillStyle = 'rgba(255, 180, 210, 0.40)';
-  radarBgCtx.strokeStyle = 'rgba(255, 140, 185, 0.65)';
+  radarBgCtx.fillStyle = 'rgba(255, 175, 205, 0.38)';
+  radarBgCtx.strokeStyle = 'rgba(255, 130, 180, 0.60)';
   radarBgCtx.lineWidth = 1;
   BLOSSOM_BIOMES.forEach(b => {
     const bx = cx + b.x * scale;
@@ -5778,7 +5935,7 @@ function renderRadarStaticBg(){
   radarBgCtx.fill();
   radarBgCtx.stroke();
 
-  // 7. Karlı Zirve Kadim Sunakları (Peak Shrines - Cyan Baklava İkonları)
+  // 7. Karlı Zirve Kadim Sunakları (Peak Shrines - Parlak Cyan Baklava)
   PEAK_SHRINES.forEach(ps => {
     const px = cx + ps.x * scale;
     const py = cy + ps.z * scale;
@@ -5795,12 +5952,29 @@ function renderRadarStaticBg(){
     radarBgCtx.stroke();
   });
 
+  // 8. Uçan Gökyüzü Adaları (İkili Altın & Turkuaz Halka)
+  if(typeof SKY_ISLANDS !== 'undefined'){
+    SKY_ISLANDS.forEach(isl => {
+      const ix = cx + isl.x * scale;
+      const iy = cy + isl.z * scale;
+      radarBgCtx.strokeStyle = '#ffd700';
+      radarBgCtx.lineWidth = 1.2;
+      radarBgCtx.beginPath();
+      radarBgCtx.arc(ix, iy, 4.2, 0, Math.PI * 2);
+      radarBgCtx.stroke();
+      radarBgCtx.fillStyle = '#00ffcc';
+      radarBgCtx.beginPath();
+      radarBgCtx.arc(ix, iy, 2.0, 0, Math.PI * 2);
+      radarBgCtx.fill();
+    });
+  }
+
   radarBgCtx.restore();
   radarBgReady = true;
 }
 
 function updateRadar(){
-  if(!gameActive) return;
+  if(!gameActive || !isRadarVisible) return;
   if(++radarFrameTick % 2 !== 0) return; // 30 FPS throttling
 
   if(!radarBgReady) renderRadarStaticBg();
@@ -5809,8 +5983,8 @@ function updateRadar(){
   const h = radarCanvas.height;
   const cx = w / 2;
   const cy = h / 2;
-  const radius = cx - 2;
-  const scale = (radius * 0.92) / 2200;
+  const radius = cx - 3;
+  const scale = (radius * 0.90) / 2200;
 
   radarCtx.clearRect(0, 0, w, h);
   radarCtx.drawImage(radarBgCanvas, 0, 0);
@@ -5881,7 +6055,7 @@ function updateRadar(){
     }
   }
 
-  // 5. Yerel Ejderha Konumu ve Baktığı Yön
+  // 5. Yerel Ejderha Konumu ve Baktığı Yön (Zarif Altın/Yakut Ok)
   const px = cx + dragonPos.x * scale;
   const py = cy + dragonPos.z * scale;
 
@@ -5889,25 +6063,35 @@ function updateRadar(){
   radarCtx.translate(px, py);
   radarCtx.rotate(-yaw);
 
+  // Uçuş Görüş Konisi (Vision cone)
   radarCtx.beginPath();
-  radarCtx.moveTo(0, -6.5);
-  radarCtx.lineTo(4.5, 5);
-  radarCtx.lineTo(0, 3);
-  radarCtx.lineTo(-4.5, 5);
+  radarCtx.moveTo(0, 0);
+  radarCtx.lineTo(-7.0, -16.0);
+  radarCtx.lineTo(7.0, -16.0);
+  radarCtx.closePath();
+  radarCtx.fillStyle = 'rgba(255, 215, 0, 0.12)';
+  radarCtx.fill();
+
+  // Ejderha Ok İbresi
+  radarCtx.beginPath();
+  radarCtx.moveTo(0, -7.5);
+  radarCtx.lineTo(5.0, 5.5);
+  radarCtx.lineTo(0, 3.2);
+  radarCtx.lineTo(-5.0, 5.5);
   radarCtx.closePath();
   radarCtx.fillStyle = '#ff2b55';
   radarCtx.fill();
-  radarCtx.strokeStyle = '#ffe4a0';
-  radarCtx.lineWidth = 1.2;
+  radarCtx.strokeStyle = '#ffd700';
+  radarCtx.lineWidth = 1.4;
   radarCtx.stroke();
 
+  // Merkez Işık Noktası
   radarCtx.beginPath();
-  radarCtx.arc(0, 0, 4.5, 0, Math.PI * 2);
-  radarCtx.fillStyle = 'rgba(255, 60, 90, 0.35)';
+  radarCtx.arc(0, 0, 3.5, 0, Math.PI * 2);
+  radarCtx.fillStyle = 'rgba(255, 215, 0, 0.85)';
   radarCtx.fill();
 
   radarCtx.restore();
-
   radarCtx.restore();
 }
 
@@ -5955,6 +6139,17 @@ function animate(){
         if(s.light){
           s.light.intensity = 2.2 + Math.sin(sTime * 3.0 + i) * 0.5;
         }
+      }
+    }
+  }
+  if(typeof skyIslandCrystals !== 'undefined' && skyIslandCrystals.length > 0){
+    const sTime = clock.getElapsedTime();
+    for(let i = 0; i < skyIslandCrystals.length; i++){
+      const cr = skyIslandCrystals[i];
+      if(cr){
+        cr.rotation.y += dt * 0.8;
+        cr.rotation.x = Math.sin(sTime * 1.5 + i) * 0.15;
+        cr.position.y = 14 + Math.sin(sTime * 2.0 + i) * 0.6;
       }
     }
   }
@@ -6026,22 +6221,56 @@ function animate(){
       windGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.1);
     }
 
-    // Yumuşak Sınır Rüzgarı (Boundary Updraft)
-    const dCenter = Math.sqrt(dragonPos.x*dragonPos.x + dragonPos.z*dragonPos.z);
-    if(dCenter > 2200){
-      const targetAngle = Math.atan2(-dragonPos.x, -dragonPos.z);
-      let diff = targetAngle - yaw;
-      while(diff < -Math.PI) diff += Math.PI * 2;
-      while(diff > Math.PI) diff -= Math.PI * 2;
-      yaw += diff * dt * 0.75;
+    // ── AKILLI SINIR RÜZGARI (Doğal İtme & Asla Dönüşü Kilitlememe) ──
+    const dCenter = Math.hypot(dragonPos.x, dragonPos.z);
+    if(dCenter > 2100){
+      // Oyuncunun dönüşünü kilitlemeden, harita merkezine doğru yumuşak rüzgar itkisi
+      const pushInward = Math.min(45.0, (dCenter - 2100) * 1.5);
+      dragonPos.x -= (dragonPos.x / dCenter) * pushInward * dt;
+      dragonPos.z -= (dragonPos.z / dCenter) * pushInward * dt;
+
+      // Oyuncu hiçbir dönüş tuşuna basmıyorsa ve fare oynamıyorsa hafifçe merkeze yönlendir
+      if(!keys['KeyA'] && !keys['KeyD'] && !keys['ArrowLeft'] && !keys['ArrowRight'] && Math.abs(mouseDX) < 1.5){
+        const targetAngle = Math.atan2(dragonPos.x, dragonPos.z);
+        let diff = targetAngle - yaw;
+        while(diff < -Math.PI) diff += Math.PI * 2;
+        while(diff > Math.PI) diff -= Math.PI * 2;
+        yaw += diff * dt * 0.35;
+      }
     }
 
-    // Zemin & Su Seviyesi Koruma & Yüksek İrtifa Sınırı (1800 metreye kadar tam özgürlük)
+    // ── ÖNGÖRÜLÜ DAĞ YAMACI SÜZÜLME & ÇARPIŞMA KORUMASI (Terrain Slope Deflection) ──
+    const probeDist = Math.max(12.0, flightSpeed * 0.45);
+    const probeX = dragonPos.x + _forward.x * probeDist;
+    const probeZ = dragonPos.z + _forward.z * probeDist;
+    const aheadGroundY = Math.max(-8.5, getTerrainHeight(probeX, probeZ));
     const groundY = Math.max(-8.5, getTerrainHeight(dragonPos.x, dragonPos.z));
+
     if(!isLanded){
-      if(dragonPos.y < groundY + 12.0){
-        dragonPos.y += (groundY + 12.0 - dragonPos.y) * Math.min(1.0, dt * 5.0);
-        if(pitch < 0) pitch *= 0.85;
+      // 1. İleride dik bir kaya duvarı veya dağ yamacı varsa (duvara çarpıp takılmayı önle)
+      const cliffDiff = aheadGroundY - (dragonPos.y - 3.0);
+      if(cliffDiff > 0){
+        // Dağ yüzeyinin eğim normalini hesapla (yamacın baktığı açık yöne it)
+        const eps = 3.5;
+        const slopeX = (getTerrainHeight(dragonPos.x + eps, dragonPos.z) - getTerrainHeight(dragonPos.x - eps, dragonPos.z)) / (eps * 2);
+        const slopeZ = (getTerrainHeight(dragonPos.x, dragonPos.z + eps) - getTerrainHeight(dragonPos.x, dragonPos.z - eps)) / (eps * 2);
+        const slopeLen = Math.hypot(slopeX, slopeZ) || 1.0;
+        const normX = -slopeX / slopeLen; // Dağ yüzeyinden dışarı doğru
+        const normZ = -slopeZ / slopeLen;
+
+        const deflectSpeed = Math.min(36.0, cliffDiff * 2.5);
+        dragonPos.x += normX * deflectSpeed * dt;
+        dragonPos.z += normZ * deflectSpeed * dt;
+
+        // Dağ yamacından yukarı doğru doğal aerodinamik hava yastığı (lift)
+        dragonPos.y += Math.min(48.0, cliffDiff * 3.4) * dt;
+        if(pitch < 0) pitch *= Math.max(0.1, 1.0 - dt * 6.0);
+      }
+
+      // 2. Taban zemin koruması (asla arazinin içine gömülmeme)
+      if(dragonPos.y < groundY + 11.5){
+        dragonPos.y += (groundY + 11.5 - dragonPos.y) * Math.min(1.0, dt * 7.0);
+        if(pitch < 0) pitch *= 0.80;
       }
       if(dragonPos.y > 1800.0) dragonPos.y -= (dragonPos.y - 1800.0) * 0.06;
     }
@@ -6116,6 +6345,7 @@ function animate(){
     updatePetalsAndSnow(dt);
     updateSkyRays(dt);
     updateWindChimes(dt);
+    if(typeof updateFireflies === 'function') updateFireflies(dt);
 
     // 4. Alev Parçacıkları (Vektör Havuzu)
     const positions = fireParticles.geometry.attributes.position.array;
@@ -6176,6 +6406,12 @@ function animate(){
       }
       _camOffset.applyQuaternion(dragonRig.quaternion);
       camera.position.copy(dragonPos).add(_camOffset);
+      if(!isFirstPerson){
+        const camGroundY = Math.max(-8.5, getTerrainHeight(camera.position.x, camera.position.z));
+        if(camera.position.y < camGroundY + 3.0){
+          camera.position.y = camGroundY + 3.0;
+        }
+      }
 
       const lookDist = 40;
       _lookTarget.copy(dragonPos).add(_camOffset).addScaledVector(_forward, lookDist);
