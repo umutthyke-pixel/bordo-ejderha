@@ -521,6 +521,71 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   font-family:monospace;font-size:12px;display:none;max-width:80%;
 }
 
+/* ── Canlı Halka & Hız Lider Tablosu Widget'ı (Sağ Taraf, Müzik Kartının Altı) ── */
+#leaderboard-widget{
+  position:fixed;top:72px;right:18px;width:245px;
+  background:rgba(12,6,15,0.88);border:1px solid rgba(255,215,0,0.45);
+  box-shadow:0 8px 28px rgba(0,0,0,0.75), 0 0 16px rgba(255,215,0,0.18);
+  border-radius:18px;padding:10px 14px;backdrop-filter:blur(16px);
+  z-index:55;pointer-events:none;
+  transition:all .25s ease;
+  user-select:none;
+}
+.lb-header{
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:6px;margin-bottom:8px;
+}
+.lb-icon{font-size:1.05rem;}
+.lb-title{
+  font-size:0.72rem;font-weight:900;letter-spacing:1.2px;color:#ffd700;
+  text-shadow:0 0 10px rgba(255,215,0,0.4);
+}
+.lb-mode{
+  font-size:0.62rem;font-weight:800;background:rgba(255,50,80,0.25);
+  border:1px solid rgba(255,70,100,0.5);color:#ff7090;padding:1px 6px;
+  border-radius:8px;letter-spacing:0.8px;
+}
+.lb-list{
+  display:flex;flex-direction:column;gap:6px;
+}
+.lb-row{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;padding:5px 8px;transition:all .2s ease;
+}
+.lb-row.lead{
+  background:linear-gradient(90deg, rgba(255,215,0,0.18) 0%, rgba(255,140,0,0.08) 100%);
+  border-color:rgba(255,215,0,0.45);
+  box-shadow:0 0 10px rgba(255,215,0,0.2);
+}
+.lb-rank{
+  font-size:0.82rem;font-weight:900;min-width:32px;
+}
+.lb-rank.rank-1{color:#ffea00;text-shadow:0 0 8px rgba(255,220,0,0.6);}
+.lb-rank.rank-2{color:#a0d8ef;text-shadow:0 0 6px rgba(160,216,239,0.5);}
+.lb-name-group{
+  flex:1;display:flex;align-items:center;gap:5px;overflow:hidden;
+}
+.lb-name{
+  font-size:0.75rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.lb-badge{
+  font-size:0.58rem;font-weight:800;padding:1px 5px;border-radius:6px;
+  background:rgba(255,215,0,0.2);color:#ffd700;border:1px solid rgba(255,215,0,0.4);
+}
+.lb-badge.behind{
+  background:rgba(255,255,255,0.1);color:#a0c0d0;border-color:rgba(255,255,255,0.2);
+}
+.lb-score{
+  font-family:monospace;font-size:0.88rem;font-weight:900;color:#fff;
+  display:flex;align-items:baseline;gap:3px;
+}
+.lb-score small{font-size:0.58rem;color:#d0b0b8;font-weight:700;}
+.lb-footer{
+  margin-top:6px;padding-top:4px;font-size:0.62rem;color:#f0b8c4;
+  text-align:center;letter-spacing:0.4px;border-top:1px dashed rgba(255,255,255,0.08);
+}
+
 /* ── Uçan Emote Baloncukları (3D Takip Eden Cam Panel) ── */
 .floating-emote{
   position:fixed;pointer-events:none;z-index:95;
@@ -936,6 +1001,34 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <div id="friend-tag" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-100%);background:rgba(15,5,12,0.88);border:1px solid #00e5ff;color:#e0f7ff;font-size:0.75rem;font-weight:800;padding:4px 10px;border-radius:8px;box-shadow:0 0 15px rgba(0,229,255,0.45);white-space:nowrap;">🐉 <span id="friend-tag-name">Arkadaşın</span> [<span id="friend-tag-dist">--</span>m]</div>
 <div id="friend-offscreen-pointer" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-50%);color:#00e5ff;font-size:0.80rem;font-weight:900;text-shadow:0 0 12px #00ffff;background:rgba(10,5,15,0.88);border:1px solid #00e5ff;padding:4px 12px;border-radius:20px;box-shadow:0 0 16px rgba(0,229,255,0.5);">◀ 🐉 Arkadaşın (<span id="friend-offscreen-dist">--</span>m)</div>
 
+<!-- Çok Oyunculu Canlı Sıralama & Halka Lider Tablosu (Sağ Taraf) -->
+<div id="leaderboard-widget">
+  <div class="lb-header">
+    <span class="lb-icon">🏆</span>
+    <span class="lb-title">HALKA SIRALAMASI</span>
+    <span class="lb-mode" id="lb-mode-tag">CANLI</span>
+  </div>
+  <div class="lb-list" id="lb-list">
+    <div class="lb-row lead" id="lb-row-1">
+      <div class="lb-rank rank-1">🥇 1.</div>
+      <div class="lb-name-group">
+        <span class="lb-name" id="lb-name-1">Sen</span>
+        <span class="lb-badge" id="lb-badge-1">LİDER</span>
+      </div>
+      <div class="lb-score"><span id="lb-score-1">0</span> <small>HALKA</small></div>
+    </div>
+    <div class="lb-row" id="lb-row-2" style="display:none;">
+      <div class="lb-rank rank-2">🥈 2.</div>
+      <div class="lb-name-group">
+        <span class="lb-name" id="lb-name-2">Arkadaşın</span>
+        <span class="lb-badge behind" id="lb-badge-2">TAKİPTE</span>
+      </div>
+      <div class="lb-score"><span id="lb-score-2">0</span> <small>HALKA</small></div>
+    </div>
+  </div>
+  <div class="lb-footer" id="lb-footer-msg">Halkalardan geçerek hız kazan & yarış!</div>
+</div>
+
 <!-- Mini Harita / Fantezi Pusula HUD -->
 <div id="radar-wrap">
   <button id="radar-close-btn" onclick="toggleRadarVisibility(false)" title="Haritayı Gizle (M)">✕</button>
@@ -984,7 +1077,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <div class="help-item"><span class="help-k">T</span><span class="help-desc">🌌 Gündüz / Günbatımı / Aurora</span></div>
       <div class="help-item"><span class="help-k">G</span><span class="help-desc">⚡ Fırtına Efekti</span></div>
       <div class="help-item"><span class="help-k">N / P</span><span class="help-desc">🎵 Şarkı İleri / Geri</span></div>
-      <div class="help-item"><span class="help-k">M</span><span class="help-desc">📜 Şarkı Menüsü</span></div>
+      <div class="help-item"><span class="help-k">L</span><span class="help-desc">📜 Şarkı Menüsü</span></div>
       <div class="help-item"><span class="help-k">H</span><span class="help-desc">⌨️ Kılavuzu Kapat</span></div>
     </div>
   </div>
@@ -1010,9 +1103,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <div id="music-card">
   <div class="pulse"></div>
   <button class="music-nav-btn" onclick="prevTrack()" title="Önceki Şarkı (P)">⏮</button>
-  <div class="song-info-wrap" onclick="togglePlaylistMenu()" title="Şarkı Listesini Aç/Kapat (M)">
+  <div class="song-info-wrap" onclick="togglePlaylistMenu()" title="Şarkı Listesini Aç/Kapat (L)">
     <span id="song-title">Yükleniyor...</span>
-    <span class="playlist-badge">📜 Liste</span>
+    <span class="playlist-badge">📜 Liste [L]</span>
   </div>
   <button class="music-nav-btn" onclick="nextTrack()" title="Sonraki Şarkı (N)">⏭</button>
   <button id="music-btn" onclick="toggleMusic()">⏸ Duraklat</button>
@@ -1559,6 +1652,7 @@ function startExperience(){
     splashEl.style.display = 'none';
   }
   gameActive = true;
+  if(typeof updateLeaderboard === 'function') updateLeaderboard();
   document.body.requestPointerLock();
 }
 
@@ -3573,72 +3667,297 @@ function updateThermalUpdrafts(dt){
 }
 
 // ═══════════════════════════════════════════════════
-//  UÇUŞ ALTIN HALKALARI (Golden Flight Rings & Mini-Oyun)
+//  RENKLİ HIZ & BOOST HALKALARI (Colored Boost Rings & Sıralama Sistemi)
 // ═══════════════════════════════════════════════════
-const ringGeo = new THREE.TorusGeometry(5.8, 0.45, 8, 26);
-const ringMat = new THREE.MeshStandardMaterial({
-  color: 0xffcc00,
-  emissive: 0xff9900,
-  emissiveIntensity: 0.7,
-  roughness: 0.25,
-  metalness: 0.85
+const ringGeo = new THREE.TorusGeometry(6.2, 0.55, 10, 28);
+
+const RING_TYPES = {
+  gold: {
+    id: 'gold',
+    name: 'Altın İvme',
+    colorHex: '#ffcc00',
+    colorNum: 0xffcc00,
+    emissiveNum: 0xff9900,
+    emissiveInt: 0.85,
+    boost: 22.0,
+    maxSpeed: 82.0,
+    score: 100,
+    popupTitle: '✨ ALTIN İVME! +22 m/s',
+    popupColor: '#ffea00',
+    popupGlow: '0 0 25px #ffaa00',
+    auraColor: 'rgba(255, 215, 0, 0.45)'
+  },
+  crimson: {
+    id: 'crimson',
+    name: 'Magma Turbo',
+    colorHex: '#ff2200',
+    colorNum: 0xff1a1a,
+    emissiveNum: 0xff3300,
+    emissiveInt: 1.45,
+    boost: 42.0,
+    maxSpeed: 125.0,
+    score: 250,
+    popupTitle: '🔥 MAGMA TURBO BOOST! +42 m/s 🔥',
+    popupColor: '#ff2b2b',
+    popupGlow: '0 0 30px #ff0000, 0 0 50px #ff6600',
+    auraColor: 'rgba(255, 34, 0, 0.65)'
+  },
+  sapphire: {
+    id: 'sapphire',
+    name: 'Safir Sonik',
+    colorHex: '#00d5ff',
+    colorNum: 0x00d5ff,
+    emissiveNum: 0x0077ff,
+    emissiveInt: 1.25,
+    boost: 30.0,
+    maxSpeed: 102.0,
+    score: 160,
+    popupTitle: '⚡ SAFİR SONİK PATLAMA! +30 m/s ⚡',
+    popupColor: '#00f3ff',
+    popupGlow: '0 0 28px #00aaff, 0 0 45px #00ffff',
+    auraColor: 'rgba(0, 213, 255, 0.55)'
+  },
+  emerald: {
+    id: 'emerald',
+    name: 'Zümrüt Rüzgar',
+    colorHex: '#00ee77',
+    colorNum: 0x00ee77,
+    emissiveNum: 0x00aa33,
+    emissiveInt: 1.15,
+    boost: 24.0,
+    maxSpeed: 88.0,
+    score: 130,
+    popupTitle: '🍃 ZÜMRÜT TAYFUN İTKİSİ! +24 m/s 🍃',
+    popupColor: '#00ff88',
+    popupGlow: '0 0 26px #00ee77',
+    auraColor: 'rgba(0, 238, 119, 0.50)'
+  }
+};
+
+const ringMaterials = {};
+Object.keys(RING_TYPES).forEach(k => {
+  const t = RING_TYPES[k];
+  ringMaterials[k] = new THREE.MeshStandardMaterial({
+    color: t.colorNum,
+    emissive: t.emissiveNum,
+    emissiveIntensity: t.emissiveInt,
+    roughness: 0.22,
+    metalness: 0.88
+  });
 });
-const NUM_RINGS = 18;
+
+const NUM_RINGS = 36;
 const rings = [];
 const ringGroup = new THREE.Group();
 scene.add(ringGroup);
 
-for(let i=0; i<NUM_RINGS; i++){
-  const rMesh = new THREE.Mesh(ringGeo, ringMat);
-  const rx = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.65);
-  const rz = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.65);
+const RING_TYPE_POOL = [
+  'gold', 'gold', 'gold', 'gold',
+  'emerald', 'emerald', 'emerald',
+  'sapphire', 'sapphire',
+  'crimson'
+];
+
+// Stratejik Noktalar (Gök Adaları yaklaşma yolları & Zirve kanyonları)
+const PRESET_RING_LOCATIONS = [
+  // Aetheria Gök Adası Çevresi (x: -360, y: 440, z: -320)
+  { x: -360, y: 456, z: -240, type: 'sapphire' },
+  { x: -280, y: 448, z: -320, type: 'gold' },
+  { x: -360, y: 462, z: -400, type: 'crimson' },
+  { x: -440, y: 452, z: -320, type: 'emerald' },
+  // Kadim Ayaz Gök Adası Çevresi (x: 680, y: 560, z: -720)
+  { x: 680, y: 576, z: -630, type: 'crimson' },
+  { x: 760, y: 568, z: -720, type: 'sapphire' },
+  { x: 680, y: 582, z: -810, type: 'gold' },
+  { x: 600, y: 572, z: -720, type: 'emerald' },
+  // Kadim Dağ Tapınağı Üstü (x: 350, z: -1050)
+  { x: 350, y: 190, z: -1050, type: 'crimson' },
+  { x: 350, y: 230, z: -970, type: 'gold' },
+  // Karlı Zirve Geçitleri
+  { x: 1150, y: 390, z: -1150, type: 'sapphire' },
+  { x: -1250, y: 420, z: 1250, type: 'crimson' }
+];
+
+PRESET_RING_LOCATIONS.forEach(loc => {
+  const tKey = loc.type;
+  const t = RING_TYPES[tKey];
+  const rMesh = new THREE.Mesh(ringGeo, ringMaterials[tKey]);
+  rMesh.position.set(loc.x, loc.y, loc.z);
+  rMesh.rotation.y = Math.random() * Math.PI;
+  ringGroup.add(rMesh);
+  rings.push({ mesh: rMesh, active: true, type: t });
+});
+
+for(let i = rings.length; i < NUM_RINGS; i++){
+  const tKey = RING_TYPE_POOL[Math.floor(Math.random() * RING_TYPE_POOL.length)];
+  const t = RING_TYPES[tKey];
+  const rMesh = new THREE.Mesh(ringGeo, ringMaterials[tKey]);
+  const rx = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.75);
+  const rz = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.75);
   const groundY = getTerrainHeight(rx, rz);
-  const ry = Math.max(groundY + 18, 45 + Math.random() * 75);
+  const ry = Math.max(groundY + 22, 50 + Math.random() * 110);
   rMesh.position.set(rx, ry, rz);
   rMesh.rotation.y = Math.random() * Math.PI;
   ringGroup.add(rMesh);
-  rings.push({ mesh: rMesh, active: true });
+  rings.push({ mesh: rMesh, active: true, type: t });
 }
 
 let ringsCollected = 0;
+let remoteRingsCollected = 0;
 const elRings = document.getElementById('val-rings');
 const elRingPopup = document.getElementById('ring-popup');
 
+function updateLeaderboard(){
+  const isMultiplayer = !!(activeConnection && activeConnection.open && remotePlayer && remotePlayer.active);
+  const row2 = document.getElementById('lb-row-2');
+  const lbModeTag = document.getElementById('lb-mode-tag');
+  const lbFooterMsg = document.getElementById('lb-footer-msg');
+
+  if(lbModeTag){
+    lbModeTag.textContent = isMultiplayer ? 'CANLI DÜELLO' : 'SOLO';
+    lbModeTag.style.color = isMultiplayer ? '#00ffaa' : '#ffd700';
+    lbModeTag.style.borderColor = isMultiplayer ? 'rgba(0,255,170,0.5)' : 'rgba(255,215,0,0.5)';
+  }
+
+  const name1 = document.getElementById('lb-name-1');
+  const name2 = document.getElementById('lb-name-2');
+  const score1 = document.getElementById('lb-score-1');
+  const score2 = document.getElementById('lb-score-2');
+  const badge1 = document.getElementById('lb-badge-1');
+  const badge2 = document.getElementById('lb-badge-2');
+  const elRow1 = document.getElementById('lb-row-1');
+  const elRow2 = document.getElementById('lb-row-2');
+
+  if(!isMultiplayer){
+    if(row2) row2.style.display = 'none';
+    if(name1) name1.textContent = 'Sen';
+    if(score1) score1.textContent = ringsCollected;
+    if(badge1) { badge1.textContent = 'UÇUŞ'; badge1.className = 'lb-badge'; }
+    if(elRow1) elRow1.className = 'lb-row lead';
+    if(lbFooterMsg){
+      lbFooterMsg.textContent = 'Halkalardan geçerek hız kazan & rekor kır!';
+      lbFooterMsg.style.color = '#f0b8c4';
+    }
+    return;
+  }
+
+  if(row2) row2.style.display = 'flex';
+
+  if(ringsCollected >= remoteRingsCollected){
+    // Sen 1. sıradasın
+    if(name1) name1.textContent = 'Sen';
+    if(score1) score1.textContent = ringsCollected;
+    if(badge1) { badge1.textContent = (ringsCollected > remoteRingsCollected) ? 'LİDER 👑' : 'EŞİT'; badge1.className = 'lb-badge'; }
+    if(elRow1) elRow1.className = 'lb-row lead';
+
+    if(name2) name2.textContent = 'Arkadaşın';
+    if(score2) score2.textContent = remoteRingsCollected;
+    if(badge2) { badge2.textContent = 'TAKİPTE'; badge2.className = 'lb-badge behind'; }
+    if(elRow2) elRow2.className = 'lb-row';
+
+    if(lbFooterMsg){
+      if(ringsCollected > remoteRingsCollected){
+        lbFooterMsg.textContent = `🔥 Harika! Arkadaşının ${ringsCollected - remoteRingsCollected} halka önündesin!`;
+        lbFooterMsg.style.color = '#ffd700';
+      } else {
+        lbFooterMsg.textContent = '⚡ Başa baş yarış! Bir sonraki halkayı ilk sen kap!';
+        lbFooterMsg.style.color = '#00ffcc';
+      }
+    }
+  } else {
+    // Arkadaşın 1. sırada
+    if(name1) name1.textContent = 'Arkadaşın';
+    if(score1) score1.textContent = remoteRingsCollected;
+    if(badge1) { badge1.textContent = 'LİDER 👑'; badge1.className = 'lb-badge'; }
+    if(elRow1) elRow1.className = 'lb-row lead';
+
+    if(name2) name2.textContent = 'Sen';
+    if(score2) score2.textContent = ringsCollected;
+    if(badge2) { badge2.textContent = 'TAKİPTE'; badge2.className = 'lb-badge behind'; }
+    if(elRow2) elRow2.className = 'lb-row';
+
+    if(lbFooterMsg){
+      lbFooterMsg.textContent = `⚠️ Arkadaşın ${remoteRingsCollected - ringsCollected} halka önde! Hızlan!`;
+      lbFooterMsg.style.color = '#ff8899';
+    }
+  }
+}
+
 function checkRingCollision(pos){
   rings.forEach((r) => {
-    if(r.active && pos.distanceTo(r.mesh.position) < 8.2){
+    if(r.active && pos.distanceTo(r.mesh.position) < 8.8){
       r.active = false;
       ringsCollected++;
       if(elRings) elRings.textContent = ringsCollected;
 
       ringCombo++;
-      ringComboTimer = 8.5; // 8.5 saniye combo penceresi
-      const comboBonus = 100 * ringCombo;
+      ringComboTimer = 8.5;
+      const typeBonus = r.type ? r.type.score : 100;
+      const comboBonus = typeBonus * ringCombo;
       playerScore += comboBonus;
       if(elScore) elScore.textContent = playerScore;
 
-      playRingChime(ringCombo);
+      // Renkli Boost İtmesi & Hızlanma
+      const boostVal = r.type ? r.type.boost : 22.0;
+      const maxSpd = r.type ? r.type.maxSpeed : 85.0;
+      flightSpeed = Math.min(flightSpeed + boostVal, maxSpd);
 
-      flightSpeed = Math.min(flightSpeed + 15, 105);
-      elRingPopup.textContent = (ringCombo > 1) ? 
-        `⚡ ${ringCombo}x KOMBO! +${comboBonus} PUAN ⚡` : 
-        `✨ HALKA GEÇİLDİ! +${comboBonus} PUAN ✨`;
-      elRingPopup.style.color = (ringCombo > 1) ? '#ffea00' : '#ffffff';
-      elRingPopup.style.textShadow = '0 0 20px #ff9900';
-      elRingPopup.style.opacity = '1';
-      elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.18)';
-      setTimeout(()=>{
-        elRingPopup.style.opacity = '0';
-        elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
-      }, 1200);
+      // Ses efekti (türe göre dinamik frekans)
+      if(r.type && r.type.id === 'crimson'){
+        playRingChime(ringCombo + 4);
+        if(typeof playTurboRoarSound === 'function') playTurboRoarSound();
+      } else if(r.type && r.type.id === 'sapphire'){
+        playRingChime(ringCombo + 2);
+      } else {
+        playRingChime(ringCombo);
+      }
 
+      // Rüzgar ve ekran aurası flaşı
+      if(elWindBlur){
+        elWindBlur.style.opacity = '0.92';
+        elWindBlur.style.background = `radial-gradient(circle at 50% 50%, transparent 20%, ${r.type ? r.type.auraColor : 'rgba(255,255,255,0.2)'} 100%)`;
+        setTimeout(() => {
+          elWindBlur.style.background = 'radial-gradient(circle at 50% 50%, transparent 30%, rgba(255,255,255,0.09) 100%)';
+        }, 650);
+      }
+
+      // Renkli Görsel Bildirim
+      if(elRingPopup){
+        const title = r.type ? r.type.popupTitle : '✨ HALKA GEÇİLDİ!';
+        elRingPopup.textContent = (ringCombo > 1) ? 
+          `⚡ ${ringCombo}x KOMBO! ${title} (+${comboBonus}P) ⚡` : 
+          `${title} (+${comboBonus}P)`;
+        elRingPopup.style.color = r.type ? r.type.popupColor : '#ffffff';
+        elRingPopup.style.textShadow = r.type ? r.type.popupGlow : '0 0 20px #ff9900';
+        elRingPopup.style.opacity = '1';
+        elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.25)';
+        setTimeout(()=>{
+          elRingPopup.style.opacity = '0';
+          elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+        }, 1300);
+      }
+
+      // Canlı Sıralamayı Güncelle
+      updateLeaderboard();
+
+      // Çok oyunculu moddaysa skoru anında gönder
+      if(activeConnection && activeConnection.open){
+        activeConnection.send({ t: 'rg', rg: ringsCollected });
+      }
+
+      // 2.8 saniye sonra yeni bir rotada yeniden canlandır
       setTimeout(() => {
-        const nx = dragonPos.x + (Math.random() - 0.5) * 800 + Math.sin(yaw) * -400;
-        const nz = dragonPos.z + (Math.random() - 0.5) * 800 + Math.cos(yaw) * -400;
-        const ngy = getTerrainHeight(nx, nz);
-        r.mesh.position.set(nx, Math.max(ngy + 18, 45 + Math.random() * 75), nz);
+        const nextTypeKey = RING_TYPE_POOL[Math.floor(Math.random() * RING_TYPE_POOL.length)];
+        const nextType = RING_TYPES[nextTypeKey];
+        r.type = nextType;
+        r.mesh.material = ringMaterials[nextTypeKey];
+
+        const nx = dragonPos.x + (Math.random() - 0.5) * 800 + Math.sin(yaw) * -420;
+        const nz = dragonPos.z + (Math.random() - 0.5) * 800 + Math.cos(yaw) * -420;
+        const ngy = getSurfaceHeightAt(nx, nz, dragonPos.y);
+        r.mesh.position.set(nx, Math.max(ngy + 20, 50 + Math.random() * 95), nz);
         r.active = true;
-      }, 2500);
+      }, 2800);
     }
   });
 }
@@ -3921,6 +4240,28 @@ function updateFireflies(dt){
   fireflyGeo.attributes.position.needsUpdate = true;
   const isNight = (typeof skyModeState !== 'undefined' && skyModeState === 2);
   fireflyMat.opacity = isNight ? 0.92 : ((typeof skyModeState !== 'undefined' && skyModeState === 1) ? 0.75 : 0.40);
+}
+
+// ── YÜZEY YÜKSEKLİK HESABI (Zemin ve Uçan Gök Adalarına İniş Desteği) ──
+function getSurfaceHeightAt(x, z, checkY = (typeof dragonPos !== 'undefined' ? dragonPos.y : 100)){
+  let surfaceY = Math.max(-8.5, getTerrainHeight(x, z));
+  if(typeof SKY_ISLANDS !== 'undefined'){
+    for(let i = 0; i < SKY_ISLANDS.length; i++){
+      const isl = SKY_ISLANDS[i];
+      const dist2D = Math.hypot(x - isl.x, z - isl.z);
+      // Gök adası üst düzlük yarıçapı ~34m (36m güvenlik toleransı)
+      if(dist2D <= 35.0){
+        const islTop = isl.y + 6.0;
+        // Eğer ejderha adanın üzerinde veya adanın üst yüzeyine yakınsa
+        if(checkY >= isl.y - 12.0){
+          if(islTop > surfaceY){
+            surfaceY = islTop;
+          }
+        }
+      }
+    }
+  }
+  return surfaceY;
 }
 
 // ═══════════════════════════════════════════════════
@@ -4375,7 +4716,7 @@ function selectDragonSpecies(species, btn){
     switchDragonModel('wyvern');
   }
   applyDragonCustomization();
-  if(typeof sendMultiplayerData === 'function' && conn && conn.open){
+  if(typeof sendMultiplayerData === 'function' && typeof activeConnection !== 'undefined' && activeConnection && activeConnection.open){
     sendMultiplayerData({
       type: 'cust',
       species: currentSpecies,
@@ -4392,7 +4733,7 @@ function selectDragonColor(colorKey, btn){
   document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('active'));
   if(btn) btn.classList.add('active');
   applyDragonCustomization();
-  if(typeof sendMultiplayerData === 'function' && conn && conn.open){
+  if(typeof sendMultiplayerData === 'function' && typeof activeConnection !== 'undefined' && activeConnection && activeConnection.open){
     sendMultiplayerData({
       type: 'cust',
       species: currentSpecies,
@@ -4833,7 +5174,7 @@ window.addEventListener('keydown', e => {
   if(e.code === 'KeyP' || e.code === 'KeyB'){
     prevTrack();
   }
-  if(e.code === 'KeyM'){
+  if(e.code === 'KeyL'){
     togglePlaylistMenu();
   }
   if(e.code === 'KeyE'){
@@ -5294,6 +5635,15 @@ function handleRemotePacket(data){
         }
       }
     }
+    if(typeof data.rg === 'number' && data.rg !== remoteRingsCollected){
+      remoteRingsCollected = data.rg;
+      updateLeaderboard();
+    }
+  } else if(data.t === 'rg'){
+    if(typeof data.rg === 'number'){
+      remoteRingsCollected = data.rg;
+      updateLeaderboard();
+    }
   } else if(data.t === 'm_sync'){
     loadTrack(data.id, !data.paused, data.time || 0, false);
   } else if(data.t === 'm_playstate'){
@@ -5328,21 +5678,28 @@ function toggleLanding(){
     takeoffLanding();
     return;
   }
-  const groundY = Math.max(-8.5, getTerrainHeight(dragonPos.x, dragonPos.z));
-  const alt = dragonPos.y - groundY;
+  const surfaceY = getSurfaceHeightAt(dragonPos.x, dragonPos.z, dragonPos.y);
+  const alt = dragonPos.y - surfaceY;
   if(alt < 55){
     isLanded = true;
-    landHeightTarget = groundY + 0.65;
+    landHeightTarget = surfaceY + 0.65;
     flightSpeed = 0;
+    const isSkyIsland = (surfaceY > 200);
     const lobbyStatus = document.getElementById('val-lobby-status');
     if(lobbyStatus){
-      lobbyStatus.textContent = '🦅 Dinleniyor (Kalkış: Boşluk/W)';
-      lobbyStatus.style.color = '#70c050';
+      lobbyStatus.textContent = isSkyIsland ? '🏝️ Gök Adasında Dinleniyor (Kalkış: Boşluk/W)' : '🦅 Dinleniyor (Kalkış: Boşluk/W)';
+      lobbyStatus.style.color = isSkyIsland ? '#00ffcc' : '#70c050';
+    }
+    const ind = document.getElementById('cam-mode-indicator');
+    if(ind){
+      ind.textContent = isSkyIsland ? '🏝️ GÖK ADASINA İNİŞ YAPILDI! (Kalkış: Boşluk / W)' : '🌿 YERE İNİŞ YAPILDI (Kalkış: Boşluk / W)';
+      ind.style.opacity = '1';
+      setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2400);
     }
   } else {
     const ind = document.getElementById('cam-mode-indicator');
     if(ind){
-      ind.textContent = '🦅 Konmak için yere veya tepeye biraz daha alçalın (< 50m)';
+      ind.textContent = '🦅 Konmak için yere veya gök adasına alçalın (< 50m)';
       ind.style.opacity = '1';
       setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
     }
@@ -5352,7 +5709,8 @@ function toggleLanding(){
 function takeoffLanding(){
   if(!isLanded) return;
   isLanded = false;
-  flightSpeed = 38;
+  flightSpeed = 28;
+  dragonPos.y += 4.5;
   const lobbyStatus = document.getElementById('val-lobby-status');
   if(lobbyStatus && (!activeConnection || !activeConnection.open)){
     lobbyStatus.textContent = 'Tek Başına Uçuş';
@@ -5776,6 +6134,7 @@ function setupConnection(conn, successMsg){
       lobbyHudVal.style.color = '#ffaa33';
     }
     updateRemotePlayerHUD();
+    updateLeaderboard();
   });
 }
 
@@ -5792,7 +6151,8 @@ function setupNetworkSendLoop(){
         sp: currentSpecies,
         c: currentColorKey,
         l: isLanded ? 1 : 0,
-        m: [currentTrackIdx, Math.round(bgm.currentTime || 0), bgm.paused ? 1 : 0]
+        m: [currentTrackIdx, Math.round(bgm.currentTime || 0), bgm.paused ? 1 : 0],
+        rg: ringsCollected
       });
     }
   }, 35);
@@ -5994,15 +6354,15 @@ function updateRadar(){
   radarCtx.arc(cx, cy, radius, 0, Math.PI * 2);
   radarCtx.clip();
 
-  // 3. Altın Halka Noktaları
+  // 3. Renkli Boost Halka Noktaları
   rings.forEach(r => {
     if(r.active){
       const rx = cx + r.mesh.position.x * scale;
       const ry = cy + r.mesh.position.z * scale;
       if(Math.hypot(rx - cx, ry - cy) < radius - 3){
-        radarCtx.fillStyle = '#ffcc00';
+        radarCtx.fillStyle = (r.type && r.type.colorHex) ? r.type.colorHex : '#ffcc00';
         radarCtx.beginPath();
-        radarCtx.arc(rx, ry, 2.2, 0, Math.PI * 2);
+        radarCtx.arc(rx, ry, 2.4, 0, Math.PI * 2);
         radarCtx.fill();
       }
     }
@@ -6182,10 +6542,26 @@ function animate(){
       pitch = Math.max(-Math.PI * 0.35, Math.min(Math.PI * 0.36, pitch));
       mouseDX = 0; mouseDY = 0;
 
+      const CRUISE_SPEED = 26.0; // ~94 km/h sakin ve asil süzülüş hızı
+      const SPRINT_SPEED = 56.0; // ~200 km/h W tuşuyla hızlanma
+
       if(keys['KeyA'] || keys['ArrowLeft'])  yaw += 1.6 * dt;
       if(keys['KeyD'] || keys['ArrowRight']) yaw -= 1.6 * dt;
-      if(keys['KeyW'] || keys['ArrowUp'])    flightSpeed = Math.min(flightSpeed + 30 * dt, 98);
-      if(keys['KeyS'] || keys['ArrowDown'])  flightSpeed = Math.max(flightSpeed - 25 * dt, 12);
+
+      if(keys['KeyW'] || keys['ArrowUp']){
+        // W'ye basıldığında kanat çırparak hızlan (halka boost'u varsa onu aniden kesme)
+        flightSpeed = Math.min(flightSpeed + 26.0 * dt, Math.max(flightSpeed, SPRINT_SPEED));
+      } else if(keys['KeyS'] || keys['ArrowDown']){
+        // S'ye basıldığında fren yap ve süzül
+        flightSpeed = Math.max(flightSpeed - 28.0 * dt, 10.0);
+      } else {
+        // Tuşsuz süzülüş: aerodinamik süzülüşle seyir hızına yumuşakça dön
+        if(flightSpeed > CRUISE_SPEED){
+          flightSpeed += (CRUISE_SPEED - flightSpeed) * Math.min(1.0, dt * 0.45);
+        } else if(flightSpeed < CRUISE_SPEED){
+          flightSpeed += (CRUISE_SPEED - flightSpeed) * Math.min(1.0, dt * 0.85);
+        }
+      }
 
       // Yükselme & Alçalma / Süzülüş Kontrolleri (Space = Yüksel, Ctrl/Q = Alçal)
       if(keys['Space'] && !isLanded){
@@ -6217,7 +6593,7 @@ function animate(){
     }
 
     if(windGain && audioCtx){
-      const targetGain = (0.03 + (flightSpeed / 98) * 0.16) * currentVolume;
+      const targetGain = (0.03 + (flightSpeed / 125) * 0.18) * currentVolume;
       windGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.1);
     }
 
@@ -6243,8 +6619,8 @@ function animate(){
     const probeDist = Math.max(12.0, flightSpeed * 0.45);
     const probeX = dragonPos.x + _forward.x * probeDist;
     const probeZ = dragonPos.z + _forward.z * probeDist;
-    const aheadGroundY = Math.max(-8.5, getTerrainHeight(probeX, probeZ));
-    const groundY = Math.max(-8.5, getTerrainHeight(dragonPos.x, dragonPos.z));
+    const aheadGroundY = getSurfaceHeightAt(probeX, probeZ, dragonPos.y);
+    const groundY = getSurfaceHeightAt(dragonPos.x, dragonPos.z, dragonPos.y);
 
     if(!isLanded){
       // 1. İleride dik bir kaya duvarı veya dağ yamacı varsa (duvara çarpıp takılmayı önle)
@@ -6322,8 +6698,8 @@ function animate(){
     const spdKm = Math.round(flightSpeed * 3.6);
     elSpeed.textContent = spdKm;
     elAlt.textContent = Math.max(0, Math.round(dragonPos.y - groundY));
-    elSpeedBar.style.width = ((flightSpeed / 98) * 100) + '%';
-    elWindBlur.style.opacity = Math.max(0.0, (flightSpeed - 65) / 33 * 0.6).toFixed(2);
+    elSpeedBar.style.width = Math.min(100, (flightSpeed / 125) * 100) + '%';
+    elWindBlur.style.opacity = Math.max(0.0, (flightSpeed - 52) / 55 * 0.70).toFixed(2);
     const headingIdx = Math.floor(((((-yaw * 180 / Math.PI) % 360) + 360) % 360) / 45);
     elHdg.textContent = CARDINALS[headingIdx % 8];
 
