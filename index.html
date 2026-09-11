@@ -3547,6 +3547,7 @@ scene.add(cloudInst);
 
 // ═══════════════════════════════════════════════════
 //  HARİTA EASTER EGGLERİ: 4 KADİM MİSTİK KEŞİF SİSTEMİ
+//  (Tüm nesneler arazinin tam yüzey kotuna kusursuzca oturtulur)
 // ═══════════════════════════════════════════════════
 const easterEggsGroup = new THREE.Group();
 scene.add(easterEggsGroup);
@@ -3555,102 +3556,117 @@ let easterEggsFoundCount = 0;
 const totalEasterEggs = 4;
 const discoveredEggs = { egg: false, sword: false, monolith: false, oasis: false };
 
-// 1. Kadim Altın Ejderha Yumurtası (Gizli Dağ Yuvası: x: -850, y: 165, z: 620)
+// 1. Kadim Altın Ejderha Yumurtası (Volkanik Zirve Yuvası: -920, 980)
+const eggCoords = { x: -920, z: 980 };
+const eggGroundY = getTerrainHeight(eggCoords.x, eggCoords.z);
 const eggGroup = new THREE.Group();
-eggGroup.position.set(-850, 165, 620);
+eggGroup.position.set(eggCoords.x, eggGroundY, eggCoords.z);
 const nestMat = new THREE.MeshStandardMaterial({ color: 0x241d1a, roughness: 0.95 });
 for(let n = 0; n < 8; n++){
   const ang = (n / 8) * Math.PI * 2;
   const nRock = new THREE.Mesh(new THREE.DodecahedronGeometry(2.4 + Math.random() * 0.8), nestMat);
-  nRock.position.set(Math.cos(ang) * 5.2, Math.random() * 0.4, Math.sin(ang) * 5.2);
+  nRock.position.set(Math.cos(ang) * 5.2, 0.4 + Math.random() * 0.4, Math.sin(ang) * 5.2);
   eggGroup.add(nRock);
 }
-const goldEggGeo = new THREE.SphereGeometry(3.2, 22, 22);
+const goldEggGeo = new THREE.SphereGeometry(3.0, 22, 22);
 goldEggGeo.scale(1.0, 1.35, 1.0);
 const goldEggMat = new THREE.MeshStandardMaterial({
-  color: 0xffd700, roughness: 0.18, metalness: 0.95, emissive: 0xffaa00, emissiveIntensity: 0.75
+  color: 0xffd700, roughness: 0.18, metalness: 0.95, emissive: 0xffaa00, emissiveIntensity: 0.80
 });
 const goldEggMesh = new THREE.Mesh(goldEggGeo, goldEggMat);
-goldEggMesh.position.set(0, 3.8, 0);
+goldEggMesh.position.set(0, 2.6, 0);
 eggGroup.add(goldEggMesh);
-const eggLight = new THREE.PointLight(0xffcc00, 3.5, 50);
-eggLight.position.set(0, 5.0, 0);
+const eggLight = new THREE.PointLight(0xffcc00, 3.8, 55);
+eggLight.position.set(0, 4.2, 0);
 eggGroup.add(eggLight);
 easterEggsGroup.add(eggGroup);
 
-// 2. Taşa Saplı Valyria Kılıcı (Zirve Kaya Sunağı: x: 720, y: 310, z: 980)
+// 2. Taşa Saplı Valyria Kılıcı (Güneydoğu Sivri Zirve Sunağı: 1100, 1000)
+const swordCoords = { x: 1100, z: 1000 };
+const swordGroundY = getTerrainHeight(swordCoords.x, swordCoords.z);
 const swordGroup = new THREE.Group();
-swordGroup.position.set(720, 310, 980);
+swordGroup.position.set(swordCoords.x, swordGroundY, swordCoords.z);
 const swordRockMat = new THREE.MeshStandardMaterial({ color: 0x3d444b, roughness: 0.85, metalness: 0.2 });
-const swordRock = new THREE.Mesh(new THREE.DodecahedronGeometry(4.5, 1), swordRockMat);
-swordRock.position.set(0, 2.0, 0);
+const swordRock = new THREE.Mesh(new THREE.DodecahedronGeometry(4.2, 1), swordRockMat);
+swordRock.position.set(0, 1.8, 0);
 swordGroup.add(swordRock);
 const bladeGeo = new THREE.BoxGeometry(0.55, 6.8, 0.12);
 const bladeMat = new THREE.MeshStandardMaterial({
-  color: 0xe0f7ff, roughness: 0.1, metalness: 0.98, emissive: 0x9933ff, emissiveIntensity: 0.85
+  color: 0xe0f7ff, roughness: 0.1, metalness: 0.98, emissive: 0x9933ff, emissiveIntensity: 0.88
 });
 const bladeMesh = new THREE.Mesh(bladeGeo, bladeMat);
-bladeMesh.position.set(0, 6.2, 0);
+bladeMesh.position.set(0, 4.8, 0);
 bladeMesh.rotation.z = 0.08;
 swordGroup.add(bladeMesh);
 const guardMesh = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.4, 0.4), new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9 }));
-guardMesh.position.set(0, 9.6, 0);
+guardMesh.position.set(0, 8.2, 0);
 swordGroup.add(guardMesh);
-const swordLight = new THREE.PointLight(0xaa44ff, 3.2, 45);
-swordLight.position.set(0, 7.5, 0);
+const swordLight = new THREE.PointLight(0xaa44ff, 3.5, 50);
+swordLight.position.set(0, 5.5, 0);
 swordGroup.add(swordLight);
 easterEggsGroup.add(swordGroup);
 
-// 3. Kozmik Yıldız Taşı Monoliti (Kuzey Buzulu: x: -1100, y: 260, z: -1250)
+// 3. Kozmik Yıldız Taşı Monoliti (Kuzey Buzulu Zirvesi: -1100, -1250)
+const monoCoords = { x: -1100, z: -1250 };
+const monoGroundY = getTerrainHeight(monoCoords.x, monoCoords.z);
 const monolithGroup = new THREE.Group();
-monolithGroup.position.set(-1100, 260, -1250);
+monolithGroup.position.set(monoCoords.x, monoGroundY, monoCoords.z);
 const obeliskGeo = new THREE.CylinderGeometry(0.8, 2.4, 14.0, 4);
 const obeliskMat = new THREE.MeshStandardMaterial({
-  color: 0x050a14, roughness: 0.15, metalness: 0.9, emissive: 0x00ccff, emissiveIntensity: 0.55
+  color: 0x050a14, roughness: 0.15, metalness: 0.9, emissive: 0x00ccff, emissiveIntensity: 0.60
 });
 const obeliskMesh = new THREE.Mesh(obeliskGeo, obeliskMat);
-obeliskMesh.position.set(0, 8.0, 0);
+obeliskMesh.position.set(0, 7.0, 0);
 monolithGroup.add(obeliskMesh);
 const monoRing = new THREE.Mesh(new THREE.TorusGeometry(4.2, 0.25, 8, 24), new THREE.MeshStandardMaterial({
-  color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.3
+  color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.35
 }));
 monoRing.rotation.x = Math.PI / 2;
-monoRing.position.set(0, 8.0, 0);
+monoRing.position.set(0, 7.5, 0);
 monolithGroup.add(monoRing);
-const monoLight = new THREE.PointLight(0x00d5ff, 3.8, 55);
-monoLight.position.set(0, 8.5, 0);
+const monoLight = new THREE.PointLight(0x00d5ff, 4.0, 60);
+monoLight.position.set(0, 8.0, 0);
 monolithGroup.add(monoLight);
 easterEggsGroup.add(monolithGroup);
 
-// 4. Kayıp Cennet Vahası & Nilüfer Çiçeği (Şelale Arkası: x: -640, y: 44, z: 240)
+// 4. Kayıp Cennet Nilüferi (Sakin Dağ Koyu Suları: -280, 220)
+const oasisCoords = { x: -280, z: 220 };
 const oasisGroup = new THREE.Group();
-oasisGroup.position.set(-640, 44, 240);
+oasisGroup.position.set(oasisCoords.x, -7.8, oasisCoords.z);
+// Su üstünde yüzen yeşil nilüfer yaprakları (Lily pads)
+const padMat = new THREE.MeshStandardMaterial({ color: 0x1f6628, roughness: 0.8 });
+for(let lp = 0; lp < 4; lp++){
+  const lAng = (lp / 4) * Math.PI * 2;
+  const pad = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 0.08, 12), padMat);
+  pad.position.set(Math.cos(lAng) * 2.6, 0.05, Math.sin(lAng) * 2.6);
+  oasisGroup.add(pad);
+}
 const lotusMat = new THREE.MeshStandardMaterial({
-  color: 0xff66aa, emissive: 0xff3388, emissiveIntensity: 0.85, roughness: 0.2, metalness: 0.3, transparent: true, opacity: 0.92
+  color: 0xff66aa, emissive: 0xff3388, emissiveIntensity: 0.90, roughness: 0.2, metalness: 0.3, transparent: true, opacity: 0.94
 });
 for(let p = 0; p < 6; p++){
   const pAng = (p / 6) * Math.PI * 2;
-  const petal = new THREE.Mesh(new THREE.ConeGeometry(1.6, 5.0, 4), lotusMat);
-  petal.position.set(Math.cos(pAng) * 2.2, 1.8, Math.sin(pAng) * 2.2);
+  const petal = new THREE.Mesh(new THREE.ConeGeometry(1.6, 4.6, 4), lotusMat);
+  petal.position.set(Math.cos(pAng) * 2.0, 1.4, Math.sin(pAng) * 2.0);
   petal.rotation.x = 0.45;
   petal.rotation.y = pAng;
   oasisGroup.add(petal);
 }
-const lotusCore = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 16), new THREE.MeshStandardMaterial({
-  color: 0xffff66, emissive: 0xffaa00, emissiveIntensity: 1.2
+const lotusCore = new THREE.Mesh(new THREE.SphereGeometry(1.3, 16, 16), new THREE.MeshStandardMaterial({
+  color: 0xffff66, emissive: 0xffaa00, emissiveIntensity: 1.3
 }));
-lotusCore.position.set(0, 2.2, 0);
+lotusCore.position.set(0, 1.8, 0);
 oasisGroup.add(lotusCore);
-const oasisLight = new THREE.PointLight(0xff66cc, 3.5, 50);
-oasisLight.position.set(0, 3.5, 0);
+const oasisLight = new THREE.PointLight(0xff66cc, 3.8, 55);
+oasisLight.position.set(0, 2.8, 0);
 oasisGroup.add(oasisLight);
 easterEggsGroup.add(oasisGroup);
 
 const EASTER_EGGS = [
-  { id: 'egg', name: '🥚 Kadim Altın Ejderha Yumurtası', pos: new THREE.Vector3(-850, 165, 620), group: eggGroup, rotObj: goldEggMesh },
-  { id: 'sword', name: '⚔️ Taşa Saplı Valyria Kılıcı', pos: new THREE.Vector3(720, 310, 980), group: swordGroup, rotObj: bladeMesh },
-  { id: 'monolith', name: '🌌 Kozmik Yıldız Monoliti', pos: new THREE.Vector3(-1100, 260, -1250), group: monolithGroup, rotObj: monoRing },
-  { id: 'oasis', name: '🌸 Kayıp Cennet Nilüferi', pos: new THREE.Vector3(-640, 44, 240), group: oasisGroup, rotObj: lotusCore }
+  { id: 'egg', name: '🥚 Kadim Altın Ejderha Yumurtası', pos: new THREE.Vector3(eggCoords.x, eggGroundY + 2.5, eggCoords.z), group: eggGroup, rotObj: goldEggMesh },
+  { id: 'sword', name: '⚔️ Taşa Saplı Valyria Kılıcı', pos: new THREE.Vector3(swordCoords.x, swordGroundY + 4.0, swordCoords.z), group: swordGroup, rotObj: bladeMesh },
+  { id: 'monolith', name: '🌌 Kozmik Yıldız Monoliti', pos: new THREE.Vector3(monoCoords.x, monoGroundY + 7.5, monoCoords.z), group: monolithGroup, rotObj: monoRing },
+  { id: 'oasis', name: '🌸 Kayıp Cennet Nilüferi', pos: new THREE.Vector3(oasisCoords.x, -7.0, oasisCoords.z), group: oasisGroup, rotObj: lotusCore }
 ];
 
 function playEasterEggSound(){
@@ -3691,7 +3707,7 @@ function updateEasterEggs(dt){
 function checkEasterEggs(pos){
   for(let i = 0; i < EASTER_EGGS.length; i++){
     const ee = EASTER_EGGS[i];
-    if(!discoveredEggs[ee.id] && pos.distanceTo(ee.pos) < 18.0){
+    if(!discoveredEggs[ee.id] && pos.distanceTo(ee.pos) < 22.0){
       discoveredEggs[ee.id] = true;
       easterEggsFoundCount++;
       playerScore += 500;
@@ -5215,6 +5231,7 @@ const dragonPos = new THREE.Vector3(0, 95, 0);
 let yaw = 0, pitch = 0, roll = 0;
 let flightSpeed = 40.0;
 let mouseDX = 0, mouseDY = 0;
+let smoothMouseDX = 0, smoothMouseDY = 0;
 let isFiring = false, fireStrength = 0;
 
 // Başlangıç Kamera Ayarı
@@ -5321,11 +5338,15 @@ container.addEventListener('click', () => {
 document.addEventListener('mousemove', e => {
   if(document.pointerLockElement === document.body){
     if(isPhotoMode){
-      photoCamAngleX -= e.movementX * 0.003;
-      photoCamAngleY = Math.max(-1.1, Math.min(1.1, photoCamAngleY + e.movementY * 0.003));
+      const mX = Math.max(-60, Math.min(60, e.movementX));
+      const mY = Math.max(-60, Math.min(60, e.movementY));
+      photoCamAngleX -= mX * 0.003;
+      photoCamAngleY = Math.max(-1.1, Math.min(1.1, photoCamAngleY + mY * 0.003));
     } else {
-      mouseDX += e.movementX;
-      mouseDY += e.movementY;
+      const mX = Math.max(-80, Math.min(80, e.movementX));
+      const mY = Math.max(-80, Math.min(80, e.movementY));
+      mouseDX += mX;
+      mouseDY += mY;
     }
   }
 });
@@ -6767,6 +6788,27 @@ function updateRadar(){
     }
   });
 
+  // 3e. Canlı Easter Egg İşaretçileri (Parlayan Altın Yıldızlar & Keşif İbresi)
+  if(typeof EASTER_EGGS !== 'undefined'){
+    const tPulse = (Math.sin(Date.now() * 0.007) + 1.0) * 0.5;
+    EASTER_EGGS.forEach(ee => {
+      const ex = cx + ee.pos.x * scale;
+      const ey = cy + ee.pos.z * scale;
+      if(Math.hypot(ex - cx, ey - cy) < radius - 3){
+        const isDiscovered = (discoveredEggs && discoveredEggs[ee.id]);
+        radarCtx.fillStyle = isDiscovered ? '#00ffcc' : '#ffd700';
+        radarCtx.beginPath();
+        radarCtx.arc(ex, ey, isDiscovered ? 2.2 : (2.4 + tPulse * 1.6), 0, Math.PI * 2);
+        radarCtx.fill();
+        if(!isDiscovered){
+          radarCtx.strokeStyle = 'rgba(255, 140, 0, 0.85)';
+          radarCtx.lineWidth = 1.0;
+          radarCtx.stroke();
+        }
+      }
+    });
+  }
+
   // 4. Dost Ejderha Konumu (Cyan Ok)
   if(remotePlayer && remotePlayer.active && remoteDragonRig){
     const rx = cx + remoteDragonRig.position.x * scale;
@@ -6915,8 +6957,13 @@ function animate(){
 
       if(keys['KeyA'] || keys['ArrowLeft'])  yaw += 1.8 * dt;
       if(keys['KeyD'] || keys['ArrowRight']) yaw -= 1.8 * dt;
-      yaw -= mouseDX * 0.0022;
+      const walkInDX = Math.max(-45.0, Math.min(45.0, mouseDX));
       mouseDX = 0; mouseDY = 0;
+      smoothMouseDX += (walkInDX - smoothMouseDX) * Math.min(1.0, dt * 25.0);
+      yaw -= smoothMouseDX * 0.0018;
+
+      while(yaw > Math.PI) yaw -= Math.PI * 2;
+      while(yaw < -Math.PI) yaw += Math.PI * 2;
 
       // Model Taban Ayak Seviyesi (Yerin dibine batmayı %100 önler)
       const curSurfaceY = getSurfaceHeightAt(dragonPos.x, dragonPos.z, dragonPos.y);
@@ -6960,11 +7007,27 @@ function animate(){
         toggleFormationFlight();
       }
     } else {
-      // 1. Dümen & Hız
-      yaw -= mouseDX * 0.0022;
-      pitch -= mouseDY * 0.0022;
-      pitch = Math.max(-Math.PI * 0.35, Math.min(Math.PI * 0.36, pitch));
+      // 1. Dümen & Hız (Mouse yumuşatma ve takılma koruması)
+      const inputDX = Math.max(-60.0, Math.min(60.0, mouseDX));
+      const inputDY = Math.max(-60.0, Math.min(60.0, mouseDY));
       mouseDX = 0; mouseDY = 0;
+
+      // Mouse hareketini yüksek kare hızında akıcı enterpole et (Anlık sıçramaları ve takılmayı %100 önler)
+      smoothMouseDX += (inputDX - smoothMouseDX) * Math.min(1.0, dt * 26.0);
+      smoothMouseDY += (inputDY - smoothMouseDY) * Math.min(1.0, dt * 26.0);
+
+      const mouseSens = 0.0018;
+      yaw -= smoothMouseDX * mouseSens;
+      pitch -= smoothMouseDY * mouseSens;
+
+      // Takla ve Gimbal Lock atmayan akıcı pitch sınırları
+      const MAX_PITCH_UP = 0.58;   // ~33.2° (Gökyüzüne asil tırmanış açısı)
+      const MAX_PITCH_DOWN = -0.52; // ~-29.8° (Yere kontrollü dalış açısı)
+      pitch = Math.max(MAX_PITCH_DOWN, Math.min(MAX_PITCH_UP, pitch));
+
+      // Yaw açısını [-PI, PI] aralığında tut
+      while(yaw > Math.PI) yaw -= Math.PI * 2;
+      while(yaw < -Math.PI) yaw += Math.PI * 2;
 
       const CRUISE_SPEED = 26.0; // ~94 km/h sakin ve asil süzülüş hızı
       const SPRINT_SPEED = 48.0; // ~172 km/h W tuşuyla güçlü uçuş hızı
@@ -6994,16 +7057,19 @@ function animate(){
 
       // Yükselme & Alçalma / Süzülüş Kontrolleri (Space = Yüksel, Ctrl/Q = Alçal)
       if(keys['Space'] && !isLanded){
-        pitch = Math.min(pitch + 1.8 * dt, Math.PI * 0.42);
-        dragonPos.y += 44.0 * dt;
+        pitch = Math.min(pitch + 1.2 * dt, MAX_PITCH_UP);
+        dragonPos.y += 40.0 * dt;
       }
       if((keys['ControlLeft'] || keys['ControlRight'] || keys['KeyC'] || keys['KeyQ']) && !isLanded){
-        pitch = Math.max(pitch - 1.5 * dt, -Math.PI * 0.42);
-        dragonPos.y -= 28.0 * dt;
+        pitch = Math.max(pitch - 1.2 * dt, MAX_PITCH_DOWN);
+        dragonPos.y -= 26.0 * dt;
       }
 
-      const turnIntent = (keys['KeyA']||keys['ArrowLeft']) ? 1 : (keys['KeyD']||keys['ArrowRight']) ? -1 : 0;
-      roll = roll * 0.86 + turnIntent * 0.55 * 0.14;
+      // Mouse ve Tuş Dönüşlerine Göre Doğal ve Asil Kanat Yatışı (Aerodynamic Bank Roll)
+      const mouseRollTarget = Math.max(-0.65, Math.min(0.65, -smoothMouseDX * 0.035));
+      const keyRollTarget = (keys['KeyA']||keys['ArrowLeft']) ? 0.60 : (keys['KeyD']||keys['ArrowRight']) ? -0.60 : 0;
+      const targetRoll = keyRollTarget + mouseRollTarget;
+      roll += (targetRoll - roll) * Math.min(1.0, dt * 6.5);
 
       // 2. İleri Hareket (Sıfır GC Tahsisi)
       const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
@@ -7048,14 +7114,19 @@ function animate(){
       if(cliffDiff > 0 && cliffDiff < 14.0 && _forward.y < 0.25){
         const liftReq = Math.min(20.0, cliffDiff * 1.8);
         dragonPos.y += liftReq * dt;
-        if(pitch < 0) pitch *= Math.max(0.3, 1.0 - dt * 2.5);
+        if(pitch < 0){
+          pitch += (0.02 - pitch) * Math.min(1.0, dt * 3.5);
+        }
       }
 
       // 2. Taban zemin koruması (asla arazinin veya gök adasının içine gömülmeme)
       const minSafeAlt = 7.5;
       if(dragonPos.y < groundY + minSafeAlt){
-        dragonPos.y += (groundY + minSafeAlt - dragonPos.y) * Math.min(1.0, dt * 5.0);
-        if(pitch < 0) pitch *= Math.max(0.2, 1.0 - dt * 4.0);
+        dragonPos.y += (groundY + minSafeAlt - dragonPos.y) * Math.min(1.0, dt * 6.5);
+        // Zemin yakını yumuşak düzleme: Titreme yerine ufka yumuşak paralel süzülüş
+        if(pitch < 0){
+          pitch += (0.02 - pitch) * Math.min(1.0, dt * 5.0);
+        }
       }
       if(dragonPos.y > 1800.0) dragonPos.y -= (dragonPos.y - 1800.0) * 0.06;
     }
@@ -7234,6 +7305,7 @@ function animate(){
       const cY = dragonPos.y + Math.sin(photoCamAngleY) * pDist + 2.4;
       const cZ = dragonPos.z + Math.cos(photoCamAngleX) * Math.cos(photoCamAngleY) * pDist;
       camera.position.set(cX, cY, cZ);
+      camera.up.set(0, 1, 0);
       _lookTarget.copy(dragonPos).add(new THREE.Vector3(0, 1.2, 0));
       camera.lookAt(_lookTarget);
     } else {
@@ -7291,6 +7363,11 @@ function animate(){
         _tempVec1.set(0, 1.2, 0).applyQuaternion(dragonRig.quaternion);
         _lookTarget.copy(dragonPos).add(_tempVec1).addScaledVector(_forward, lookDist);
       }
+      // 🎯 GİMBAL LOCK & TAKILMA ENGELLEYİCİ:
+      // Uçuş sırasında camera.up vektörünü ejderhanın yerel yukarı eksenine kitle.
+      // Bu sayede en sağa, sola, yukarı veya aşağı bakıldığında cross(up, fwd) asla sıfır olmaz!
+      _tempVec2.set(0, 1, 0).applyQuaternion(dragonRig.quaternion);
+      camera.up.copy(_tempVec2);
       camera.lookAt(_lookTarget);
     }
 
@@ -7318,6 +7395,7 @@ function animate(){
       camY + Math.sin(t * 0.6) * 0.4,
       dragonPos.z + Math.cos(t) * orbitDist
     );
+    camera.up.set(0, 1, 0);
     _lookTarget.set(dragonPos.x, dragonPos.y + 0.1, dragonPos.z);
     camera.lookAt(_lookTarget);
     updateBirdFlock(dt);
