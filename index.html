@@ -28,12 +28,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   display:none !important;
 }
 .splash-card{
-  max-width:620px;width:92%;
-  background:rgba(20,5,12,0.85);
-  border:1.5px solid rgba(255,100,135,0.35);
-  box-shadow:0 30px 80px rgba(0,0,0,0.92), 0 0 60px rgba(180,20,50,0.25);
+  max-width:800px;width:94%;
+  background:rgba(18,5,12,0.92);
+  border:1.5px solid rgba(255,100,135,0.40);
+  box-shadow:0 25px 80px rgba(0,0,0,0.95), 0 0 50px rgba(200,20,50,0.30);
   backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border-radius:28px;padding:24px 26px;
+  border-radius:24px;padding:20px 24px;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   position:relative;
 }
@@ -42,197 +42,148 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   display:flex;align-items:center;justify-content:center;gap:14px;width:100%;
 }
 .dragon-badge-img{
-  width:78px;height:auto;max-height:90px;object-fit:contain;
-  filter:drop-shadow(0 0 22px rgba(220,25,65,0.75)) drop-shadow(0 0 40px rgba(255,140,40,0.35));
+  width:64px;height:auto;max-height:74px;object-fit:contain;
+  filter:drop-shadow(0 0 18px rgba(220,25,65,0.75)) drop-shadow(0 0 32px rgba(255,140,40,0.35));
   animation:dragonFloat 3.6s ease-in-out infinite;
   pointer-events:none;
 }
 @keyframes dragonFloat{
   0%,100%{transform:translateY(0) scale(1) rotate(-1.2deg)}
-  50%{transform:translateY(-8px) scale(1.02) rotate(1.2deg)}
+  50%{transform:translateY(-6px) scale(1.02) rotate(1.2deg)}
 }
 .splash-title-group{text-align:left;}
 .splash-card h1{
-  font-size:clamp(1.6rem,3.8vw,2.2rem);font-weight:900;letter-spacing:3px;
+  font-size:clamp(1.4rem,3.2vw,2.0rem);font-weight:900;letter-spacing:2.5px;
   text-transform:uppercase;margin:0;line-height:1.15;
   background:linear-gradient(135deg,#fff4d0 0%,#f7b731 35%,#e83350 70%,#941026 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 3px 14px rgba(180,20,50,0.5));
+  filter:drop-shadow(0 3px 12px rgba(180,20,50,0.5));
 }
 .splash-card .sub{
-  color:#f7ccd3;font-size:.78rem;letter-spacing:1.5px;margin-top:3px;
+  color:#f7ccd3;font-size:.74rem;letter-spacing:1.2px;margin-top:2px;
   text-transform:uppercase;font-weight:600;opacity:.9;
 }
 
-/* ── Modern Sekmeli Menü Sistemi ── */
-.menu-tabs{
-  display:flex;gap:6px;margin:14px 0 12px 0;width:100%;max-width:560px;
-  background:rgba(0,0,0,0.40);padding:5px;border-radius:16px;
-  border:1px solid rgba(255,100,135,0.22);
+/* ── Ergonomik 2 Sütunlu Izgara (Dashboard) ── */
+.splash-dashboard{
+  display:grid;grid-template-columns:1.05fr 1fr;gap:14px;
+  width:100%;margin-top:14px;
 }
-.menu-tab-btn{
-  flex:1;background:transparent;border:none;color:#dfc3cb;
-  padding:8px 8px;border-radius:12px;font-size:.71rem;font-weight:700;
-  cursor:pointer;transition:all .18s ease;display:flex;align-items:center;
-  justify-content:center;gap:5px;user-select:none;outline:none;white-space:nowrap;
+@media (max-width:760px){
+  .splash-dashboard{grid-template-columns:1fr;gap:10px;}
+  .splash-card{padding:16px 14px;}
 }
-.menu-tab-btn:hover{
-  background:rgba(255,255,255,0.08);color:#fff;
+.dash-card{
+  background:rgba(12,4,8,0.76);border:1px solid rgba(255,100,130,0.28);
+  box-shadow:0 8px 24px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.1);
+  border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;
+  backdrop-filter:blur(14px);text-align:left;
 }
-.menu-tab-btn.active{
-  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(200,50,30,0.7));
-  color:#fff;border:1px solid rgba(255,150,175,0.4);
-  box-shadow:0 0 14px rgba(220,30,60,0.55);
+.dash-card-title{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:.74rem;font-weight:800;letter-spacing:1.2px;color:#ffc5d3;
+  text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.08);
+  padding-bottom:6px;
 }
+.dash-card-title span{display:flex;align-items:center;gap:6px;}
 
-.tab-pane{
-  display:none;width:100%;max-width:540px;
-}
-.tab-pane.active{
-  display:block;animation:paneFade .22s ease;
-}
-@keyframes paneFade{
-  from{opacity:0;transform:translateY(6px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-/* ── Ejderha Özelleştirme & Atölye Paneli (Modern Glassmorphic Tasarım) ── */
-.customizer-box{
-  width:100%;
-  background:rgba(14,5,9,0.72);border:1px solid rgba(255,100,130,0.30);
-  box-shadow:0 12px 32px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12);
-  border-radius:20px;padding:12px 16px;display:flex;flex-direction:column;gap:10px;
-  backdrop-filter:blur(14px);
-}
 .cust-row{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  display:flex;flex-direction:column;gap:5px;
 }
 .cust-label{
   display:inline-flex;align-items:center;gap:6px;
-  font-size:.74rem;color:#ffc5d3;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;
+  font-size:.70rem;color:#f0b4c2;font-weight:800;letter-spacing:1px;text-transform:uppercase;
 }
 .cust-label-icon{
-  width:14px;height:14px;stroke:#ff7a94;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  width:13px;height:13px;stroke:#ff7a94;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
 }
 .cust-types{
-  display:flex;gap:6px;flex-wrap:wrap;
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;
 }
 .cust-btn{
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
-  color:#ead5da;padding:5px 11px;border-radius:12px;font-size:.71rem;font-weight:700;
-  cursor:pointer;transition:all .18s ease;outline:none;display:inline-flex;align-items:center;gap:6px;
-}
-.cust-btn .cust-svg{
-  width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-  transition:transform .18s;
+  color:#ead5da;padding:7px 6px;border-radius:12px;font-size:.68rem;font-weight:700;
+  cursor:pointer;transition:all .18s ease;outline:none;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;text-align:center;
 }
 .cust-btn:hover{background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.3);transform:translateY(-1px)}
 .cust-btn.active{
   background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(255,120,30,0.65));
-  border-color:#ff99b0;color:#fff;box-shadow:0 0 14px rgba(225,35,70,0.6);
+  border-color:#ff99b0;color:#fff;box-shadow:0 0 12px rgba(225,35,70,0.5);
 }
-.cust-btn.active .cust-svg{
-  stroke:#ffe380;transform:scale(1.12);
-}
-.color-chips{
-  display:flex;gap:8px;align-items:center;
-}
+.cust-btn .cust-svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;}
+
+.color-chips{display:flex;gap:7px;align-items:center;margin-top:2px;}
 .color-chip{
-  width:23px;height:23px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.28);
-  transition:all .18s cubic-bezier(0.2,0.8,0.2,1);box-shadow:0 2px 8px rgba(0,0,0,0.7);
+  width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.28);
+  transition:all .18s cubic-bezier(0.2,0.8,0.2,1);box-shadow:0 2px 6px rgba(0,0,0,0.7);
 }
-.color-chip:hover{transform:scale(1.22);border-color:rgba(255,255,255,0.6)}
-.color-chip.active{border-color:#fff;box-shadow:0 0 14px rgba(255,255,255,0.95), 0 0 6px rgba(255,80,120,0.8);transform:scale(1.22)}
-.accessory-toggles{
-  display:flex;gap:8px;flex-wrap:wrap;
-}
+.color-chip:hover{transform:scale(1.2);border-color:rgba(255,255,255,0.6)}
+.color-chip.active{border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,0.95), 0 0 6px rgba(255,80,120,0.8);transform:scale(1.2)}
+
+.accessory-toggles{display:flex;gap:6px;flex-wrap:wrap;}
 .acc-toggle-btn{
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
-  color:#dfc3cb;padding:5px 10px;border-radius:12px;font-size:.71rem;font-weight:700;
-  cursor:pointer;transition:all .18s ease;outline:none;display:inline-flex;align-items:center;gap:6px;
-  user-select:none;
+  color:#dfc3cb;padding:4px 8px;border-radius:10px;font-size:.67rem;font-weight:700;
+  cursor:pointer;transition:all .18s ease;outline:none;display:inline-flex;align-items:center;gap:5px;
 }
-.acc-toggle-btn .acc-svg{
-  width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-}
-.acc-toggle-btn .acc-status-dot{
-  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all .18s;
-}
-.acc-toggle-btn:hover{
-  background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.3);
-}
+.acc-toggle-btn:hover{background:rgba(255,255,255,0.12);color:#fff;}
 .acc-toggle-btn.active{
   background:linear-gradient(135deg,rgba(160,20,50,0.75),rgba(200,80,30,0.55));
-  border-color:#ff8ca5;color:#fff;box-shadow:0 0 12px rgba(220,30,60,0.45);
+  border-color:#ff8ca5;color:#fff;box-shadow:0 0 10px rgba(220,30,60,0.4);
 }
-.acc-toggle-btn.active .acc-svg{
-  stroke:#ffd255;
+.acc-status-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all .18s;}
+.acc-toggle-btn.active .acc-status-dot{background:#00ffaa;box-shadow:0 0 6px #00ffaa;}
+
+/* Sağ Kart: Modlar & Ayarlar */
+.lobby-mode-pills{display:flex;gap:5px;width:100%;}
+.lobby-pill-btn{
+  flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  color:#ead5da;padding:6px 6px;border-radius:10px;font-size:.69rem;font-weight:700;
+  cursor:pointer;transition:all .18s ease;text-align:center;outline:none;
 }
-.acc-toggle-btn.active .acc-status-dot{
-  background:#00ffaa;box-shadow:0 0 8px #00ffaa;
+.lobby-pill-btn:hover{background:rgba(255,255,255,0.12);color:#fff;}
+.lobby-pill-btn.active{
+  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(200,50,30,0.7));
+  color:#fff;border-color:#ff99b0;box-shadow:0 0 10px rgba(220,30,60,0.45);
 }
 
-/* ── Turbo Kükreme HUD Efekti ── */
-#turbo-fx{
-  position:fixed;inset:0;pointer-events:none;z-index:39;opacity:0;
-  background:radial-gradient(circle at 50% 50%,transparent 40%,rgba(255,100,20,0.25) 85%,rgba(255,30,60,0.45) 100%);
-  mix-blend-mode:screen;transition:opacity .15s ease;
-}
-
-/* ── Tab 3: Müzik & Gökyüzü Paneli ── */
-.sky-music-box{
-  width:100%;background:rgba(14,5,9,0.72);border:1px solid rgba(255,100,130,0.30);
-  box-shadow:0 12px 32px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.12);
-  border-radius:20px;padding:14px 16px;display:flex;flex-direction:column;gap:12px;
-  backdrop-filter:blur(14px);
-}
 .song-picker-splash{
-  display:inline-flex;align-items:center;justify-content:space-between;gap:10px;
-  padding:8px 16px;border-radius:16px;
-  background:rgba(120,12,35,0.4);border:1px solid rgba(255,130,160,0.4);
-  box-shadow:0 4px 18px rgba(0,0,0,0.45);width:100%;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:6px 12px;border-radius:12px;background:rgba(120,12,35,0.4);
+  border:1px solid rgba(255,130,160,0.35);width:100%;box-sizing:border-box;
 }
 .song-picker-splash select{
-  flex:1;background:transparent;border:none;color:#ffebef;font-size:.84rem;
-  font-weight:700;font-family:inherit;cursor:pointer;outline:none;
+  flex:1;background:transparent;border:none;color:#ffebef;font-size:.78rem;
+  font-weight:700;cursor:pointer;outline:none;
 }
 .song-picker-splash select option{background:#16040b;color:#ffebef}
 
-.sky-time-picker{display:flex;flex-direction:column;gap:8px;text-align:left;}
-.sky-time-label{font-size:.74rem;color:#ffc5d3;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;}
-.sky-time-btns{display:flex;gap:7px;flex-wrap:wrap;}
+.sky-time-btns{display:flex;gap:5px;}
 .sky-time-btn{
-  flex:1;min-width:130px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
-  color:#ead5da;padding:8px 10px;border-radius:12px;font-size:.73rem;font-weight:700;
-  cursor:pointer;transition:all .18s ease;outline:none;text-align:center;
+  flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
+  color:#ead5da;padding:6px 4px;border-radius:10px;font-size:.68rem;font-weight:700;
+  cursor:pointer;transition:all .18s ease;text-align:center;outline:none;
 }
-.sky-time-btn:hover{background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.3);}
+.sky-time-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
 .sky-time-btn.active{
   background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(255,120,30,0.65));
-  border-color:#ff99b0;color:#fff;box-shadow:0 0 14px rgba(225,35,70,0.6);
+  border-color:#ff99b0;color:#fff;box-shadow:0 0 10px rgba(225,35,70,0.5);
 }
 
-/* ── Tab 4: Kontroller Tablosu ── */
-.splash-keys-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:6px;
-  width:100%;background:rgba(14,5,9,0.72);border:1px solid rgba(255,100,130,0.30);
-  border-radius:20px;padding:12px 14px;max-height:220px;overflow-y:auto;
-  box-shadow:0 10px 30px rgba(0,0,0,0.65);backdrop-filter:blur(14px);
+.btn-open-help-modal{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);
+  color:#fcd0dc;padding:6px 12px;border-radius:10px;font-size:.70rem;font-weight:700;
+  cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;
 }
-.splash-keys-grid::-webkit-scrollbar{width:4px;}
-.splash-keys-grid::-webkit-scrollbar-thumb{background:rgba(255,100,130,0.4);border-radius:4px;}
-.splash-key-item{
-  display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:5px 8px;
-  font-size:.72rem;color:#f3d4dc;text-align:left;
-}
+.btn-open-help-modal:hover{background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.35);}
 
 /* ── Menü Alt Bölümü (Başlat Butonu & İpucu) ── */
 .splash-footer{
-  display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:12px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:14px;
 }
 #startBtn{
-  padding:12px 42px;font-size:1.15rem;font-weight:800;
+  padding:12px 46px;font-size:1.15rem;font-weight:800;
   letter-spacing:2.2px;text-transform:uppercase;cursor:pointer;border-radius:50px;
   background:linear-gradient(135deg,#840d24 0%,#d81e44 50%,#840d24 100%);
   color:#fff;border:2px solid #ff7a94;
@@ -775,57 +726,39 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <img src="dragon_badge_user.png" class="dragon-badge-img" id="splash-dragon-badge" alt="Asil Ejderha"/>
       <div class="splash-title-group">
         <h1 id="splash-dragon-title">Asil Ejderha (Bordo)</h1>
-        <div class="sub">House of the Dragon Sinematik Chill Uçuş Simülasyonu <span style="background:rgba(255,140,0,0.3);border:1px solid rgba(255,180,50,0.6);color:#ffd044;font-size:0.68rem;padding:2px 7px;border-radius:10px;font-weight:800;letter-spacing:1px;margin-left:5px;">YENİ MENÜ</span></div>
+        <div class="sub">House of the Dragon — Sinematik Uçuş Simülasyonu</div>
       </div>
     </div>
 
-    <!-- Menü Sekme Başlıkları -->
-    <div class="menu-tabs">
-      <button type="button" class="menu-tab-btn active" onclick="switchSplashTab('dragon', this)">
-        <span>🐉</span> Ejderha Atölyesi
-      </button>
-      <button type="button" class="menu-tab-btn" onclick="switchSplashTab('lobby', this)">
-        <span>🌐</span> Çok Oyunculu
-      </button>
-      <button type="button" class="menu-tab-btn" onclick="switchSplashTab('music', this)">
-        <span>🎵</span> Şarkı & Gökyüzü
-      </button>
-      <button type="button" class="menu-tab-btn" onclick="switchSplashTab('controls', this)">
-        <span>⌨️</span> Kontroller
-      </button>
-    </div>
+    <!-- Ergonomik 2 Sütunlu Dashboard (Tüm Ayarlar Tek Bakışta) -->
+    <div class="splash-dashboard">
+      <!-- SOL SÜTUN: Ejderha Modeli, Rengi & Donanımı -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          <span>🐉 Ejderha Seçimi</span>
+          <span style="font-size:0.62rem;color:#fca5a5;">3D Canlı Model</span>
+        </div>
 
-    <!-- TAB 1: EJDERHA ATÖLYESİ -->
-    <div class="tab-pane active" id="tab-dragon">
-      <div class="customizer-box">
-        <!-- 1. Tür & Irk -->
         <div class="cust-row">
-          <span class="cust-label">
-            <svg class="cust-label-icon" viewBox="0 0 24 24"><path d="M12 2l2.5 5 5.5.8-4 3.9 1 5.3-5-2.6-5 2.6 1-5.3-4-3.9 5.5-.8z"/></svg>
-            Tür & Irk:
-          </span>
+          <div class="cust-label">Tür & Model:</div>
           <div class="cust-types">
             <button type="button" class="cust-btn active" id="btn-species-meleys" onclick="selectDragonSpecies('meleys', this)">
               <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
-              Asil Ejderha (Bordo)
+              <span>Asil Bordo</span>
             </button>
             <button type="button" class="cust-btn" id="btn-species-demon" onclick="selectDragonSpecies('demon', this)">
               <svg class="cust-svg" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4.1 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
-              Kadim İblis (Obsidyen)
+              <span>Kadim İblis</span>
             </button>
             <button type="button" class="cust-btn" id="btn-species-wyvern" onclick="selectDragonSpecies('wyvern', this)">
               <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 7v5m-3-2.5h6"/></svg>
-              Zırhlı Wyvern (3D GLB)
+              <span>Zırhlı Wyvern</span>
             </button>
           </div>
         </div>
 
-        <!-- 2. Renk Paleti -->
         <div class="cust-row">
-          <span class="cust-label">
-            <svg class="cust-label-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/></svg>
-            Ejderha Rengi:
-          </span>
+          <div class="cust-label">Renk Paleti:</div>
           <div class="color-chips">
             <div class="color-chip active" style="background:#550818;" title="Asil Bordo" onclick="selectDragonColor('bordo', this)"></div>
             <div class="color-chip" style="background:#1a1222;" title="Obsidyen Gece" onclick="selectDragonColor('obsidian', this)"></div>
@@ -836,125 +769,88 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
           </div>
         </div>
 
-        <!-- 3. Aksesuarlar & Donanım -->
         <div class="cust-row">
-          <span class="cust-label">
-            <svg class="cust-label-icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            Donanım:
-          </span>
+          <div class="cust-label">Donanım & Parıltı:</div>
           <div class="accessory-toggles">
             <button type="button" class="acc-toggle-btn" id="acc-btn-armor" onclick="toggleAccessoryBtn('armor')">
-              <span class="acc-status-dot"></span> 🛡️ Ejderha Zırhı
+              <span class="acc-status-dot"></span> 🛡️ Zırh
             </button>
             <button type="button" class="acc-toggle-btn" id="acc-btn-wingembers" onclick="toggleAccessoryBtn('wingembers')">
-              <span class="acc-status-dot"></span> ✨ Kanat Kıvılcımları
+              <span class="acc-status-dot"></span> ✨ Kıvılcım
             </button>
             <button type="button" class="acc-toggle-btn" id="acc-btn-eyeglow" onclick="toggleAccessoryBtn('eyeglow')">
-              <span class="acc-status-dot"></span> 🔥 Göz Parıltısı
+              <span class="acc-status-dot"></span> 🔥 Göz Işığı
             </button>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- TAB 2: ÇOK OYUNCULU LOBİ -->
-    <div class="tab-pane" id="tab-lobby">
-      <div class="lobby-box">
-        <div class="lobby-header">
-          <span class="lobby-title">
-            <svg class="cust-label-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-            Uçuş Modu:
-          </span>
-          <div class="lobby-mode-pills">
-            <button type="button" class="lobby-pill-btn active" id="btn-mode-solo" onclick="setLobbyMode('solo')">🎮 Tek Başına</button>
-            <button type="button" class="lobby-pill-btn" id="btn-mode-host" onclick="setLobbyMode('host')">👑 Oda Kur</button>
-            <button type="button" class="lobby-pill-btn" id="btn-mode-join" onclick="setLobbyMode('join')">🤝 Odaya Katıl</button>
+      <!-- SAĞ SÜTUN: Uçuş Modu, Şarkı & Atmosfer -->
+      <div class="dash-card">
+        <div class="dash-card-title">
+          <span>🌐 Uçuş Modu</span>
+          <button type="button" class="btn-open-help-modal" onclick="toggleHelpPanel(true)" title="Kontrol Tuşlarını Gör">⌨️ Kontroller [H]</button>
+        </div>
+
+        <div class="lobby-mode-pills">
+          <button type="button" class="lobby-pill-btn active" id="btn-mode-solo" onclick="setLobbyMode('solo')">🎮 Solo Uçuş</button>
+          <button type="button" class="lobby-pill-btn" id="btn-mode-host" onclick="setLobbyMode('host')">👑 Oda Kur</button>
+          <button type="button" class="lobby-pill-btn" id="btn-mode-join" onclick="setLobbyMode('join')">🤝 Odaya Katıl</button>
+        </div>
+
+        <!-- Solo Mod Görünümü -->
+        <div class="lobby-body" id="lobby-view-solo" style="display:flex;">
+          <div class="lobby-status-msg" style="padding:6px 10px;font-size:0.71rem;width:100%;box-sizing:border-box;">
+            <span>🏔️ Şarkılar eşliğinde tek başına huzurlu, serbest ve akıcı uçuş.</span>
           </div>
         </div>
 
-        <div class="lobby-body" id="lobby-view-solo">
-          <div class="lobby-status-msg">
-            <span>🏔️ Şarkılar eşliğinde tek başına huzurlu ve serbest uçuş modu.</span>
-          </div>
-        </div>
-
-        <div class="lobby-body" id="lobby-view-host" style="display:none;">
-          <div class="room-code-display">
+        <!-- Oda Kur Görünümü -->
+        <div class="lobby-body" id="lobby-view-host" style="display:none;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;">
+          <div class="room-code-display" style="padding:6px 10px;">
             <div>
-              <span style="font-size:.65rem;color:#fca5a5;display:block;letter-spacing:1px;font-weight:700;">ODA KODUN:</span>
-              <span class="room-code-text" id="host-room-code-val">EJDER-49</span>
+              <span style="font-size:.62rem;color:#fca5a5;display:block;letter-spacing:1px;font-weight:700;">ODA KODUN:</span>
+              <span class="room-code-text" id="host-room-code-val" style="font-size:0.95rem;">EJDER-49</span>
             </div>
-            <div style="display:flex;gap:6px;">
+            <div style="display:flex;gap:5px;">
               <button type="button" class="lobby-action-btn" onclick="copyRoomCode()">📋 Kopyala</button>
-              <button type="button" class="lobby-action-btn" onclick="copyInviteLink()">🔗 Davet Linki</button>
+              <button type="button" class="lobby-action-btn" onclick="copyInviteLink()">🔗 Link</button>
             </div>
           </div>
-          <div class="lobby-status-msg waiting" id="host-status-msg">
+          <div class="lobby-status-msg waiting" id="host-status-msg" style="font-size:0.69rem;padding:5px 8px;">
             <span class="pulse-dot"></span> Arkadaşının katılması bekleniyor... (Odayı kurup direkt uçabilirsin!)
           </div>
         </div>
 
-        <div class="lobby-body" id="lobby-view-join" style="display:none;">
-          <div class="lobby-input-row">
-            <input type="text" class="lobby-input" id="input-room-code" placeholder="ÖRN: EJDER-49" maxlength="15" />
-            <button type="button" class="lobby-action-btn" style="padding:9px 16px;" onclick="joinRoomByCode()">Bağlan 🚀</button>
+        <!-- Odaya Katıl Görünümü -->
+        <div class="lobby-body" id="lobby-view-join" style="display:none;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;">
+          <div class="lobby-input-row" style="gap:6px;">
+            <input type="text" class="lobby-input" id="input-room-code" placeholder="ÖRN: EJDER-49" maxlength="15" style="padding:6px 10px;font-size:0.80rem;" />
+            <button type="button" class="lobby-action-btn" style="padding:7px 12px;" onclick="joinRoomByCode()">Bağlan 🚀</button>
           </div>
-          <div class="lobby-status-msg" id="join-status-msg">
-            Arkadaşından aldığın oda kodunu buraya gir ve bağlan.
+          <div class="lobby-status-msg" id="join-status-msg" style="font-size:0.69rem;padding:4px 8px;">
+            Arkadaşından aldığın oda kodunu gir ve bağlan.
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- TAB 3: ŞARKI & GÖKYÜZÜ -->
-    <div class="tab-pane" id="tab-music">
-      <div class="sky-music-box">
-        <div class="song-picker-splash">
-          <span style="font-size:.78rem;font-weight:700;color:#fcd0dc;">🎵 Başlangıç Şarkısı:</span>
-          <select id="splash-song-select" onchange="loadTrack(parseInt(this.value), false)">
-            <!-- JavaScript ile doldurulur -->
-          </select>
+        <!-- Müzik & Gökyüzü -->
+        <div class="cust-row" style="margin-top:2px;">
+          <div class="cust-label">🎵 Başlangıç Şarkısı:</div>
+          <div class="song-picker-splash">
+            <select id="splash-song-select" onchange="loadTrack(parseInt(this.value), false)">
+              <!-- JS ile doldurulur -->
+            </select>
+          </div>
         </div>
 
-        <div class="sky-time-picker">
-          <div class="sky-time-label">🌅 Başlangıç Gökyüzü Atmosferi:</div>
+        <div class="cust-row">
+          <div class="cust-label">🌅 Gökyüzü Atmosferi:</div>
           <div class="sky-time-btns">
-            <button type="button" class="sky-time-btn active" id="sky-btn-0" onclick="selectStartSkyMode(0)">
-              ☀️ Canlı Gündüz
-            </button>
-            <button type="button" class="sky-time-btn" id="sky-btn-1" onclick="selectStartSkyMode(1)">
-              🌅 Altın Gün Batımı
-            </button>
-            <button type="button" class="sky-time-btn" id="sky-btn-2" onclick="selectStartSkyMode(2)">
-              🌌 Büyülü Gece & Aurora
-            </button>
+            <button type="button" class="sky-time-btn active" id="sky-btn-0" onclick="selectStartSkyMode(0)">☀️ Gündüz</button>
+            <button type="button" class="sky-time-btn" id="sky-btn-1" onclick="selectStartSkyMode(1)">🌅 Gün Batımı</button>
+            <button type="button" class="sky-time-btn" id="sky-btn-2" onclick="selectStartSkyMode(2)">🌌 Gece</button>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- TAB 4: KONTROLLER -->
-    <div class="tab-pane" id="tab-controls">
-      <div class="splash-keys-grid">
-        <div class="splash-key-item"><span class="k-badge">🖱️ FARE</span><span>Yönlendir / Bakış Açısı</span></div>
-        <div class="splash-key-item"><span class="k-badge">W / S</span><span>Havada: Hızlan/Fren | Yerde: Yürü</span></div>
-        <div class="splash-key-item"><span class="k-badge">A / D</span><span>Yatış / Yerde Dönüş</span></div>
-        <div class="splash-key-item"><span class="k-badge">SPACE</span><span>⬆️ Göğe Tırman / Yerden Havalan</span></div>
-        <div class="splash-key-item"><span class="k-badge">CTRL / Q</span><span>⬇️ Alçal & Süzülerek Dal</span></div>
-        <div class="splash-key-item"><span class="k-badge">E</span><span>🦅 Yere Kon / Dinlen Modu</span></div>
-        <div class="splash-key-item"><span class="k-badge">SHIFT</span><span>⚡ Turbo Kükreme Hızlanması</span></div>
-        <div class="splash-key-item"><span class="k-badge">M</span><span>🗺️ Uçuş Radarı / Harita (Aç/Kapa)</span></div>
-        <div class="splash-key-item"><span class="k-badge">L</span><span>📜 Şarkı Listesi Menüsü</span></div>
-        <div class="splash-key-item"><span class="k-badge">F</span><span>🤝 Formasyon / Takip Uçuşu</span></div>
-        <div class="splash-key-item"><span class="k-badge">R</span><span>🎨 Gökyüzü Çizimi (Aç/Kapa)</span></div>
-        <div class="splash-key-item"><span class="k-badge">Y</span><span>🌈 Çizim Rengi Değiştir</span></div>
-        <div class="splash-key-item"><span class="k-badge">X</span><span>🧹 Gökyüzü Çizimini Sil</span></div>
-        <div class="splash-key-item"><span class="k-badge">1 - 4</span><span>💬 Emote (❤️🎵👋✨)</span></div>
-        <div class="splash-key-item"><span class="k-badge">C</span><span>📸 Foto Modu [Boşluk: Çek]</span></div>
-        <div class="splash-key-item"><span class="k-badge">V</span><span>🎥 Kamera (1. / 3. Şahıs)</span></div>
-        <div class="splash-key-item"><span class="k-badge">T</span><span>🌌 Gündüz / Günbatımı / Aurora</span></div>
-        <div class="splash-key-item"><span class="k-badge">G</span><span>⚡ Fırtına & Şimşek Efekti</span></div>
-        <div class="splash-key-item"><span class="k-badge">N / P</span><span>🎶 Sonraki / Önceki Şarkı</span></div>
       </div>
     </div>
 
@@ -1050,6 +946,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
     <div class="pill" id="music-sync-pill" style="border-color: rgba(244,114,182,0.6); background: rgba(30,10,25,0.85);">📻 <b>Ortak Radyo:</b> <span id="val-sync-status" style="color:#f472b6; font-weight:bold;">Senkronize</span></div>
     <div class="pill" id="skywrite-hud-pill" style="border-color: rgba(255,215,0,0.6); background: rgba(30,25,5,0.85);">🎨 <b>Çizim:</b> <span id="val-draw-status" style="color:#ffd700; font-weight:bold;">Kapalı</span></div>
     <div class="pill">⭐ <b>Halka:</b> <span id="val-rings">0</span></div>
+    <div class="pill" id="easter-egg-hud-pill" style="border-color: rgba(255,215,0,0.6); background: rgba(30,22,5,0.85);">🗝️ <b>Sırlar:</b> <span id="val-easter-eggs" style="color:#ffd700; font-weight:bold;">0 / 4</span></div>
     <div class="pill pill-btn" id="map-toggle-btn" onclick="toggleRadarVisibility()" style="border-color: rgba(240,195,95,0.6); background: rgba(25,20,10,0.85);">🗺️ <b>Harita [M]:</b> <span id="val-map-status" style="color:#00ffaa; font-weight:bold;">Açık</span></div>
     <div class="pill pill-btn" id="help-toggle-btn" onclick="toggleHelpPanel()">⌨️ <b>Kılavuz [H]</b></div>
   </div>
@@ -3649,112 +3546,185 @@ cloudInst.instanceMatrix.needsUpdate = true;
 scene.add(cloudInst);
 
 // ═══════════════════════════════════════════════════
-//  CANLI DOĞA: TERMAL RÜZGAR BACALARI (Thermal Updrafts & Spirals)
+//  HARİTA EASTER EGGLERİ: 4 KADİM MİSTİK KEŞİF SİSTEMİ
 // ═══════════════════════════════════════════════════
-const THERMAL_SOURCES = [
-  { x: -140, z: -180, radius: 44, baseH: 15, topH: 1450, strength: 38.0 }, // Vadi Boğazı
-  { x:  280, z:  170, radius: 46, baseH: 40, topH: 1450, strength: 40.0 }, // Doğu Kanyonu
-  { x: -360, z:  290, radius: 45, baseH: 35, topH: 1450, strength: 36.0 }, // Batı Dağ Sırtı
-  { x:  360, z: -350, radius: 48, baseH: 50, topH: 1450, strength: 42.0 }  // Kuzey Tapınak Vadisi
+const easterEggsGroup = new THREE.Group();
+scene.add(easterEggsGroup);
+
+let easterEggsFoundCount = 0;
+const totalEasterEggs = 4;
+const discoveredEggs = { egg: false, sword: false, monolith: false, oasis: false };
+
+// 1. Kadim Altın Ejderha Yumurtası (Gizli Dağ Yuvası: x: -850, y: 165, z: 620)
+const eggGroup = new THREE.Group();
+eggGroup.position.set(-850, 165, 620);
+const nestMat = new THREE.MeshStandardMaterial({ color: 0x241d1a, roughness: 0.95 });
+for(let n = 0; n < 8; n++){
+  const ang = (n / 8) * Math.PI * 2;
+  const nRock = new THREE.Mesh(new THREE.DodecahedronGeometry(2.4 + Math.random() * 0.8), nestMat);
+  nRock.position.set(Math.cos(ang) * 5.2, Math.random() * 0.4, Math.sin(ang) * 5.2);
+  eggGroup.add(nRock);
+}
+const goldEggGeo = new THREE.SphereGeometry(3.2, 22, 22);
+goldEggGeo.scale(1.0, 1.35, 1.0);
+const goldEggMat = new THREE.MeshStandardMaterial({
+  color: 0xffd700, roughness: 0.18, metalness: 0.95, emissive: 0xffaa00, emissiveIntensity: 0.75
+});
+const goldEggMesh = new THREE.Mesh(goldEggGeo, goldEggMat);
+goldEggMesh.position.set(0, 3.8, 0);
+eggGroup.add(goldEggMesh);
+const eggLight = new THREE.PointLight(0xffcc00, 3.5, 50);
+eggLight.position.set(0, 5.0, 0);
+eggGroup.add(eggLight);
+easterEggsGroup.add(eggGroup);
+
+// 2. Taşa Saplı Valyria Kılıcı (Zirve Kaya Sunağı: x: 720, y: 310, z: 980)
+const swordGroup = new THREE.Group();
+swordGroup.position.set(720, 310, 980);
+const swordRockMat = new THREE.MeshStandardMaterial({ color: 0x3d444b, roughness: 0.85, metalness: 0.2 });
+const swordRock = new THREE.Mesh(new THREE.DodecahedronGeometry(4.5, 1), swordRockMat);
+swordRock.position.set(0, 2.0, 0);
+swordGroup.add(swordRock);
+const bladeGeo = new THREE.BoxGeometry(0.55, 6.8, 0.12);
+const bladeMat = new THREE.MeshStandardMaterial({
+  color: 0xe0f7ff, roughness: 0.1, metalness: 0.98, emissive: 0x9933ff, emissiveIntensity: 0.85
+});
+const bladeMesh = new THREE.Mesh(bladeGeo, bladeMat);
+bladeMesh.position.set(0, 6.2, 0);
+bladeMesh.rotation.z = 0.08;
+swordGroup.add(bladeMesh);
+const guardMesh = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.4, 0.4), new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.9 }));
+guardMesh.position.set(0, 9.6, 0);
+swordGroup.add(guardMesh);
+const swordLight = new THREE.PointLight(0xaa44ff, 3.2, 45);
+swordLight.position.set(0, 7.5, 0);
+swordGroup.add(swordLight);
+easterEggsGroup.add(swordGroup);
+
+// 3. Kozmik Yıldız Taşı Monoliti (Kuzey Buzulu: x: -1100, y: 260, z: -1250)
+const monolithGroup = new THREE.Group();
+monolithGroup.position.set(-1100, 260, -1250);
+const obeliskGeo = new THREE.CylinderGeometry(0.8, 2.4, 14.0, 4);
+const obeliskMat = new THREE.MeshStandardMaterial({
+  color: 0x050a14, roughness: 0.15, metalness: 0.9, emissive: 0x00ccff, emissiveIntensity: 0.55
+});
+const obeliskMesh = new THREE.Mesh(obeliskGeo, obeliskMat);
+obeliskMesh.position.set(0, 8.0, 0);
+monolithGroup.add(obeliskMesh);
+const monoRing = new THREE.Mesh(new THREE.TorusGeometry(4.2, 0.25, 8, 24), new THREE.MeshStandardMaterial({
+  color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 1.3
+}));
+monoRing.rotation.x = Math.PI / 2;
+monoRing.position.set(0, 8.0, 0);
+monolithGroup.add(monoRing);
+const monoLight = new THREE.PointLight(0x00d5ff, 3.8, 55);
+monoLight.position.set(0, 8.5, 0);
+monolithGroup.add(monoLight);
+easterEggsGroup.add(monolithGroup);
+
+// 4. Kayıp Cennet Vahası & Nilüfer Çiçeği (Şelale Arkası: x: -640, y: 44, z: 240)
+const oasisGroup = new THREE.Group();
+oasisGroup.position.set(-640, 44, 240);
+const lotusMat = new THREE.MeshStandardMaterial({
+  color: 0xff66aa, emissive: 0xff3388, emissiveIntensity: 0.85, roughness: 0.2, metalness: 0.3, transparent: true, opacity: 0.92
+});
+for(let p = 0; p < 6; p++){
+  const pAng = (p / 6) * Math.PI * 2;
+  const petal = new THREE.Mesh(new THREE.ConeGeometry(1.6, 5.0, 4), lotusMat);
+  petal.position.set(Math.cos(pAng) * 2.2, 1.8, Math.sin(pAng) * 2.2);
+  petal.rotation.x = 0.45;
+  petal.rotation.y = pAng;
+  oasisGroup.add(petal);
+}
+const lotusCore = new THREE.Mesh(new THREE.SphereGeometry(1.4, 16, 16), new THREE.MeshStandardMaterial({
+  color: 0xffff66, emissive: 0xffaa00, emissiveIntensity: 1.2
+}));
+lotusCore.position.set(0, 2.2, 0);
+oasisGroup.add(lotusCore);
+const oasisLight = new THREE.PointLight(0xff66cc, 3.5, 50);
+oasisLight.position.set(0, 3.5, 0);
+oasisGroup.add(oasisLight);
+easterEggsGroup.add(oasisGroup);
+
+const EASTER_EGGS = [
+  { id: 'egg', name: '🥚 Kadim Altın Ejderha Yumurtası', pos: new THREE.Vector3(-850, 165, 620), group: eggGroup, rotObj: goldEggMesh },
+  { id: 'sword', name: '⚔️ Taşa Saplı Valyria Kılıcı', pos: new THREE.Vector3(720, 310, 980), group: swordGroup, rotObj: bladeMesh },
+  { id: 'monolith', name: '🌌 Kozmik Yıldız Monoliti', pos: new THREE.Vector3(-1100, 260, -1250), group: monolithGroup, rotObj: monoRing },
+  { id: 'oasis', name: '🌸 Kayıp Cennet Nilüferi', pos: new THREE.Vector3(-640, 44, 240), group: oasisGroup, rotObj: lotusCore }
 ];
 
-const THERMAL_PARTICLE_COUNT = 240;
-const thermalGeo = new THREE.BufferGeometry();
-const thermalPosArr = new Float32Array(THERMAL_PARTICLE_COUNT * 3);
-const thermalColorArr = new Float32Array(THERMAL_PARTICLE_COUNT * 3);
-const thermalPData = [];
-
-for(let i = 0; i < THERMAL_PARTICLE_COUNT; i++){
-  const tSource = THERMAL_SOURCES[i % THERMAL_SOURCES.length];
-  const hNorm = Math.random();
-  const angle = Math.random() * Math.PI * 2;
-  const r = (0.2 + 0.8 * Math.sqrt(Math.random())) * tSource.radius;
-  const px = tSource.x + Math.cos(angle) * r;
-  const py = tSource.baseH + hNorm * (tSource.topH - tSource.baseH);
-  const pz = tSource.z + Math.sin(angle) * r;
-
-  thermalPosArr[i * 3]     = px;
-  thermalPosArr[i * 3 + 1] = py;
-  thermalPosArr[i * 3 + 2] = pz;
-
-  const isGold = (i % 2 === 0);
-  thermalColorArr[i * 3]     = isGold ? 1.0 : 0.45;
-  thermalColorArr[i * 3 + 1] = isGold ? 0.85 : 0.88;
-  thermalColorArr[i * 3 + 2] = isGold ? 0.35 : 1.0;
-
-  thermalPData.push({
-    source: tSource,
-    angle: angle,
-    r: r,
-    y: py,
-    riseSpeed: 38 + Math.random() * 26,
-    spinSpeed: 0.85 + Math.random() * 0.95
-  });
+function playEasterEggSound(){
+  if(!audioCtx) return;
+  const now = audioCtx.currentTime;
+  const osc1 = audioCtx.createOscillator();
+  const osc2 = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc1.type = 'triangle';
+  osc2.type = 'sine';
+  osc1.frequency.setValueAtTime(523.25, now);
+  osc1.frequency.setValueAtTime(659.25, now + 0.12);
+  osc1.frequency.setValueAtTime(783.99, now + 0.24);
+  osc1.frequency.setValueAtTime(1046.50, now + 0.36);
+  osc2.frequency.setValueAtTime(261.63, now);
+  gain.gain.setValueAtTime(0.35, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+  osc1.connect(gain);
+  osc2.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc1.start(now);
+  osc2.start(now);
+  osc1.stop(now + 1.8);
+  osc2.stop(now + 1.8);
 }
 
-thermalGeo.setAttribute('position', new THREE.BufferAttribute(thermalPosArr, 3));
-thermalGeo.setAttribute('color', new THREE.BufferAttribute(thermalColorArr, 3));
-
-const thermalMat = new THREE.PointsMaterial({
-  size: 3.8,
-  vertexColors: true,
-  transparent: true,
-  opacity: 0.65,
-  blending: THREE.AdditiveBlending,
-  depthWrite: false
-});
-const thermalPoints = new THREE.Points(thermalGeo, thermalMat);
-scene.add(thermalPoints);
-
-let thermalNoticeCooldown = 0;
-
-function updateThermalUpdrafts(dt){
-  if(thermalNoticeCooldown > 0) thermalNoticeCooldown -= dt;
-  const pArr = thermalGeo.attributes.position.array;
-
-  for(let i = 0; i < THERMAL_PARTICLE_COUNT; i++){
-    const p = thermalPData[i];
-    p.angle += dt * p.spinSpeed;
-    p.y += dt * p.riseSpeed;
-    if(p.y > p.source.topH){
-      p.y = p.source.baseH + Math.random() * 30;
-      p.angle = Math.random() * Math.PI * 2;
-    }
-    const idx = i * 3;
-    pArr[idx]     = p.source.x + Math.cos(p.angle) * p.r;
-    pArr[idx + 1] = p.y;
-    pArr[idx + 2] = p.source.z + Math.sin(p.angle) * p.r;
+function updateEasterEggs(dt){
+  const t = clock.getElapsedTime();
+  if(goldEggMesh) goldEggMesh.rotation.y += dt * 0.9;
+  if(bladeMesh) bladeMesh.rotation.y += dt * 1.2;
+  if(monoRing){
+    monoRing.rotation.z += dt * 1.0;
+    monoRing.position.y = 8.0 + Math.sin(t * 1.5) * 0.6;
   }
-  thermalGeo.attributes.position.needsUpdate = true;
+  if(lotusCore) lotusCore.rotation.y += dt * 0.8;
+}
 
-  // Ejderha termal bacasının içine girdiğinde dikey rüzgar asansörü
-  if(gameActive && !isLanded){
-    for(let s = 0; s < THERMAL_SOURCES.length; s++){
-      const src = THERMAL_SOURCES[s];
-      const dx = dragonPos.x - src.x;
-      const dz = dragonPos.z - src.z;
-      const dHoriz = Math.sqrt(dx * dx + dz * dz);
-      if(dHoriz < src.radius && dragonPos.y >= src.baseH && dragonPos.y <= src.topH){
-        const liftFactor = (1.0 - dHoriz / src.radius);
-        dragonPos.y += src.strength * liftFactor * dt;
-        pitch = Math.min(pitch + 0.8 * liftFactor * dt, 0.40);
-        flightSpeed = Math.min(flightSpeed + 12 * liftFactor * dt, 96);
+function checkEasterEggs(pos){
+  for(let i = 0; i < EASTER_EGGS.length; i++){
+    const ee = EASTER_EGGS[i];
+    if(!discoveredEggs[ee.id] && pos.distanceTo(ee.pos) < 18.0){
+      discoveredEggs[ee.id] = true;
+      easterEggsFoundCount++;
+      playerScore += 500;
+      if(elScore) elScore.textContent = playerScore;
 
-        if(thermalNoticeCooldown <= 0){
-          thermalNoticeCooldown = 3.5;
+      playEasterEggSound();
+
+      if(elRingPopup){
+        elRingPopup.textContent = `✨ EASTER EGG! ${ee.name} (+500P) ✨`;
+        elRingPopup.style.color = '#ffd700';
+        elRingPopup.style.textShadow = '0 0 30px #ffd700, 0 0 50px #ff6600';
+        elRingPopup.style.opacity = '1';
+        elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.3)';
+        setTimeout(() => {
+          elRingPopup.style.opacity = '0';
+          elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+        }, 3200);
+      }
+
+      const eggBadge = document.getElementById('val-easter-eggs');
+      if(eggBadge) eggBadge.textContent = `${easterEggsFoundCount} / ${totalEasterEggs}`;
+
+      if(easterEggsFoundCount === totalEasterEggs){
+        setTimeout(() => {
           if(elRingPopup){
-            elRingPopup.textContent = "🌀 TERMAL RÜZGAR AKIMI! +YÜKSELİŞ 🌀";
-            elRingPopup.style.color = "#7be5ff";
-            elRingPopup.style.textShadow = "0 0 24px #00d2ff";
+            elRingPopup.textContent = "🏆 TÜM KADİM SIRLAR ÇÖZÜLDÜ! EFSANEVİ SÜVARİ! 🏆";
+            elRingPopup.style.color = "#00ffff";
+            elRingPopup.style.textShadow = "0 0 35px #00ffff, 0 0 60px #ff00ff";
             elRingPopup.style.opacity = "1";
-            elRingPopup.style.transform = "translate(-50%, -50%) scale(1.15)";
-            setTimeout(() => {
-              elRingPopup.style.opacity = "0";
-              elRingPopup.style.transform = "translate(-50%, -50%) scale(0.7)";
-            }, 1300);
+            elRingPopup.style.transform = "translate(-50%, -50%) scale(1.35)";
+            setTimeout(() => { elRingPopup.style.opacity = "0"; }, 4200);
           }
-        }
-        break;
+        }, 3500);
       }
     }
   }
@@ -4349,11 +4319,12 @@ function getSurfaceHeightAt(x, z, checkY = (typeof dragonPos !== 'undefined' ? d
     for(let i = 0; i < SKY_ISLANDS.length; i++){
       const isl = SKY_ISLANDS[i];
       const dist2D = Math.hypot(x - isl.x, z - isl.z);
-      // Gök adası üst düzlük yarıçapı ~34m (36m güvenlik toleransı)
-      if(dist2D <= 35.0){
+      // Gök adası üst düzlük yarıçapı ~34m
+      if(dist2D <= 34.0){
         const islTop = isl.y + 6.0;
-        // Eğer ejderha adanın üzerinde veya adanın üst yüzeyine yakınsa
-        if(checkY >= isl.y - 12.0){
+        // YALNIZCA varlık gerçekten adanın üstündeyse veya üzerine iniş yapıyorsa adayı zemin say
+        // Adanın altından veya yanından geçerken adayı zemin yapıp kamerayı/uçağı fırlatmayı %100 önler
+        if(checkY >= isl.y + 2.0){
           if(islTop > surfaceY){
             surfaceY = islTop;
           }
@@ -5421,23 +5392,36 @@ function getDragonFeetOffset(species){
 let walkStepTimer = 0;
 
 function getSurfaceSlope(x, z, headingYaw){
-  const fwdDist = 3.6;
-  const sideDist = 2.4;
+  const fwdDist = 2.8;
+  const sideDist = 2.0;
+  const curY = getSurfaceHeightAt(x, z, dragonPos.y);
+
   const fX = x - Math.sin(headingYaw) * fwdDist;
   const fZ = z - Math.cos(headingYaw) * fwdDist;
   const bX = x + Math.sin(headingYaw) * fwdDist;
   const bZ = z + Math.cos(headingYaw) * fwdDist;
-  const fY = getSurfaceHeightAt(fX, fZ, dragonPos.y);
-  const bY = getSurfaceHeightAt(bX, bZ, dragonPos.y);
-  const pitchSlope = Math.atan2(fY - bY, fwdDist * 2.0);
+  let fY = getSurfaceHeightAt(fX, fZ, dragonPos.y);
+  let bY = getSurfaceHeightAt(bX, bZ, dragonPos.y);
+
+  // Ada kenarında uçuruma düşen noktaların 90 derece takla attırmasını önle
+  if(Math.abs(fY - curY) > 4.5) fY = curY;
+  if(Math.abs(bY - curY) > 4.5) bY = curY;
+
+  let pitchSlope = Math.atan2(fY - bY, fwdDist * 2.0);
+  pitchSlope = Math.max(-0.40, Math.min(0.40, pitchSlope));
 
   const rX = x + Math.cos(headingYaw) * sideDist;
   const rZ = z - Math.sin(headingYaw) * sideDist;
   const lX = x - Math.cos(headingYaw) * sideDist;
   const lZ = z + Math.sin(headingYaw) * sideDist;
-  const rY = getSurfaceHeightAt(rX, rZ, dragonPos.y);
-  const lY = getSurfaceHeightAt(lX, lZ, dragonPos.y);
-  const rollSlope = Math.atan2(rY - lY, sideDist * 2.0);
+  let rY = getSurfaceHeightAt(rX, rZ, dragonPos.y);
+  let lY = getSurfaceHeightAt(lX, lZ, dragonPos.y);
+
+  if(Math.abs(rY - curY) > 4.5) rY = curY;
+  if(Math.abs(lY - curY) > 4.5) lY = curY;
+
+  let rollSlope = Math.atan2(rY - lY, sideDist * 2.0);
+  rollSlope = Math.max(-0.30, Math.min(0.30, rollSlope));
 
   return { pitch: pitchSlope, roll: rollSlope };
 }
@@ -6712,6 +6696,21 @@ function renderRadarStaticBg(){
     });
   }
 
+  // 9. Gizli Easter Egg Noktaları (Altın Mistik Yıldızlar)
+  if(typeof EASTER_EGGS !== 'undefined'){
+    EASTER_EGGS.forEach(ee => {
+      const ex = cx + ee.pos.x * scale;
+      const ey = cy + ee.pos.z * scale;
+      radarBgCtx.fillStyle = '#ffd700';
+      radarBgCtx.strokeStyle = '#ff6600';
+      radarBgCtx.lineWidth = 1.0;
+      radarBgCtx.beginPath();
+      radarBgCtx.arc(ex, ey, 2.5, 0, Math.PI * 2);
+      radarBgCtx.fill();
+      radarBgCtx.stroke();
+    });
+  }
+
   radarBgCtx.restore();
   radarBgReady = true;
 }
@@ -7046,10 +7045,10 @@ function animate(){
     if(!isLanded){
       // 1. İleride dik bir kaya duvarı veya dağ yamacı varsa yukarı doğru aerodinamik kaldırma (yanlara sarsmadan)
       const cliffDiff = aheadGroundY - (dragonPos.y - 2.0);
-      if(cliffDiff > 0 && _forward.y < 0.25){
-        const liftReq = Math.min(28.0, cliffDiff * 2.2);
+      if(cliffDiff > 0 && cliffDiff < 14.0 && _forward.y < 0.25){
+        const liftReq = Math.min(20.0, cliffDiff * 1.8);
         dragonPos.y += liftReq * dt;
-        if(pitch < 0) pitch *= Math.max(0.2, 1.0 - dt * 3.5);
+        if(pitch < 0) pitch *= Math.max(0.3, 1.0 - dt * 2.5);
       }
 
       // 2. Taban zemin koruması (asla arazinin veya gök adasının içine gömülmeme)
@@ -7061,14 +7060,13 @@ function animate(){
       if(dragonPos.y > 1800.0) dragonPos.y -= (dragonPos.y - 1800.0) * 0.06;
     }
 
-    // Çember, Kadim Tapınak ve Termal Rüzgar Bacası Kontrolleri
+    // Çember, Kadim Tapınak ve Easter Egg Kontrolleri
     checkRingCollision(dragonPos);
     if(typeof checkSanctuaryCollision === 'function'){
       checkSanctuaryCollision(dragonPos);
     }
-    if(typeof updateThermalUpdrafts === 'function'){
-      updateThermalUpdrafts(dt);
-    }
+    checkEasterEggs(dragonPos);
+    updateEasterEggs(dt);
 
     // Fırtına Yağmur & Şimşek Dinamiği
     if(isStormActive){
@@ -7327,7 +7325,7 @@ function animate(){
     updateAurora(dt);
     updatePetalsAndSnow(dt);
     updateSkyRays(dt);
-    if(typeof updateThermalUpdrafts === 'function') updateThermalUpdrafts(dt);
+    if(typeof updateEasterEggs === 'function') updateEasterEggs(dt);
   }
 
   // 3D Takip Eden Emote Baloncukları Güncellemesi
