@@ -16,7 +16,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 #splash{
   position:fixed;inset:0;z-index:999;display:flex;
   align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 50% 40%,#200612 0%,#0e0308 55%,#030002 100%);
+  background:radial-gradient(ellipse at 50% 35%,rgba(28,6,15,0.72) 0%,rgba(14,3,8,0.84) 55%,rgba(3,1,3,0.92) 100%);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   transition:opacity 0.6s ease,visibility 0.6s;
   padding:20px;
 }
@@ -854,8 +855,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
         <div class="splash-key-item"><span class="k-badge">🖱️ FARE</span><span>Yönlendir / Bakış Açısı</span></div>
         <div class="splash-key-item"><span class="k-badge">W / S</span><span>Hızlan / Fren Yap</span></div>
         <div class="splash-key-item"><span class="k-badge">A / D</span><span>Yatış & Keskin Dönüş</span></div>
-        <div class="splash-key-item"><span class="k-badge">SHIFT</span><span>Süzülüş & Turbo Kükreme</span></div>
-        <div class="splash-key-item"><span class="k-badge">E / SPACE</span><span>🦅 Yere Kon / Havalan</span></div>
+        <div class="splash-key-item"><span class="k-badge">SPACE</span><span>⬆️ Yüksel & Göğe Tırman</span></div>
+        <div class="splash-key-item"><span class="k-badge">CTRL / Q</span><span>⬇️ Alçal & Süzülerek Dal</span></div>
+        <div class="splash-key-item"><span class="k-badge">E</span><span>🦅 Yere Kon / Havalan</span></div>
+        <div class="splash-key-item"><span class="k-badge">SHIFT</span><span>⚡ Turbo Kükreme Hızlanması</span></div>
         <div class="splash-key-item"><span class="k-badge">F</span><span>🤝 Formasyon / Takip Uçuşu</span></div>
         <div class="splash-key-item"><span class="k-badge">R</span><span>🎨 Gökyüzü Çizimi (Aç/Kapa)</span></div>
         <div class="splash-key-item"><span class="k-badge">Y</span><span>🌈 Çizim Rengi Değiştir</span></div>
@@ -944,8 +947,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <div class="help-item"><span class="help-k">🖱️ FARE</span><span class="help-desc">Yönlendir / Bakış</span></div>
       <div class="help-item"><span class="help-k">W / S</span><span class="help-desc">Hızlan / Fren Yap</span></div>
       <div class="help-item"><span class="help-k">A / D</span><span class="help-desc">Yatış & Keskin Dönüş</span></div>
-      <div class="help-item"><span class="help-k">SHIFT</span><span class="help-desc">Süzülüş & Kükreme</span></div>
-      <div class="help-item"><span class="help-k">E / SPACE</span><span class="help-desc">🦅 Yere Kon / Havalan</span></div>
+      <div class="help-item"><span class="help-k">SPACE</span><span class="help-desc">⬆️ Yüksel & Göğe Tırman</span></div>
+      <div class="help-item"><span class="help-k">CTRL / Q</span><span class="help-desc">⬇️ Alçal & Süzülerek Dal</span></div>
+      <div class="help-item"><span class="help-k">E</span><span class="help-desc">🦅 Yere Kon / Havalan</span></div>
+      <div class="help-item"><span class="help-k">SHIFT</span><span class="help-desc">⚡ Turbo Kükreme</span></div>
       <div class="help-item"><span class="help-k">F</span><span class="help-desc">🤝 Formasyon Uçuşu</span></div>
       <div class="help-item"><span class="help-k">R</span><span class="help-desc">🎨 Çizim Aç / Kapat</span></div>
       <div class="help-item"><span class="help-k">Y</span><span class="help-desc">🌈 Çizim Rengi Değiştir</span></div>
@@ -1573,6 +1578,8 @@ window.addEventListener('resize', () => {
 const _tempVec1 = new THREE.Vector3();
 const _tempVec2 = new THREE.Vector3();
 const _tempVec3 = new THREE.Vector3();
+const _sepForce = new THREE.Vector3();
+const _diffVec = new THREE.Vector3();
 const _forward = new THREE.Vector3();
 const _mouthOffset = new THREE.Vector3();
 const _mouthPos = new THREE.Vector3();
@@ -1946,30 +1953,95 @@ function updateDynamicDayCycle(dt){
 }
 
 // ═══════════════════════════════════════════════════
-//  CANLI DOĞA: GÖÇMEN KUŞ SÜRÜSÜ (Flock of Birds)
+//  CANLI DOĞA: ASİL DAĞ ŞAHİNİ & KARTAL SÜRÜSÜ (3D Flocking Boids)
 // ═══════════════════════════════════════════════════
-const BIRD_COUNT = 48;
+const BIRD_COUNT = 44;
 const birdGeo = new THREE.BufferGeometry();
-// Geniş kanatlı, belirgin ve zarif beyaz martı/kartal geometrisi
+
+// Anatomik 3D Şahin / Kartal Geometrisi (Gövde, Aerodinamik Kanatlar, Kuyruk ve Gaga)
 const bVerts = new Float32Array([
-  // Sol Kanat
-  -2.6, 0.4, 0.3,   0, 0.1, -1.2,   0, 0.1, 0.8,
-  // Sağ Kanat
-   2.6, 0.4, 0.3,   0, 0.1, 0.8,    0, 0.1, -1.2,
-  // Kuyruk
-   0, 0.1, 1.6,     -0.6, 0.1, 0.6,  0.6, 0.1, 0.6,
-  // Baş / Gaga
-   0, 0.3, -1.8,    -0.4, 0.1, -0.9, 0.4, 0.1, -0.9
+  // 1. Sırt (Dorsal Gövde - 3 Üçgen)
+  0, 0.45, -0.6,   -0.45, 0.20, 0.4,   0.45, 0.20, 0.4,
+  0, 0.45, -0.6,    0.45, 0.20, 0.4,   0, 0.25, 1.4,
+  0, 0.45, -0.6,    0, 0.25, 1.4,     -0.45, 0.20, 0.4,
+
+  // 2. Karın & Göğüs (Ventral Gövde - 5 Üçgen)
+  0, -0.32, -0.2,   0.45, 0.20, 0.4,  -0.45, 0.20, 0.4,
+  0, -0.32, -0.2,   0, 0.35, -1.2,     0.45, 0.20, 0.4,
+  0, -0.32, -0.2,  -0.45, 0.20, 0.4,   0, 0.35, -1.2,
+  0, -0.32, -0.2,   0, 0.15, 1.4,      0.45, 0.20, 0.4,
+  0, -0.32, -0.2,  -0.45, 0.20, 0.4,   0, 0.15, 1.4,
+
+  // 3. Baş & Sivri Gaga (4 Üçgen)
+  0, 0.35, -1.2,    0, 0.18, -2.1,     -0.22, 0.18, -1.2,
+  0, 0.35, -1.2,    0.22, 0.18, -1.2,   0, 0.18, -2.1,
+  0, 0.08, -1.2,   -0.22, 0.18, -1.2,   0, 0.18, -2.1,
+  0, 0.08, -1.2,    0, 0.18, -2.1,      0.22, 0.18, -1.2,
+
+  // 4. Kuyruk Yelpazesi (2 Üçgen)
+  0, 0.22, 1.4,    -0.85, 0.12, 2.7,   0.85, 0.12, 2.7,
+  0, 0.16, 1.4,     0.85, 0.12, 2.7,  -0.85, 0.12, 2.7,
+
+  // 5. Sol Kanat (İç Kanat + Kavisli Dış Kanat Ucu - 4 Üçgen)
+  -0.45, 0.22, 0.1, -2.4, 0.48, 0.25, -0.45, 0.22, 0.8,
+  -2.4, 0.48, 0.25, -2.1, 0.28, 0.95, -0.45, 0.22, 0.8,
+  -2.4, 0.48, 0.25, -4.5, 0.36, 0.85, -2.1, 0.28, 0.95,
+  -4.5, 0.36, 0.85, -3.8, 0.22, 1.40, -2.1, 0.28, 0.95,
+
+  // 6. Sağ Kanat (İç Kanat + Kavisli Dış Kanat Ucu - 4 Üçgen)
+   0.45, 0.22, 0.1,  0.45, 0.22, 0.8,   2.4, 0.48, 0.25,
+   2.4, 0.48, 0.25,  0.45, 0.22, 0.8,   2.1, 0.28, 0.95,
+   2.4, 0.48, 0.25,  2.1, 0.28, 0.95,   4.5, 0.36, 0.85,
+   4.5, 0.36, 0.85,  2.1, 0.28, 0.95,   3.8, 0.22, 1.40
 ]);
+
+// Doğal Şahin Tüyü Renk Haritası (Sırt: Şahin Kahvesi, Karın: Sıcak Krem, Gaga: Amber, Uçlar: Obsidyen)
+const bColors = new Float32Array([
+  // 1. Sırt (Zengin Şahin Kahvesi)
+  0.26, 0.18, 0.12,  0.26, 0.18, 0.12,  0.26, 0.18, 0.12,
+  0.26, 0.18, 0.12,  0.26, 0.18, 0.12,  0.24, 0.16, 0.11,
+  0.26, 0.18, 0.12,  0.24, 0.16, 0.11,  0.26, 0.18, 0.12,
+
+  // 2. Karın (Sıcak Açık Krem Tüy)
+  0.82, 0.74, 0.62,  0.78, 0.70, 0.58,  0.78, 0.70, 0.58,
+  0.82, 0.74, 0.62,  0.82, 0.74, 0.62,  0.78, 0.70, 0.58,
+  0.82, 0.74, 0.62,  0.78, 0.70, 0.58,  0.82, 0.74, 0.62,
+  0.82, 0.74, 0.62,  0.75, 0.68, 0.56,  0.78, 0.70, 0.58,
+  0.82, 0.74, 0.62,  0.78, 0.70, 0.58,  0.75, 0.68, 0.56,
+
+  // 3. Baş & Gaga (Gaga ucu amber altın: 0.92, 0.64, 0.14)
+  0.22, 0.16, 0.12,  0.92, 0.64, 0.14,  0.22, 0.16, 0.12,
+  0.22, 0.16, 0.12,  0.22, 0.16, 0.12,  0.92, 0.64, 0.14,
+  0.22, 0.16, 0.12,  0.22, 0.16, 0.12,  0.92, 0.64, 0.14,
+  0.22, 0.16, 0.12,  0.92, 0.64, 0.14,  0.22, 0.16, 0.12,
+
+  // 4. Kuyruk Yelpazesi (Koyu tüy & Kenarlarda Açık Şerit)
+  0.20, 0.15, 0.11,  0.76, 0.70, 0.60,  0.76, 0.70, 0.60,
+  0.20, 0.15, 0.11,  0.76, 0.70, 0.60,  0.76, 0.70, 0.60,
+
+  // 5. Sol Kanat (İç kanat kahve, uçlar obsidyen uçuş tüyü)
+  0.32, 0.22, 0.15,  0.28, 0.20, 0.14,  0.32, 0.22, 0.15,
+  0.28, 0.20, 0.14,  0.24, 0.18, 0.12,  0.32, 0.22, 0.15,
+  0.28, 0.20, 0.14,  0.10, 0.08, 0.07,  0.24, 0.18, 0.12,
+  0.10, 0.08, 0.07,  0.12, 0.09, 0.08,  0.24, 0.18, 0.12,
+
+  // 6. Sağ Kanat (Simetrik tüy geçişleri)
+  0.32, 0.22, 0.15,  0.32, 0.22, 0.15,  0.28, 0.20, 0.14,
+  0.28, 0.20, 0.14,  0.32, 0.22, 0.15,  0.24, 0.18, 0.12,
+  0.28, 0.20, 0.14,  0.24, 0.18, 0.12,  0.10, 0.08, 0.07,
+  0.10, 0.08, 0.07,  0.24, 0.18, 0.12,  0.12, 0.09, 0.08
+]);
+
 birdGeo.setAttribute('position', new THREE.BufferAttribute(bVerts, 3));
+birdGeo.setAttribute('color', new THREE.BufferAttribute(bColors, 3));
 birdGeo.computeVertexNormals();
 
+// Parlamayan, güneş ışığı ve gölgelerle aydınlanan doğal mat tüy materyali
 const birdMat = new THREE.MeshStandardMaterial({
-  color: 0xffffff,
-  emissive: 0x99ccff,
-  emissiveIntensity: 0.45,
-  roughness: 0.35,
-  metalness: 0.1,
+  vertexColors: true,
+  roughness: 0.76,
+  metalness: 0.05,
+  flatShading: true,
   side: THREE.DoubleSide
 });
 
@@ -1979,58 +2051,87 @@ scene.add(birdInstMesh);
 
 const birdData = [];
 const _dummyBird = new THREE.Object3D();
-const _flockCenter = new THREE.Vector3(0, 95, -80);
+const _flockCenter = new THREE.Vector3(0, 140, -120);
 
 for(let i = 0; i < BIRD_COUNT; i++){
   birdData.push({
     pos: new THREE.Vector3(
-      (Math.random() - 0.5) * 80,
-      90 + Math.random() * 30,
-      -80 + (Math.random() - 0.5) * 80
+      (Math.random() - 0.5) * 180,
+      120 + Math.random() * 50,
+      -120 + (Math.random() - 0.5) * 180
     ),
-    vel: new THREE.Vector3((Math.random() - 0.5) * 10, 0, -15).normalize().multiplyScalar(24 + Math.random() * 6),
+    vel: new THREE.Vector3((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 4, -18).normalize().multiplyScalar(22 + Math.random() * 6),
     phase: Math.random() * Math.PI * 2,
-    wingSpeed: 9 + Math.random() * 4
+    wingSpeed: 7.5 + Math.random() * 3.0
   });
 }
 
 let birdEscortTimer = 0;
 
 function updateBirdFlock(dt){
-  const t = Date.now() * 0.00065;
-  // Sürü oyuncunun başlangıç noktasının tam önünde, vadi koridorunda (130m yarıçapta) süzülür
-  _flockCenter.set(Math.sin(t) * 130, 98 + Math.sin(t * 1.8) * 24, -80 + Math.cos(t) * 130);
+  const t = Date.now() * 0.00045;
+  // Sürü geniş bir vadi ve dağ rotasında süzülür (yarıçap ~340m, yükseklik 130-220m)
+  _flockCenter.set(Math.sin(t * 0.8) * 320, 140 + Math.sin(t * 1.6) * 45, -120 + Math.cos(t * 0.8) * 320);
 
   const distToDragon = dragonPos.distanceTo(_flockCenter);
-  const isEscortingDragon = (distToDragon < 160);
+  const isEscortingDragon = (distToDragon < 240);
 
   if(isEscortingDragon){
-    birdEscortTimer = Math.min(birdEscortTimer + dt * 2.2, 1.0);
+    birdEscortTimer = Math.min(birdEscortTimer + dt * 2.0, 1.0);
   } else {
-    birdEscortTimer = Math.max(birdEscortTimer - dt * 0.8, 0.0);
+    birdEscortTimer = Math.max(birdEscortTimer - dt * 0.7, 0.0);
   }
 
   for(let i = 0; i < BIRD_COUNT; i++){
     const b = birdData[i];
     b.phase += dt * b.wingSpeed;
 
+    // 1. Sürü İçi Ayrılma Kuvveti (Boids Separation - Birbirine girmeyi kesinlikle engeller)
+    _sepForce.set(0, 0, 0);
+    for(let j = 0; j < BIRD_COUNT; j++){
+      if(i !== j){
+        const other = birdData[j];
+        const dx = b.pos.x - other.pos.x;
+        const dy = b.pos.y - other.pos.y;
+        const dz = b.pos.z - other.pos.z;
+        const dSq = dx * dx + dy * dy + dz * dz;
+        if(dSq < 289.0 && dSq > 0.01){ // 17 metre mesafe kontrolü
+          const dist = Math.sqrt(dSq);
+          const push = (17.0 - dist) / dist;
+          _sepForce.x += dx * push * 34.0;
+          _sepForce.y += dy * push * 18.0;
+          _sepForce.z += dz * push * 34.0;
+        }
+      }
+    }
+
     let targetPos = _flockCenter;
-    if(birdEscortTimer > 0.06){
+    if(birdEscortTimer > 0.05){
+      // Ejderha yanında geniş, asil V-formasyonu (her iki kanatta geniş açı)
       const wingSide = (i % 2 === 0 ? 1 : -1);
-      const wingOffset = wingSide * (10 + (i * 0.45));
-      _tempVec1.set(wingOffset, 1.8 + Math.sin(i) * 2.2, 8 + i * 0.9).applyQuaternion(dragonRig.quaternion).add(dragonPos);
+      const rank = Math.floor(i / 2);
+      const wingOffset = wingSide * (18.0 + rank * 9.0);
+      const lagOffset = 8.0 + rank * 8.0;
+      const vertOffset = ((rank % 3) - 1) * 3.0;
+      _tempVec1.set(wingOffset, vertOffset, lagOffset).applyQuaternion(dragonRig.quaternion).add(dragonPos);
       targetPos = _tempVec1;
     }
 
-    _tempVec2.subVectors(targetPos, b.pos).normalize().multiplyScalar(28);
-    b.vel.lerp(_tempVec2, Math.min(1.0, dt * (isEscortingDragon ? 4.8 : 2.0)));
+    _tempVec2.subVectors(targetPos, b.pos).normalize().multiplyScalar(isEscortingDragon ? 32 : 24);
+    _tempVec2.add(_sepForce);
+
+    b.vel.lerp(_tempVec2, Math.min(1.0, dt * (isEscortingDragon ? 3.6 : 1.8)));
     b.pos.addScaledVector(b.vel, dt);
+
+    // Kanat çırpış & termalde süzülüş döngüsü (doğal şahin dinamiği)
+    const isGliding = Math.sin(b.phase * 0.35 + i * 0.4) > -0.2;
+    const wingFlap = isGliding ? (Math.sin(b.phase * 0.5) * 0.08) : (Math.sin(b.phase) * 0.48);
 
     _dummyBird.position.copy(b.pos);
     _dummyBird.rotation.y = Math.atan2(-b.vel.x, -b.vel.z);
-    _dummyBird.rotation.x = Math.max(-0.55, Math.min(0.55, b.vel.y / 26));
-    _dummyBird.rotation.z = Math.sin(b.phase) * 0.5;
-    _dummyBird.scale.set(1.6, 1.6 + Math.sin(b.phase) * 0.4, 1.6);
+    _dummyBird.rotation.x = Math.max(-0.50, Math.min(0.50, b.vel.y / 28));
+    _dummyBird.rotation.z = (Math.sin(b.phase * 0.5) * 0.12) - (b.vel.x * 0.014);
+    _dummyBird.scale.set(1.45, 1.45 + wingFlap * 0.36, 1.45);
     _dummyBird.updateMatrix();
 
     birdInstMesh.setMatrixAt(i, _dummyBird.matrix);
@@ -3219,20 +3320,134 @@ const cloudGeo = mergeGeometriesWithColors([
 const cloudMat = new THREE.MeshStandardMaterial({
   vertexColors: true, roughness: 0.9, transparent: true, opacity: 0.85, flatShading: true
 });
-const cloudInst = new THREE.InstancedMesh(cloudGeo, cloudMat, 65);
+const cloudInst = new THREE.InstancedMesh(cloudGeo, cloudMat, 120);
 const cd = new THREE.Object3D();
-for(let i=0; i<65; i++){
+for(let i=0; i<120; i++){
   const cx = (Math.random() - 0.5) * TERRAIN_WIDTH;
   const cz = (Math.random() - 0.5) * TERRAIN_WIDTH;
-  const cy = 205 + Math.random() * 125;
+  // 3 Farklı İrtifa Katmanı: Alçak vadiler (210-380m), Orta gökyüzü (500-850m), Yüksek semalar (950-1550m)
+  const cy = (i < 45) ? (210 + Math.random() * 170) : ((i < 85) ? (520 + Math.random() * 330) : (980 + Math.random() * 570));
   cd.position.set(cx, cy, cz);
-  cd.scale.set(1.6 + Math.random()*1.4, 1.1 + Math.random()*0.7, 1.6 + Math.random()*1.4);
+  const sc = (i < 45) ? (1.5 + Math.random() * 1.3) : (2.2 + Math.random() * 2.0);
+  cd.scale.set(sc, sc * (0.8 + Math.random() * 0.5), sc);
   cd.rotation.y = Math.random() * Math.PI * 2;
   cd.updateMatrix();
   cloudInst.setMatrixAt(i, cd.matrix);
 }
 cloudInst.instanceMatrix.needsUpdate = true;
 scene.add(cloudInst);
+
+// ═══════════════════════════════════════════════════
+//  CANLI DOĞA: TERMAL RÜZGAR BACALARI (Thermal Updrafts & Spirals)
+// ═══════════════════════════════════════════════════
+const THERMAL_SOURCES = [
+  { x: -140, z: -180, radius: 44, baseH: 15, topH: 1450, strength: 38.0 }, // Vadi Boğazı
+  { x:  280, z:  170, radius: 46, baseH: 40, topH: 1450, strength: 40.0 }, // Doğu Kanyonu
+  { x: -360, z:  290, radius: 45, baseH: 35, topH: 1450, strength: 36.0 }, // Batı Dağ Sırtı
+  { x:  360, z: -350, radius: 48, baseH: 50, topH: 1450, strength: 42.0 }  // Kuzey Tapınak Vadisi
+];
+
+const THERMAL_PARTICLE_COUNT = 240;
+const thermalGeo = new THREE.BufferGeometry();
+const thermalPosArr = new Float32Array(THERMAL_PARTICLE_COUNT * 3);
+const thermalColorArr = new Float32Array(THERMAL_PARTICLE_COUNT * 3);
+const thermalPData = [];
+
+for(let i = 0; i < THERMAL_PARTICLE_COUNT; i++){
+  const tSource = THERMAL_SOURCES[i % THERMAL_SOURCES.length];
+  const hNorm = Math.random();
+  const angle = Math.random() * Math.PI * 2;
+  const r = (0.2 + 0.8 * Math.sqrt(Math.random())) * tSource.radius;
+  const px = tSource.x + Math.cos(angle) * r;
+  const py = tSource.baseH + hNorm * (tSource.topH - tSource.baseH);
+  const pz = tSource.z + Math.sin(angle) * r;
+
+  thermalPosArr[i * 3]     = px;
+  thermalPosArr[i * 3 + 1] = py;
+  thermalPosArr[i * 3 + 2] = pz;
+
+  const isGold = (i % 2 === 0);
+  thermalColorArr[i * 3]     = isGold ? 1.0 : 0.45;
+  thermalColorArr[i * 3 + 1] = isGold ? 0.85 : 0.88;
+  thermalColorArr[i * 3 + 2] = isGold ? 0.35 : 1.0;
+
+  thermalPData.push({
+    source: tSource,
+    angle: angle,
+    r: r,
+    y: py,
+    riseSpeed: 38 + Math.random() * 26,
+    spinSpeed: 0.85 + Math.random() * 0.95
+  });
+}
+
+thermalGeo.setAttribute('position', new THREE.BufferAttribute(thermalPosArr, 3));
+thermalGeo.setAttribute('color', new THREE.BufferAttribute(thermalColorArr, 3));
+
+const thermalMat = new THREE.PointsMaterial({
+  size: 3.8,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.65,
+  blending: THREE.AdditiveBlending,
+  depthWrite: false
+});
+const thermalPoints = new THREE.Points(thermalGeo, thermalMat);
+scene.add(thermalPoints);
+
+let thermalNoticeCooldown = 0;
+
+function updateThermalUpdrafts(dt){
+  if(thermalNoticeCooldown > 0) thermalNoticeCooldown -= dt;
+  const pArr = thermalGeo.attributes.position.array;
+
+  for(let i = 0; i < THERMAL_PARTICLE_COUNT; i++){
+    const p = thermalPData[i];
+    p.angle += dt * p.spinSpeed;
+    p.y += dt * p.riseSpeed;
+    if(p.y > p.source.topH){
+      p.y = p.source.baseH + Math.random() * 30;
+      p.angle = Math.random() * Math.PI * 2;
+    }
+    const idx = i * 3;
+    pArr[idx]     = p.source.x + Math.cos(p.angle) * p.r;
+    pArr[idx + 1] = p.y;
+    pArr[idx + 2] = p.source.z + Math.sin(p.angle) * p.r;
+  }
+  thermalGeo.attributes.position.needsUpdate = true;
+
+  // Ejderha termal bacasının içine girdiğinde dikey rüzgar asansörü
+  if(gameActive && !isLanded){
+    for(let s = 0; s < THERMAL_SOURCES.length; s++){
+      const src = THERMAL_SOURCES[s];
+      const dx = dragonPos.x - src.x;
+      const dz = dragonPos.z - src.z;
+      const dHoriz = Math.sqrt(dx * dx + dz * dz);
+      if(dHoriz < src.radius && dragonPos.y >= src.baseH && dragonPos.y <= src.topH){
+        const liftFactor = (1.0 - dHoriz / src.radius);
+        dragonPos.y += src.strength * liftFactor * dt;
+        pitch = Math.min(pitch + 0.8 * liftFactor * dt, 0.40);
+        flightSpeed = Math.min(flightSpeed + 12 * liftFactor * dt, 96);
+
+        if(thermalNoticeCooldown <= 0){
+          thermalNoticeCooldown = 3.5;
+          if(elRingPopup){
+            elRingPopup.textContent = "🌀 TERMAL RÜZGAR AKIMI! +YÜKSELİŞ 🌀";
+            elRingPopup.style.color = "#7be5ff";
+            elRingPopup.style.textShadow = "0 0 24px #00d2ff";
+            elRingPopup.style.opacity = "1";
+            elRingPopup.style.transform = "translate(-50%, -50%) scale(1.15)";
+            setTimeout(() => {
+              elRingPopup.style.opacity = "0";
+              elRingPopup.style.transform = "translate(-50%, -50%) scale(0.7)";
+            }, 1300);
+          }
+        }
+        break;
+      }
+    }
+  }
+}
 
 // ═══════════════════════════════════════════════════
 //  UÇUŞ ALTIN HALKALARI (Golden Flight Rings & Mini-Oyun)
@@ -3593,39 +3808,51 @@ function updateTargetLockHUD(forwardVec){
 const DRAGON_PALETTES = {
   bordo: {
     name: "Asil Bordo",
-    body: 0x480613, wings: 0x2c030c, belly: 0x600918, horns: 0xd6cba6,
+    body: 0x6e0d1f, wings: 0x480814, belly: 0x8f152b, horns: 0xe8dcba,
+    emissive: 0x220308, emissiveIntensity: 0.18,
     fireHex: 0xff3b30, glowHex: 0xffa044,
-    badgeGlow: "drop-shadow(0 0 28px rgba(220,25,65,0.75)) drop-shadow(0 0 50px rgba(255,140,40,0.35))"
+    badgeGlow: "drop-shadow(0 0 28px rgba(220,25,65,0.85)) drop-shadow(0 0 50px rgba(255,140,40,0.45))",
+    badgeFilter: "none"
   },
   obsidian: {
     name: "Obsidyen Gece",
-    body: 0x120d18, wings: 0x09060c, belly: 0x22182c, horns: 0xa860b8,
+    body: 0x1e1628, wings: 0x120d18, belly: 0x362347, horns: 0xb578c9,
+    emissive: 0x1a0a28, emissiveIntensity: 0.25,
     fireHex: 0xc838ff, glowHex: 0xd988ff,
-    badgeGlow: "drop-shadow(0 0 28px rgba(180,40,255,0.75)) drop-shadow(0 0 50px rgba(100,20,220,0.45))"
+    badgeGlow: "drop-shadow(0 0 28px rgba(180,40,255,0.85)) drop-shadow(0 0 50px rgba(100,20,220,0.55))",
+    badgeFilter: "hue-rotate(270deg) brightness(0.9)"
   },
   gold: {
     name: "Antik Altın",
-    body: 0x9e7314, wings: 0x664a06, belly: 0xc49625, horns: 0xffe485,
-    fireHex: 0xff9900, glowHex: 0xffea75,
-    badgeGlow: "drop-shadow(0 0 28px rgba(255,170,0,0.85)) drop-shadow(0 0 50px rgba(255,220,80,0.45))"
+    body: 0xd49b1e, wings: 0x9e6f10, belly: 0xf5bf42, horns: 0xfff0b3,
+    emissive: 0x382402, emissiveIntensity: 0.22,
+    fireHex: 0xffaa00, glowHex: 0xffea75,
+    badgeGlow: "drop-shadow(0 0 28px rgba(255,180,0,0.95)) drop-shadow(0 0 50px rgba(255,220,80,0.55))",
+    badgeFilter: "hue-rotate(45deg) saturate(1.8) brightness(1.2)"
   },
   sapphire: {
     name: "Safir Gök Mavisi",
-    body: 0x103a6c, wings: 0x071e3b, belly: 0x18569c, horns: 0x8fe2ff,
+    body: 0x1558b0, wings: 0x0b3878, belly: 0x2479e3, horns: 0xb8e6ff,
+    emissive: 0x051d42, emissiveIntensity: 0.24,
     fireHex: 0x00bfff, glowHex: 0x7be5ff,
-    badgeGlow: "drop-shadow(0 0 28px rgba(0,180,255,0.85)) drop-shadow(0 0 50px rgba(30,100,240,0.45))"
+    badgeGlow: "drop-shadow(0 0 28px rgba(0,180,255,0.95)) drop-shadow(0 0 50px rgba(30,100,240,0.55))",
+    badgeFilter: "hue-rotate(190deg) saturate(1.7) brightness(1.1)"
   },
   emerald: {
     name: "Mistik Zümrüt",
-    body: 0x0d4a22, wings: 0x062812, belly: 0x156d33, horns: 0x90f0b0,
+    body: 0x147a38, wings: 0x0b4d22, belly: 0x22a850, horns: 0xb0f5cc,
+    emissive: 0x052810, emissiveIntensity: 0.22,
     fireHex: 0x00ff88, glowHex: 0x68ffaa,
-    badgeGlow: "drop-shadow(0 0 28px rgba(0,230,120,0.85)) drop-shadow(0 0 50px rgba(10,140,50,0.45))"
+    badgeGlow: "drop-shadow(0 0 28px rgba(0,230,120,0.95)) drop-shadow(0 0 50px rgba(10,140,50,0.55))",
+    badgeFilter: "hue-rotate(110deg) saturate(1.7) brightness(1.05)"
   },
   silver: {
     name: "Ay Gümüşü",
-    body: 0xb0bec8, wings: 0x7c8a95, belly: 0xdfe6ec, horns: 0xffffff,
+    body: 0xdde5ed, wings: 0xa8b6c4, belly: 0xf4f7fa, horns: 0xffffff,
+    emissive: 0x222a33, emissiveIntensity: 0.20,
     fireHex: 0x99e6ff, glowHex: 0xffffff,
-    badgeGlow: "drop-shadow(0 0 28px rgba(200,235,255,0.85)) drop-shadow(0 0 50px rgba(255,255,255,0.5))"
+    badgeGlow: "drop-shadow(0 0 28px rgba(200,235,255,0.95)) drop-shadow(0 0 50px rgba(255,255,255,0.6))",
+    badgeFilter: "saturate(0.1) brightness(1.4)"
   }
 };
 
@@ -3727,37 +3954,72 @@ function applyDragonCustomization(){
   const sc = dragonBaseScale;
   if(realDragonScene){
     realDragonScene.scale.set(sc, sc, sc);
-    if(currentSpecies !== 'demon' && currentSpecies !== 'wyvern'){
-      // Orijinal bordo ejderha (dragon.glb) klasik backup renkleriyle parıldasın
-      realDragonScene.traverse((child) => {
-        if(child.isMesh && child.material){
-          const updateSingleMat = (m) => {
-            const matName = (m.name || '').toLowerCase();
-            if(matName.includes('wing')){
-              m.color.setHex(0x2d030b);
-              m.roughness = 0.65;
-              m.metalness = 0.05;
-            } else if(matName.includes('belly')){
-              m.color.setHex(0x560816);
-              m.roughness = 0.45;
-              m.metalness = 0.15;
-            } else if(matName.includes('claw') || matName.includes('horn')){
-              m.color.setHex(0xd4caa6);
-              m.roughness = 0.35;
-              m.metalness = 0.10;
-            } else {
-              m.color.setHex(0x460511);
-              m.roughness = 0.42;
-              m.metalness = 0.20;
+    realDragonScene.traverse((child) => {
+      if(child.isMesh && child.material){
+        const updateSingleMat = (m) => {
+          const matName = (m.name || '').toLowerCase();
+          if(currentSpecies === 'demon'){
+            m.color.setHex(pal.body);
+            m.roughness = 0.38;
+            m.metalness = 0.55;
+            if(m.emissive){
+              m.emissive.setHex(pal.glowHex);
+              m.emissiveIntensity = 0.40;
             }
-            m.needsUpdate = true;
-          };
-          if(Array.isArray(child.material)) child.material.forEach(updateSingleMat);
-          else updateSingleMat(child.material);
-        }
-      });
-    }
+          } else if(currentSpecies === 'wyvern'){
+            m.color.setHex(pal.body);
+            m.roughness = 0.48;
+            m.metalness = 0.25;
+            if(m.emissive){
+              m.emissive.setHex(pal.glowHex);
+              m.emissiveIntensity = 0.25;
+            }
+            m.side = THREE.DoubleSide;
+          } else {
+            // Orijinal ejderha (dragon.glb / Meleys)
+            if(matName.includes('wing')){
+              m.color.setHex(pal.wings);
+              m.roughness = 0.60;
+              m.metalness = 0.12;
+            } else if(matName.includes('belly')){
+              m.color.setHex(pal.belly);
+              m.roughness = 0.45;
+              m.metalness = 0.18;
+            } else if(matName.includes('claw') || matName.includes('horn')){
+              m.color.setHex(pal.horns);
+              m.roughness = 0.35;
+              m.metalness = 0.12;
+            } else {
+              m.color.setHex(pal.body);
+              m.roughness = 0.42;
+              m.metalness = 0.22;
+            }
+            if(m.emissive && pal.emissive){
+              m.emissive.setHex(pal.emissive);
+              m.emissiveIntensity = pal.emissiveIntensity || 0.18;
+            }
+          }
+          m.needsUpdate = true;
+        };
+        if(Array.isArray(child.material)) child.material.forEach(updateSingleMat);
+        else updateSingleMat(child.material);
+      }
+    });
     clearSpeciesAnatomy();
+  }
+
+  // Menü başlığı ve rozetini canlı olarak hemen güncelle
+  const titleEl = document.getElementById('splash-dragon-title');
+  const badgeImg = document.getElementById('splash-dragon-badge');
+  const speciesNames = {
+    meleys: 'Asil Ejderha (Meleys)',
+    demon: 'Kadim İblis (Volkanik)',
+    wyvern: 'Zırhlı Wyvern'
+  };
+  const sName = speciesNames[currentSpecies] || 'Ejderha';
+  if(titleEl) titleEl.textContent = `${sName} — ${pal.name}`;
+  if(badgeImg){
+    badgeImg.style.filter = `${pal.badgeGlow} ${pal.badgeFilter || ''}`;
   }
 
   const isGlbModel = (currentSpecies === 'demon' || currentSpecies === 'wyvern');
@@ -3782,21 +4044,25 @@ function selectDragonSpecies(species, btn){
   const titleEl = document.getElementById('splash-dragon-title');
   if(species === 'meleys'){
     dragonBaseScale = 0.88;
-    currentColorKey = 'bordo';
-    if(titleEl) titleEl.textContent = 'Asil Ejderha (Orijinal Bordo)';
     switchDragonModel('meleys');
   } else if(species === 'demon'){
     dragonBaseScale = 8.2;
-    currentColorKey = 'obsidian';
-    if(titleEl) titleEl.textContent = 'Kadim İblis (Volkanik Obsidyen — 3D GLB)';
     switchDragonModel('demon');
   } else if(species === 'wyvern'){
     dragonBaseScale = 0.0092;
-    currentColorKey = 'bordo';
-    if(titleEl) titleEl.textContent = 'Zırhlı Wyvern (3D GLB)';
     switchDragonModel('wyvern');
   }
   applyDragonCustomization();
+  if(typeof sendMultiplayerData === 'function' && conn && conn.open){
+    sendMultiplayerData({
+      type: 'cust',
+      species: currentSpecies,
+      color: currentColorKey,
+      armor: accArmor,
+      wingEmbers: accWingEmbers,
+      eyeGlow: accEyeGlow
+    });
+  }
 }
 
 function selectDragonColor(colorKey, btn){
@@ -3804,6 +4070,16 @@ function selectDragonColor(colorKey, btn){
   document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('active'));
   if(btn) btn.classList.add('active');
   applyDragonCustomization();
+  if(typeof sendMultiplayerData === 'function' && conn && conn.open){
+    sendMultiplayerData({
+      type: 'cust',
+      species: currentSpecies,
+      color: currentColorKey,
+      armor: accArmor,
+      wingEmbers: accWingEmbers,
+      eyeGlow: accEyeGlow
+    });
+  }
 }
 
 function toggleAccessoryBtn(accName){
@@ -3894,18 +4170,21 @@ function applyModelSpecificSettings(key, gltf){
       });
     }
 
-    // 🎨 KULLANICININ İBLİS EJDERHASINI RENKLENDİR & BOYA (Volkanik Obsidyen, Koyu Bordo & Magma)
+    // 🎨 KULLANICININ İBLİS EJDERHASINI RENKLENDİR & BOYA
+    const palDemon = DRAGON_PALETTES[currentColorKey] || DRAGON_PALETTES['bordo'];
     gltf.scene.traverse((child) => {
       if(child.isMesh){
         child.frustumCulled = false;
         child.castShadow = true;
         child.receiveShadow = true;
         if(child.material){
-          child.material.color.setHex(0x380b13); // Koyu Asil Volkanik Bordo / Obsidyen
+          child.material.color.setHex(palDemon.body);
           child.material.roughness = 0.38;
-          child.material.metalness = 0.65;
-          child.material.emissive.setHex(0x40070b); // İçten parlayan lav/magma alevi
-          child.material.emissiveIntensity = 0.45;
+          child.material.metalness = 0.55;
+          if(child.material.emissive){
+            child.material.emissive.setHex(palDemon.glowHex);
+            child.material.emissiveIntensity = 0.40;
+          }
           child.material.needsUpdate = true;
         }
       }
@@ -3937,6 +4216,7 @@ function applyModelSpecificSettings(key, gltf){
     gltf.scene.position.set(0, -0.70, 0.10);
     gltf.scene.scale.set(0.0092, 0.0092, 0.0092);
     gltf.flyClip = THREE.AnimationClip.findByName(gltf.animations, 'GltfAnimation 0') || gltf.animations[0];
+    const palWyvern = DRAGON_PALETTES[currentColorKey] || DRAGON_PALETTES['bordo'];
     gltf.scene.traverse((child) => {
       if(child.isMesh){
         child.frustumCulled = false;
@@ -3945,6 +4225,14 @@ function applyModelSpecificSettings(key, gltf){
         if(child.material){
           const setSide = (m) => {
             m.side = THREE.DoubleSide;
+            m.color.setHex(palWyvern.body);
+            m.roughness = 0.48;
+            m.metalness = 0.25;
+            if(m.emissive){
+              m.emissive.setHex(palWyvern.glowHex);
+              m.emissiveIntensity = 0.25;
+            }
+            m.needsUpdate = true;
           };
           if(Array.isArray(child.material)) child.material.forEach(setSide);
           else setSide(child.material);
@@ -3958,6 +4246,7 @@ function applyModelSpecificSettings(key, gltf){
     gltf.scene.scale.set(0.88, 0.88, 0.88);
     gltf.flyClip = THREE.AnimationClip.findByName(gltf.animations, 'Dragon_Flying') || gltf.animations[0];
 
+    const palMeleys = DRAGON_PALETTES[currentColorKey] || DRAGON_PALETTES['bordo'];
     gltf.scene.traverse((child) => {
       if(child.isMesh){
         child.frustumCulled = false;
@@ -3968,21 +4257,25 @@ function applyModelSpecificSettings(key, gltf){
             const matName = (mat.name || '').toLowerCase();
             const m = mat.clone();
             if(matName.includes('wing')){
-              m.color.setHex(0x2d030b);
-              m.roughness = 0.65;
-              m.metalness = 0.05;
+              m.color.setHex(palMeleys.wings);
+              m.roughness = 0.60;
+              m.metalness = 0.12;
             } else if(matName.includes('belly')){
-              m.color.setHex(0x560816);
+              m.color.setHex(palMeleys.belly);
               m.roughness = 0.45;
-              m.metalness = 0.15;
+              m.metalness = 0.18;
             } else if(matName.includes('claw') || matName.includes('horn')){
-              m.color.setHex(0xd4caa6);
+              m.color.setHex(palMeleys.horns);
               m.roughness = 0.35;
-              m.metalness = 0.10;
+              m.metalness = 0.12;
             } else {
-              m.color.setHex(0x460511);
+              m.color.setHex(palMeleys.body);
               m.roughness = 0.42;
-              m.metalness = 0.20;
+              m.metalness = 0.22;
+            }
+            if(m.emissive && palMeleys.emissive){
+              m.emissive.setHex(palMeleys.emissive);
+              m.emissiveIntensity = palMeleys.emissiveIntensity || 0.18;
             }
             return m;
           };
@@ -4414,26 +4707,43 @@ function applyRemoteDragonPalette(sceneObj, species, colorKey){
           const clonedM = m.clone();
           const matName = (clonedM.name || '').toLowerCase();
           if(species === 'demon'){
-            clonedM.color.setHex(0x380b13); // Koyu Asil Volkanik Bordo / Obsidyen
+            clonedM.color.setHex(pal.body);
             clonedM.roughness = 0.38;
-            clonedM.metalness = 0.65;
-            clonedM.emissive.setHex(0x40070b);
-            clonedM.emissiveIntensity = 0.45;
+            clonedM.metalness = 0.55;
+            if(clonedM.emissive){
+              clonedM.emissive.setHex(pal.glowHex);
+              clonedM.emissiveIntensity = 0.40;
+            }
           } else if(species === 'wyvern'){
+            clonedM.color.setHex(pal.body);
+            clonedM.roughness = 0.48;
+            clonedM.metalness = 0.25;
+            if(clonedM.emissive){
+              clonedM.emissive.setHex(pal.glowHex);
+              clonedM.emissiveIntensity = 0.25;
+            }
             clonedM.side = THREE.DoubleSide;
           } else {
             if(matName.includes('wing')){
               clonedM.color.setHex(pal.wings);
-              clonedM.roughness = 0.65;
+              clonedM.roughness = 0.60;
+              clonedM.metalness = 0.12;
             } else if(matName.includes('belly')){
               clonedM.color.setHex(pal.belly);
               clonedM.roughness = 0.45;
+              clonedM.metalness = 0.18;
             } else if(matName.includes('claw') || matName.includes('horn')){
               clonedM.color.setHex(pal.horns);
               clonedM.roughness = 0.35;
+              clonedM.metalness = 0.12;
             } else {
               clonedM.color.setHex(pal.body);
               clonedM.roughness = 0.42;
+              clonedM.metalness = 0.22;
+            }
+            if(clonedM.emissive && pal.emissive){
+              clonedM.emissive.setHex(pal.emissive);
+              clonedM.emissiveIntensity = pal.emissiveIntensity || 0.18;
             }
           }
           clonedM.needsUpdate = true;
@@ -5454,6 +5764,16 @@ function animate(){
       if(keys['KeyW'] || keys['ArrowUp'])    flightSpeed = Math.min(flightSpeed + 30 * dt, 98);
       if(keys['KeyS'] || keys['ArrowDown'])  flightSpeed = Math.max(flightSpeed - 25 * dt, 12);
 
+      // Yükselme & Alçalma / Süzülüş Kontrolleri (Space = Yüksel, Ctrl/Q = Alçal)
+      if(keys['Space'] && !isLanded){
+        pitch = Math.min(pitch + 1.8 * dt, Math.PI * 0.42);
+        dragonPos.y += 44.0 * dt;
+      }
+      if((keys['ControlLeft'] || keys['ControlRight'] || keys['KeyC'] || keys['KeyQ']) && !isLanded){
+        pitch = Math.max(pitch - 1.5 * dt, -Math.PI * 0.42);
+        dragonPos.y -= 28.0 * dt;
+      }
+
       const turnIntent = (keys['KeyA']||keys['ArrowLeft']) ? 1 : (keys['KeyD']||keys['ArrowRight']) ? -1 : 0;
       roll = roll * 0.86 + turnIntent * 0.55 * 0.14;
 
@@ -5488,20 +5808,23 @@ function animate(){
       yaw += diff * dt * 0.75;
     }
 
-    // Zemin & Su Seviyesi Koruma
+    // Zemin & Su Seviyesi Koruma & Yüksek İrtifa Sınırı (1800 metreye kadar tam özgürlük)
     const groundY = Math.max(-8.5, getTerrainHeight(dragonPos.x, dragonPos.z));
     if(!isLanded){
       if(dragonPos.y < groundY + 12.0){
         dragonPos.y += (groundY + 12.0 - dragonPos.y) * Math.min(1.0, dt * 5.0);
         if(pitch < 0) pitch *= 0.85;
       }
-      if(dragonPos.y > 420.0) dragonPos.y -= (dragonPos.y - 420.0) * 0.05;
+      if(dragonPos.y > 1800.0) dragonPos.y -= (dragonPos.y - 1800.0) * 0.06;
     }
 
-    // Çember ve Kadim Tapınak Çarpışma Kontrolleri
+    // Çember, Kadim Tapınak ve Termal Rüzgar Bacası Kontrolleri
     checkRingCollision(dragonPos);
     if(typeof checkSanctuaryCollision === 'function'){
       checkSanctuaryCollision(dragonPos);
+    }
+    if(typeof updateThermalUpdrafts === 'function'){
+      updateThermalUpdrafts(dt);
     }
 
     // Fırtına Yağmur & Şimşek Dinamiği
@@ -5673,6 +5996,7 @@ function animate(){
     updateAurora(dt);
     updatePetalsAndSnow(dt);
     updateSkyRays(dt);
+    if(typeof updateThermalUpdrafts === 'function') updateThermalUpdrafts(dt);
   }
 
   // 3D Takip Eden Emote Baloncukları Güncellemesi
