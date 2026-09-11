@@ -12,200 +12,175 @@
 html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;user-select:none}
 #canvas-container{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:default}
 
-/* ── Başlangıç Ekranı (Modern Bordo-Obsidyen Glassmorphism) ── */
+/* ── Başlangıç Ekranı (Sinematik 3D Vitrinli Şeffaf Kokpit) ── */
 #splash{
-  position:fixed;inset:0;z-index:999;display:flex;
-  align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 50% 35%,rgba(28,6,15,0.72) 0%,rgba(14,3,8,0.84) 55%,rgba(3,1,3,0.92) 100%);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  position:fixed;inset:0;z-index:999;
+  display:flex;flex-direction:column;justify-content:space-between;align-items:center;
+  background:radial-gradient(circle at 50% 45%, rgba(0,0,0,0.12) 0%, rgba(12,3,8,0.68) 100%);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
   transition:opacity 0.6s ease,visibility 0.6s;
-  padding:20px;
+  padding:20px 28px;box-sizing:border-box;pointer-events:none;
 }
 #splash.hidden{
-  opacity:0 !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-  display:none !important;
-}
-.splash-card{
-  max-width:800px;width:94%;
-  background:rgba(18,5,12,0.92);
-  border:1.5px solid rgba(255,100,135,0.40);
-  box-shadow:0 25px 80px rgba(0,0,0,0.95), 0 0 50px rgba(200,20,50,0.30);
-  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border-radius:24px;padding:20px 24px;
-  display:flex;flex-direction:column;align-items:center;text-align:center;
-  position:relative;
+  opacity:0 !important;visibility:hidden !important;
+  pointer-events:none !important;display:none !important;
 }
 
-.splash-header{
-  display:flex;align-items:center;justify-content:center;gap:14px;width:100%;
+/* Üst Marka & Atmosfer Barı */
+.splash-top-bar{
+  width:100%;max-width:1150px;display:flex;justify-content:space-between;align-items:center;
+  pointer-events:auto;user-select:none;
 }
-.dragon-badge-img{
-  width:64px;height:auto;max-height:74px;object-fit:contain;
-  filter:drop-shadow(0 0 18px rgba(220,25,65,0.75)) drop-shadow(0 0 32px rgba(255,140,40,0.35));
+.splash-brand{display:flex;align-items:center;gap:14px;}
+.brand-badge-img{
+  width:58px;height:auto;max-height:68px;object-fit:contain;
+  filter:drop-shadow(0 0 16px rgba(220,25,65,0.85)) drop-shadow(0 0 30px rgba(255,140,40,0.4));
   animation:dragonFloat 3.6s ease-in-out infinite;
-  pointer-events:none;
 }
 @keyframes dragonFloat{
   0%,100%{transform:translateY(0) scale(1) rotate(-1.2deg)}
-  50%{transform:translateY(-6px) scale(1.02) rotate(1.2deg)}
+  50%{transform:translateY(-5px) scale(1.02) rotate(1.2deg)}
 }
-.splash-title-group{text-align:left;}
-.splash-card h1{
-  font-size:clamp(1.4rem,3.2vw,2.0rem);font-weight:900;letter-spacing:2.5px;
-  text-transform:uppercase;margin:0;line-height:1.15;
-  background:linear-gradient(135deg,#fff4d0 0%,#f7b731 35%,#e83350 70%,#941026 100%);
+.brand-text{display:flex;flex-direction:column;text-align:left;}
+.brand-text h1{
+  font-size:clamp(1.3rem,2.8vw,1.9rem);font-weight:900;letter-spacing:3px;
+  text-transform:uppercase;margin:0;line-height:1.1;
+  background:linear-gradient(135deg,#fff8e7 0%,#ffc048 35%,#e83350 70%,#941026 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 3px 12px rgba(180,20,50,0.5));
+  filter:drop-shadow(0 2px 10px rgba(180,20,50,0.6));
 }
-.splash-card .sub{
-  color:#f7ccd3;font-size:.74rem;letter-spacing:1.2px;margin-top:2px;
-  text-transform:uppercase;font-weight:600;opacity:.9;
+.brand-sub{
+  color:#f7ccd3;font-size:.68rem;letter-spacing:1.8px;margin-top:2px;
+  text-transform:uppercase;font-weight:700;opacity:.9;
+}
+.splash-top-actions{display:flex;align-items:center;gap:10px;}
+.btn-open-help-modal{
+  background:rgba(255,255,255,0.08);border:1.2px solid rgba(255,140,165,0.4);
+  color:#fff;padding:8px 15px;border-radius:14px;font-size:.74rem;font-weight:800;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;
+  backdrop-filter:blur(12px);box-shadow:0 4px 14px rgba(0,0,0,0.5);
+}
+.btn-open-help-modal:hover{
+  background:rgba(220,30,60,0.65);border-color:#ff809b;transform:scale(1.04);
+  box-shadow:0 0 18px rgba(220,30,60,0.6);
+}
+.sky-time-btns{display:flex;gap:5px;background:rgba(0,0,0,0.4);padding:4px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);}
+.sky-time-btn{
+  background:transparent;border:none;color:#dfc0c8;padding:5px 9px;border-radius:10px;
+  font-size:.68rem;font-weight:700;cursor:pointer;transition:all .18s;outline:none;
+}
+.sky-time-btn:hover{color:#fff;background:rgba(255,255,255,0.1);}
+.sky-time-btn.active{
+  background:linear-gradient(135deg,rgba(215,25,65,0.9),rgba(255,120,30,0.7));
+  color:#fff;box-shadow:0 0 10px rgba(225,35,70,0.55);
 }
 
-/* ── Ergonomik 2 Sütunlu Izgara (Dashboard) ── */
-.splash-dashboard{
-  display:grid;grid-template-columns:1.05fr 1fr;gap:14px;
-  width:100%;margin-top:14px;
+/* Alt Komuta Kokpiti (Floating Curved Dock) */
+.splash-cockpit{
+  width:100%;max-width:1020px;pointer-events:auto;
+  background:rgba(15,4,10,0.88);border:1.5px solid rgba(255,110,145,0.38);
+  box-shadow:0 24px 70px rgba(0,0,0,0.95), 0 0 45px rgba(200,20,50,0.28);
+  border-radius:26px;padding:16px 22px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  display:flex;flex-direction:column;gap:12px;box-sizing:border-box;user-select:none;
 }
-@media (max-width:760px){
-  .splash-dashboard{grid-template-columns:1fr;gap:10px;}
-  .splash-card{padding:16px 14px;}
+.cockpit-row{display:flex;align-items:center;justify-content:space-between;gap:16px;}
+.cockpit-col-species{flex:1.6;display:flex;flex-direction:column;gap:6px;}
+.cockpit-col-colors{flex:1.1;display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.cockpit-sub-title{
+  font-size:.66rem;font-weight:800;letter-spacing:1.4px;color:#fca5a5;text-transform:uppercase;
 }
-.dash-card{
-  background:rgba(12,4,8,0.76);border:1px solid rgba(255,100,130,0.28);
-  box-shadow:0 8px 24px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.1);
-  border-radius:18px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;
-  backdrop-filter:blur(14px);text-align:left;
-}
-.dash-card-title{
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:.74rem;font-weight:800;letter-spacing:1.2px;color:#ffc5d3;
-  text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.08);
-  padding-bottom:6px;
-}
-.dash-card-title span{display:flex;align-items:center;gap:6px;}
-
-.cust-row{
-  display:flex;flex-direction:column;gap:5px;
-}
-.cust-label{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:.70rem;color:#f0b4c2;font-weight:800;letter-spacing:1px;text-transform:uppercase;
-}
-.cust-label-icon{
-  width:13px;height:13px;stroke:#ff7a94;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-}
-.cust-types{
-  display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;
-}
+.cust-types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
 .cust-btn{
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
-  color:#ead5da;padding:7px 6px;border-radius:12px;font-size:.68rem;font-weight:700;
-  cursor:pointer;transition:all .18s ease;outline:none;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:4px;text-align:center;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
+  color:#ead5da;padding:7px 8px;border-radius:12px;font-size:.72rem;font-weight:700;
+  cursor:pointer;transition:all .18s;outline:none;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;text-align:center;
 }
 .cust-btn:hover{background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.3);transform:translateY(-1px)}
 .cust-btn.active{
-  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(255,120,30,0.65));
-  border-color:#ff99b0;color:#fff;box-shadow:0 0 12px rgba(225,35,70,0.5);
+  background:linear-gradient(135deg,rgba(215,25,65,0.9),rgba(255,120,30,0.7));
+  border-color:#ff99b0;color:#fff;box-shadow:0 0 14px rgba(225,35,70,0.55);
 }
 .cust-btn .cust-svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;}
+.species-desc{font-size:.58rem;opacity:.8;font-weight:600;}
 
-.color-chips{display:flex;gap:7px;align-items:center;margin-top:2px;}
+.color-chips{display:flex;gap:8px;align-items:center;}
 .color-chip{
-  width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.28);
-  transition:all .18s cubic-bezier(0.2,0.8,0.2,1);box-shadow:0 2px 6px rgba(0,0,0,0.7);
+  width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.3);
+  transition:all .18s cubic-bezier(0.2,0.8,0.2,1);box-shadow:0 3px 8px rgba(0,0,0,0.8);
 }
-.color-chip:hover{transform:scale(1.2);border-color:rgba(255,255,255,0.6)}
-.color-chip.active{border-color:#fff;box-shadow:0 0 12px rgba(255,255,255,0.95), 0 0 6px rgba(255,80,120,0.8);transform:scale(1.2)}
+.color-chip:hover{transform:scale(1.22);border-color:rgba(255,255,255,0.7)}
+.color-chip.active{border-color:#fff;box-shadow:0 0 14px rgba(255,255,255,0.95), 0 0 8px rgba(255,80,120,0.85);transform:scale(1.22)}
+.color-name-display{font-size:.65rem;font-weight:700;color:#ffe6eb;letter-spacing:1px;text-transform:uppercase;}
 
-.accessory-toggles{display:flex;gap:6px;flex-wrap:wrap;}
-.acc-toggle-btn{
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
-  color:#dfc3cb;padding:4px 8px;border-radius:10px;font-size:.67rem;font-weight:700;
-  cursor:pointer;transition:all .18s ease;outline:none;display:inline-flex;align-items:center;gap:5px;
+.cockpit-row-mid{
+  background:rgba(0,0,0,0.32);border:1px solid rgba(255,255,255,0.08);border-radius:16px;
+  padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px;
 }
-.acc-toggle-btn:hover{background:rgba(255,255,255,0.12);color:#fff;}
-.acc-toggle-btn.active{
-  background:linear-gradient(135deg,rgba(160,20,50,0.75),rgba(200,80,30,0.55));
-  border-color:#ff8ca5;color:#fff;box-shadow:0 0 10px rgba(220,30,60,0.4);
-}
-.acc-status-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.25);transition:all .18s;}
-.acc-toggle-btn.active .acc-status-dot{background:#00ffaa;box-shadow:0 0 6px #00ffaa;}
-
-/* Sağ Kart: Modlar & Ayarlar */
-.lobby-mode-pills{display:flex;gap:5px;width:100%;}
+.lobby-mode-pills{display:flex;gap:6px;flex:1.2;}
 .lobby-pill-btn{
-  flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
-  color:#ead5da;padding:6px 6px;border-radius:10px;font-size:.69rem;font-weight:700;
-  cursor:pointer;transition:all .18s ease;text-align:center;outline:none;
+  flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
+  color:#ead5da;padding:6px 8px;border-radius:10px;font-size:.69rem;font-weight:700;
+  cursor:pointer;transition:all .18s;text-align:center;outline:none;white-space:nowrap;
 }
 .lobby-pill-btn:hover{background:rgba(255,255,255,0.12);color:#fff;}
 .lobby-pill-btn.active{
-  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(200,50,30,0.7));
-  color:#fff;border-color:#ff99b0;box-shadow:0 0 10px rgba(220,30,60,0.45);
+  background:linear-gradient(135deg,rgba(215,25,65,0.9),rgba(200,50,30,0.75));
+  color:#fff;border-color:#ff99b0;box-shadow:0 0 12px rgba(220,30,60,0.5);
 }
 
 .song-picker-splash{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  padding:6px 12px;border-radius:12px;background:rgba(120,12,35,0.4);
-  border:1px solid rgba(255,130,160,0.35);width:100%;box-sizing:border-box;
+  display:flex;align-items:center;gap:8px;padding:5px 12px;border-radius:12px;
+  background:rgba(120,12,35,0.35);border:1px solid rgba(255,130,160,0.35);flex:1;
 }
 .song-picker-splash select{
-  flex:1;background:transparent;border:none;color:#ffebef;font-size:.78rem;
+  flex:1;background:transparent;border:none;color:#ffebef;font-size:.74rem;
   font-weight:700;cursor:pointer;outline:none;
 }
 .song-picker-splash select option{background:#16040b;color:#ffebef}
 
-.sky-time-btns{display:flex;gap:5px;}
-.sky-time-btn{
-  flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
-  color:#ead5da;padding:6px 4px;border-radius:10px;font-size:.68rem;font-weight:700;
-  cursor:pointer;transition:all .18s ease;text-align:center;outline:none;
+.lobby-body{display:none;width:100%;}
+.lobby-status-msg{font-size:.70rem;color:#f0b4c0;display:flex;align-items:center;gap:6px;}
+.room-code-display{
+  display:flex;align-items:center;justify-content:space-between;background:rgba(0,0,0,0.45);
+  border:1px solid rgba(255,100,130,0.35);border-radius:12px;padding:6px 12px;width:100%;box-sizing:border-box;
 }
-.sky-time-btn:hover{background:rgba(255,255,255,0.14);color:#fff;}
-.sky-time-btn.active{
-  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(255,120,30,0.65));
-  border-color:#ff99b0;color:#fff;box-shadow:0 0 10px rgba(225,35,70,0.5);
+.room-code-text{font-size:1.0rem;font-family:monospace;font-weight:900;color:#ffd000;letter-spacing:2px;margin-left:6px;}
+.lobby-action-btn{
+  background:linear-gradient(135deg,rgba(200,20,50,0.8),rgba(150,10,35,0.9));
+  border:1px solid rgba(255,120,145,0.5);color:#fff;padding:5px 10px;border-radius:8px;
+  font-size:.68rem;font-weight:700;cursor:pointer;transition:all .18s;
+}
+.lobby-action-btn:hover{background:rgba(230,30,65,0.95);transform:scale(1.04)}
+.lobby-input-row{display:flex;gap:8px;width:100%;}
+.lobby-input{
+  flex:1;background:rgba(0,0,0,0.5);border:1px solid rgba(255,130,160,0.35);
+  border-radius:10px;padding:6px 12px;color:#fff;font-size:.82rem;font-weight:700;
+  letter-spacing:2px;font-family:monospace;outline:none;text-transform:uppercase;
 }
 
-.btn-open-help-modal{
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.16);
-  color:#fcd0dc;padding:6px 12px;border-radius:10px;font-size:.70rem;font-weight:700;
-  cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;
-}
-.btn-open-help-modal:hover{background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.35);}
-
-/* ── Menü Alt Bölümü (Başlat Butonu & İpucu) ── */
-.splash-footer{
-  display:flex;flex-direction:column;align-items:center;gap:8px;margin-top:14px;
-}
+.cockpit-footer{display:flex;justify-content:center;width:100%;margin-top:2px;}
 #startBtn{
-  padding:12px 46px;font-size:1.15rem;font-weight:800;
-  letter-spacing:2.2px;text-transform:uppercase;cursor:pointer;border-radius:50px;
-  background:linear-gradient(135deg,#840d24 0%,#d81e44 50%,#840d24 100%);
-  color:#fff;border:2px solid #ff7a94;
-  box-shadow:0 0 35px rgba(216,30,68,0.7),0 6px 20px rgba(0,0,0,0.6);
+  width:100%;max-width:540px;padding:12px 30px;font-size:1.1rem;font-weight:900;
+  letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;border-radius:50px;
+  background:linear-gradient(135deg,#8c0d24 0%,#e22046 50%,#8c0d24 100%);
+  color:#fff;border:2px solid #ff92aa;
+  box-shadow:0 0 35px rgba(226,32,70,0.75), 0 8px 24px rgba(0,0,0,0.7);
   transition:all .2s cubic-bezier(0.2,0.8,0.2,1);
 }
 #startBtn:hover{
-  transform:scale(1.05) translateY(-2px);
-  box-shadow:0 0 55px rgba(255,60,100,0.95),0 10px 28px rgba(0,0,0,0.7);
+  transform:scale(1.03) translateY(-2px);
+  box-shadow:0 0 55px rgba(255,60,100,0.95), 0 12px 30px rgba(0,0,0,0.8);
   border-color:#fff;
-}
-.splash-footer-hint{
-  font-size:.73rem;color:#d8b0bb;letter-spacing:.6px;
-}
-.splash-footer-hint b{color:#ffd044;}
-
-.k-badge{
-  background:rgba(255,255,255,0.08);border:1px solid rgba(255,160,185,0.22);
-  padding:3px 7px;border-radius:6px;color:#ffe6eb;font-family:monospace;font-size:.74rem;white-space:nowrap;
 }
 
 /* ── HUD ── */
+body:not(.game-started) #hud,
+body:not(.game-started) #music-card,
+body:not(.game-started) #leaderboard-widget,
+body:not(.game-started) #radar-wrap {
+  display: none !important;
+}
 #hud{position:fixed;inset:0;pointer-events:none;z-index:50}
 #crosshair{display:none !important;}
 #hud-flight{
@@ -221,7 +196,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 #speed-bar-wrap{width:110px;height:7px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
 #speed-bar{width:40%;height:100%;background:linear-gradient(90deg,#e02444,#ffbb00);border-radius:4px;transition:width .1s}
 
-/* ── Üst Bilgi Barı (Sol Üst Köşe - Asla Müzik Kartıyla Çakışmaz, Tek Satır) ── */
+/* ── Üst Bilgi Barı ── */
 #top-bar{
   position:fixed;top:16px;left:18px;
   display:flex;gap:7px;align-items:center;flex-wrap:nowrap;
@@ -247,46 +222,70 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   border-color:#ff99b0;transform:scale(1.05);box-shadow:0 0 16px rgba(220,30,60,0.6);
 }
 
-/* ── Oyun İçi Tuş Kılavuzu & Yardım Paneli ([H] Tuşu) ── */
+/* ── Kontrol Kılavuzu & Yardım Modalı (Her şeyin üstünde: z-index 10005) ── */
+#help-modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,0.74);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:10004;display:none;
+}
+#help-modal-backdrop.open{display:block;}
+
 #help-panel{
-  position:fixed;top:60px;left:18px;width:370px;max-width:calc(100vw - 36px);
-  background:rgba(15,5,12,0.95);border:1.5px solid rgba(255,100,135,0.45);
-  box-shadow:0 18px 50px rgba(0,0,0,0.85), 0 0 30px rgba(200,20,60,0.3);
-  border-radius:20px;padding:16px 18px;backdrop-filter:blur(22px);
-  z-index:115;display:none;flex-direction:column;gap:12px;
-  pointer-events:auto;
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:620px;max-width:calc(100vw - 32px);max-height:86vh;
+  background:rgba(18,5,12,0.97);border:2px solid rgba(255,110,145,0.6);
+  box-shadow:0 25px 80px rgba(0,0,0,0.95), 0 0 50px rgba(220,25,65,0.45);
+  border-radius:24px;padding:22px 24px;backdrop-filter:blur(28px);
+  z-index:10005;display:none;flex-direction:column;gap:12px;
+  pointer-events:auto;box-sizing:border-box;user-select:none;
 }
 #help-panel.open{
-  display:flex;animation:helpSlide .2s cubic-bezier(0.18, 0.89, 0.32, 1.2);
+  display:flex;animation:helpModalIn .22s cubic-bezier(0.18, 0.89, 0.32, 1.2);
 }
-@keyframes helpSlide{
-  from{opacity:0;transform:translateY(-8px) scale(0.96)}
-  to{opacity:1;transform:translateY(0) scale(1)}
+@keyframes helpModalIn{
+  from{opacity:0;transform:translate(-50%,-46%) scale(0.94)}
+  to{opacity:1;transform:translate(-50%,-50%) scale(1)}
 }
 .help-header{
   display:flex;align-items:center;justify-content:space-between;
   border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:10px;
 }
-.help-title{font-size:.84rem;font-weight:800;color:#ffc5d3;letter-spacing:1px;display:flex;align-items:center;gap:6px;}
+.help-title{font-size:.92rem;font-weight:900;color:#ffc5d3;letter-spacing:1px;display:flex;align-items:center;gap:8px;}
 .help-close{
-  cursor:pointer;color:#bbb;font-size:1.1rem;padding:2px 7px;border-radius:6px;
-  background:rgba(255,255,255,0.06);transition:all .15s;border:1px solid rgba(255,255,255,0.1);
+  cursor:pointer;color:#bbb;font-size:1.1rem;padding:3px 9px;border-radius:8px;
+  background:rgba(255,255,255,0.08);transition:all .15s;border:1px solid rgba(255,255,255,0.12);
 }
-.help-close:hover{color:#fff;background:rgba(220,30,60,0.6);border-color:#ff4a68;}
+.help-close:hover{color:#fff;background:rgba(220,30,60,0.7);border-color:#ff4a68;}
 .help-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:360px;overflow-y:auto;padding-right:2px;
+  display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:420px;overflow-y:auto;padding-right:4px;
 }
-.help-grid::-webkit-scrollbar{width:4px;}
-.help-grid::-webkit-scrollbar-thumb{background:rgba(255,100,130,0.4);border-radius:4px;}
+.help-grid::-webkit-scrollbar{width:5px;}
+.help-grid::-webkit-scrollbar-thumb{background:rgba(255,100,130,0.5);border-radius:4px;}
+.help-section-title{
+  grid-column:1 / -1;font-size:.68rem;font-weight:900;letter-spacing:1.5px;
+  color:#ffd044;margin-top:6px;border-bottom:1px dashed rgba(255,255,255,0.12);padding-bottom:3px;
+}
 .help-item{
   display:flex;align-items:center;gap:7px;background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:6px 9px;
 }
+.help-item.special-power{background:rgba(180,30,70,0.18);border-color:rgba(255,180,80,0.3);}
 .help-k{
-  font-family:monospace;font-size:.72rem;background:rgba(255,255,255,0.12);
+  font-family:monospace;font-size:.70rem;background:rgba(255,255,255,0.12);
   color:#ffd044;padding:2px 6px;border-radius:5px;font-weight:700;white-space:nowrap;
 }
-.help-desc{font-size:.72rem;color:#f0d0d8;font-weight:600;}
+.help-k.gold{color:#ffd700;background:rgba(255,215,0,0.2);border:1px solid #ffd700;}
+.help-k.purple{color:#df99ff;background:rgba(180,50,255,0.2);border:1px solid #c060ff;}
+.help-k.cyan{color:#00ffff;background:rgba(0,255,255,0.2);border:1px solid #00ffff;}
+.help-k.pink{color:#ff80c0;background:rgba(255,100,180,0.2);border:1px solid #ff80c0;}
+.help-desc{font-size:.71rem;color:#f0d0d8;font-weight:600;}
+.help-footer{display:flex;justify-content:center;margin-top:4px;}
+.help-done-btn{
+  background:linear-gradient(135deg,rgba(215,25,65,0.85),rgba(140,15,40,0.9));
+  border:1.5px solid #ff7a94;color:#fff;padding:8px 24px;border-radius:30px;
+  font-size:.76rem;font-weight:800;letter-spacing:1px;cursor:pointer;transition:all .18s;
+}
+.help-done-btn:hover{transform:scale(1.04);box-shadow:0 0 16px rgba(220,30,60,0.6);}
 
 /* ── Müzik & Ses Kontrol Kartı (Sağ Üst Köşe) ── */
 #music-card{
@@ -721,143 +720,132 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <audio id="bgm" preload="auto"></audio>
 
 <div id="splash">
-  <div class="splash-card">
-    <div class="splash-header">
-      <img src="dragon_badge_user.png" class="dragon-badge-img" id="splash-dragon-badge" alt="Asil Ejderha"/>
-      <div class="splash-title-group">
-        <h1 id="splash-dragon-title">Asil Ejderha (Bordo)</h1>
-        <div class="sub">House of the Dragon — Sinematik Uçuş Simülasyonu</div>
+  <!-- Üst Marka & Gökyüzü / Kılavuz Barı -->
+  <div class="splash-top-bar">
+    <div class="splash-brand">
+      <img src="dragon_badge_user.png" class="brand-badge-img" id="splash-dragon-badge" alt="Asil Ejderha"/>
+      <div class="brand-text">
+        <h1 id="splash-dragon-title">ASİL EJDERHA</h1>
+        <div class="brand-sub">House of the Dragon — Sinematik Uçuş Simülasyonu</div>
       </div>
     </div>
+    <div class="splash-top-actions">
+      <div class="sky-time-btns">
+        <button type="button" class="sky-time-btn active" id="sky-btn-0" onclick="selectStartSkyMode(0)">☀️ Gündüz</button>
+        <button type="button" class="sky-time-btn" id="sky-btn-1" onclick="selectStartSkyMode(1)">🌅 Gün Batımı</button>
+        <button type="button" class="sky-time-btn" id="sky-btn-2" onclick="selectStartSkyMode(2)">🌌 Gece</button>
+      </div>
+      <button type="button" class="btn-open-help-modal" onclick="toggleHelpPanel(true)" title="Tüm Kontroller ve Kadim Güçler">
+        <span>⌨️ Kontroller & Güçler [H]</span>
+      </button>
+    </div>
+  </div>
 
-    <!-- Ergonomik 2 Sütunlu Dashboard (Tüm Ayarlar Tek Bakışta) -->
-    <div class="splash-dashboard">
-      <!-- SOL SÜTUN: Ejderha Modeli, Rengi & Donanımı -->
-      <div class="dash-card">
-        <div class="dash-card-title">
-          <span>🐉 Ejderha Seçimi</span>
-          <span style="font-size:0.62rem;color:#fca5a5;">3D Canlı Model</span>
-        </div>
-
-        <div class="cust-row">
-          <div class="cust-label">Tür & Model:</div>
-          <div class="cust-types">
-            <button type="button" class="cust-btn active" id="btn-species-meleys" onclick="selectDragonSpecies('meleys', this)">
-              <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
-              <span>Asil Bordo</span>
-            </button>
-            <button type="button" class="cust-btn" id="btn-species-demon" onclick="selectDragonSpecies('demon', this)">
-              <svg class="cust-svg" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4.1 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
-              <span>Kadim İblis</span>
-            </button>
-            <button type="button" class="cust-btn" id="btn-species-wyvern" onclick="selectDragonSpecies('wyvern', this)">
-              <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 7v5m-3-2.5h6"/></svg>
-              <span>Zırhlı Wyvern</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="cust-row">
-          <div class="cust-label">Renk Paleti:</div>
-          <div class="color-chips">
-            <div class="color-chip active" style="background:#550818;" title="Asil Bordo" onclick="selectDragonColor('bordo', this)"></div>
-            <div class="color-chip" style="background:#1a1222;" title="Obsidyen Gece" onclick="selectDragonColor('obsidian', this)"></div>
-            <div class="color-chip" style="background:#a37817;" title="Antik Altın" onclick="selectDragonColor('gold', this)"></div>
-            <div class="color-chip" style="background:#13447d;" title="Safir Gök Mavisi" onclick="selectDragonColor('sapphire', this)"></div>
-            <div class="color-chip" style="background:#105728;" title="Mistik Zümrüt" onclick="selectDragonColor('emerald', this)"></div>
-            <div class="color-chip" style="background:#cad5de;" title="Ay Gümüşü" onclick="selectDragonColor('silver', this)"></div>
-          </div>
-        </div>
-
-        <div class="cust-row">
-          <div class="cust-label">Donanım & Parıltı:</div>
-          <div class="accessory-toggles">
-            <button type="button" class="acc-toggle-btn" id="acc-btn-armor" onclick="toggleAccessoryBtn('armor')">
-              <span class="acc-status-dot"></span> 🛡️ Zırh
-            </button>
-            <button type="button" class="acc-toggle-btn" id="acc-btn-wingembers" onclick="toggleAccessoryBtn('wingembers')">
-              <span class="acc-status-dot"></span> ✨ Kıvılcım
-            </button>
-            <button type="button" class="acc-toggle-btn" id="acc-btn-eyeglow" onclick="toggleAccessoryBtn('eyeglow')">
-              <span class="acc-status-dot"></span> 🔥 Göz Işığı
-            </button>
-          </div>
+  <!-- Alt Komuta Kokpiti (Kavisli Modern Yüzen Dock) -->
+  <div class="splash-cockpit">
+    <div class="cockpit-row">
+      <!-- Ejderha Türü -->
+      <div class="cockpit-col-species">
+        <div class="cockpit-sub-title">🐉 Ejderha Türü & Modeli</div>
+        <div class="cust-types">
+          <button type="button" class="cust-btn active" id="btn-species-meleys" onclick="selectDragonSpecies('meleys', this)">
+            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+            <span>Asil Bordo</span>
+            <span class="species-desc">Dengeli & Çevik</span>
+          </button>
+          <button type="button" class="cust-btn" id="btn-species-demon" onclick="selectDragonSpecies('demon', this)">
+            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4.1 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3a2.5 2.5 0 0 0 2.5 3z"/></svg>
+            <span>Kadim İblis</span>
+            <span class="species-desc">Ateşli & Yırtıcı</span>
+          </button>
+          <button type="button" class="cust-btn" id="btn-species-wyvern" onclick="selectDragonSpecies('wyvern', this)">
+            <svg class="cust-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 7v5m-3-2.5h6"/></svg>
+            <span>Zırhlı Wyvern</span>
+            <span class="species-desc">Ağır & Heybetli</span>
+          </button>
         </div>
       </div>
 
-      <!-- SAĞ SÜTUN: Uçuş Modu, Şarkı & Atmosfer -->
-      <div class="dash-card">
-        <div class="dash-card-title">
-          <span>🌐 Uçuş Modu</span>
-          <button type="button" class="btn-open-help-modal" onclick="toggleHelpPanel(true)" title="Kontrol Tuşlarını Gör">⌨️ Kontroller [H]</button>
+      <!-- Renk Paleti & Donanım -->
+      <div class="cockpit-col-colors">
+        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+          <div class="cockpit-sub-title">🎨 Renk Paleti</div>
+          <div class="color-name-display" id="active-color-name">Asil Bordo</div>
         </div>
-
-        <div class="lobby-mode-pills">
-          <button type="button" class="lobby-pill-btn active" id="btn-mode-solo" onclick="setLobbyMode('solo')">🎮 Solo Uçuş</button>
-          <button type="button" class="lobby-pill-btn" id="btn-mode-host" onclick="setLobbyMode('host')">👑 Oda Kur</button>
-          <button type="button" class="lobby-pill-btn" id="btn-mode-join" onclick="setLobbyMode('join')">🤝 Odaya Katıl</button>
+        <div class="color-chips">
+          <div class="color-chip active" style="background:#550818;" title="Asil Bordo" onclick="selectDragonColor('bordo', this)"></div>
+          <div class="color-chip" style="background:#1a1222;" title="Obsidyen Gece" onclick="selectDragonColor('obsidian', this)"></div>
+          <div class="color-chip" style="background:#a37817;" title="Antik Altın" onclick="selectDragonColor('gold', this)"></div>
+          <div class="color-chip" style="background:#13447d;" title="Safir Gök Mavisi" onclick="selectDragonColor('sapphire', this)"></div>
+          <div class="color-chip" style="background:#105728;" title="Mistik Zümrüt" onclick="selectDragonColor('emerald', this)"></div>
+          <div class="color-chip" style="background:#cad5de;" title="Ay Gümüşü" onclick="selectDragonColor('silver', this)"></div>
         </div>
-
-        <!-- Solo Mod Görünümü -->
-        <div class="lobby-body" id="lobby-view-solo" style="display:flex;">
-          <div class="lobby-status-msg" style="padding:6px 10px;font-size:0.71rem;width:100%;box-sizing:border-box;">
-            <span>🏔️ Şarkılar eşliğinde tek başına huzurlu, serbest ve akıcı uçuş.</span>
-          </div>
-        </div>
-
-        <!-- Oda Kur Görünümü -->
-        <div class="lobby-body" id="lobby-view-host" style="display:none;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;">
-          <div class="room-code-display" style="padding:6px 10px;">
-            <div>
-              <span style="font-size:.62rem;color:#fca5a5;display:block;letter-spacing:1px;font-weight:700;">ODA KODUN:</span>
-              <span class="room-code-text" id="host-room-code-val" style="font-size:0.95rem;">EJDER-49</span>
-            </div>
-            <div style="display:flex;gap:5px;">
-              <button type="button" class="lobby-action-btn" onclick="copyRoomCode()">📋 Kopyala</button>
-              <button type="button" class="lobby-action-btn" onclick="copyInviteLink()">🔗 Link</button>
-            </div>
-          </div>
-          <div class="lobby-status-msg waiting" id="host-status-msg" style="font-size:0.69rem;padding:5px 8px;">
-            <span class="pulse-dot"></span> Arkadaşının katılması bekleniyor... (Odayı kurup direkt uçabilirsin!)
-          </div>
-        </div>
-
-        <!-- Odaya Katıl Görünümü -->
-        <div class="lobby-body" id="lobby-view-join" style="display:none;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;">
-          <div class="lobby-input-row" style="gap:6px;">
-            <input type="text" class="lobby-input" id="input-room-code" placeholder="ÖRN: EJDER-49" maxlength="15" style="padding:6px 10px;font-size:0.80rem;" />
-            <button type="button" class="lobby-action-btn" style="padding:7px 12px;" onclick="joinRoomByCode()">Bağlan 🚀</button>
-          </div>
-          <div class="lobby-status-msg" id="join-status-msg" style="font-size:0.69rem;padding:4px 8px;">
-            Arkadaşından aldığın oda kodunu gir ve bağlan.
-          </div>
-        </div>
-
-        <!-- Müzik & Gökyüzü -->
-        <div class="cust-row" style="margin-top:2px;">
-          <div class="cust-label">🎵 Başlangıç Şarkısı:</div>
-          <div class="song-picker-splash">
-            <select id="splash-song-select" onchange="loadTrack(parseInt(this.value), false)">
-              <!-- JS ile doldurulur -->
-            </select>
-          </div>
-        </div>
-
-        <div class="cust-row">
-          <div class="cust-label">🌅 Gökyüzü Atmosferi:</div>
-          <div class="sky-time-btns">
-            <button type="button" class="sky-time-btn active" id="sky-btn-0" onclick="selectStartSkyMode(0)">☀️ Gündüz</button>
-            <button type="button" class="sky-time-btn" id="sky-btn-1" onclick="selectStartSkyMode(1)">🌅 Gün Batımı</button>
-            <button type="button" class="sky-time-btn" id="sky-btn-2" onclick="selectStartSkyMode(2)">🌌 Gece</button>
-          </div>
+        <div class="accessory-toggles" style="display:flex;gap:6px;margin-top:2px;">
+          <button type="button" class="acc-toggle-btn" id="acc-btn-armor" onclick="toggleAccessoryBtn('armor')">
+            <span class="acc-status-dot"></span> 🛡️ Zırh
+          </button>
+          <button type="button" class="acc-toggle-btn" id="acc-btn-wingembers" onclick="toggleAccessoryBtn('wingembers')">
+            <span class="acc-status-dot"></span> ✨ Kıvılcım
+          </button>
+          <button type="button" class="acc-toggle-btn" id="acc-btn-eyeglow" onclick="toggleAccessoryBtn('eyeglow')">
+            <span class="acc-status-dot"></span> 🔥 Göz Işığı
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Menü Alt Bölümü (Başlat Butonu & İpucu) -->
-    <div class="splash-footer">
-      <button id="startBtn" onclick="startExperience()">▶ &nbsp;UÇUŞA BAŞLA</button>
-      <div class="splash-footer-hint">💡 Uçuş esnasında kontrolleri görmek için <b>[H]</b> tuşuna basabilirsin</div>
+    <!-- Orta Satır: Uçuş Modu & Müzik -->
+    <div class="cockpit-row-mid">
+      <div class="lobby-mode-pills">
+        <button type="button" class="lobby-pill-btn active" id="btn-mode-solo" onclick="setLobbyMode('solo')">🎮 Solo Uçuş</button>
+        <button type="button" class="lobby-pill-btn" id="btn-mode-host" onclick="setLobbyMode('host')">👑 Oda Kur</button>
+        <button type="button" class="lobby-pill-btn" id="btn-mode-join" onclick="setLobbyMode('join')">🤝 Odaya Katıl</button>
+      </div>
+
+      <div class="song-picker-splash">
+        <span style="font-size:0.75rem;">🎵</span>
+        <select id="splash-song-select" onchange="loadTrack(parseInt(this.value), false)">
+          <!-- JS ile doldurulur -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Çok Oyunculu Bilgileri (Solo / Host / Join) -->
+    <div class="lobby-body" id="lobby-view-solo" style="display:flex;">
+      <div class="lobby-status-msg" style="padding:4px 8px;font-size:0.72rem;width:100%;box-sizing:border-box;">
+        <span>🏔️ Şarkılar eşliğinde tek başına huzurlu, serbest ve akıcı uçuş deneyimi.</span>
+      </div>
+    </div>
+
+    <div class="lobby-body" id="lobby-view-host" style="display:none;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;">
+      <div class="room-code-display">
+        <div>
+          <span style="font-size:.62rem;color:#fca5a5;display:block;letter-spacing:1px;font-weight:700;">PAYLAŞILACAK ODA KODUN:</span>
+          <span class="room-code-text" id="host-room-code-val">EJDER-49</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="lobby-action-btn" onclick="copyRoomCode()">📋 Kodu Kopyala</button>
+          <button type="button" class="lobby-action-btn" onclick="copyInviteLink()">🔗 Davet Linki</button>
+        </div>
+      </div>
+      <div class="lobby-status-msg waiting" id="host-status-msg" style="margin-top:4px;">
+        <span class="pulse-dot"></span> Arkadaşının katılması bekleniyor... (Odayı kurup hemen uçabilirsin!)
+      </div>
+    </div>
+
+    <div class="lobby-body" id="lobby-view-join" style="display:none;flex-direction:column;gap:6px;width:100%;box-sizing:border-box;">
+      <div class="lobby-input-row">
+        <input type="text" class="lobby-input" id="input-room-code" placeholder="ÖRN: EJDER-49" maxlength="15" />
+        <button type="button" class="lobby-action-btn" onclick="joinRoomByCode()">Bağlan & Odaya Gir 🚀</button>
+      </div>
+      <div class="lobby-status-msg" id="join-status-msg" style="margin-top:4px;">
+        Arkadaşından aldığın oda kodunu gir ve bağlan.
+      </div>
+    </div>
+
+    <!-- Başlat Butonu -->
+    <div class="cockpit-footer">
+      <button id="startBtn" onclick="startExperience()">▶ &nbsp;KANATLAN & UÇUŞA BAŞLA</button>
     </div>
   </div>
 </div>
@@ -938,47 +926,56 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   <div id="radar-toggle-hint">[M] Harita</div>
 </div>
 
+<!-- Kontrol Kılavuzu & Kadim Güçler Modal Penceresi (H Tuşu) -->
+<div id="help-modal-backdrop" onclick="toggleHelpPanel(false)"></div>
+<div id="help-panel">
+  <div class="help-header">
+    <span class="help-title">⌨️ Kontrol Kılavuzu & Kadim Güçler</span>
+    <span class="help-close" onclick="toggleHelpPanel(false)">✖</span>
+  </div>
+  <div class="help-grid">
+    <div class="help-section-title">✈️ TEMEL UÇUŞ & MANEVRA</div>
+    <div class="help-item"><span class="help-k">🖱️ FARE</span><span class="help-desc">Yönlendir & Yumuşak Bakış</span></div>
+    <div class="help-item"><span class="help-k">W / S</span><span class="help-desc">Havada: Hızlan/Fren | Yerde: Yürü</span></div>
+    <div class="help-item"><span class="help-k">A / D</span><span class="help-desc">Aerodinamik Yatış | Yerde Dönüş</span></div>
+    <div class="help-item"><span class="help-k">SPACE</span><span class="help-desc">⬆️ Göğe Tırman / Yerden Havalan</span></div>
+    <div class="help-item"><span class="help-k">CTRL / Q</span><span class="help-desc">⬇️ Alçal & Süzülerek Dal</span></div>
+    <div class="help-item"><span class="help-k">E</span><span class="help-desc">🦅 Yere / Gök Adasına Konuş</span></div>
+    <div class="help-item"><span class="help-k">SHIFT</span><span class="help-desc">⚡ Turbo Kükreme İvmesi</span></div>
+
+    <div class="help-section-title">🗝️ KADİM EASTER EGG SÜPER GÜÇLERİ (Keşfedildikçe Açılır)</div>
+    <div class="help-item special-power"><span class="help-k gold">[R] Kükreme</span><span class="help-desc">🥚 Kadim Şok Dalgası (+26 m/s İtme)</span></div>
+    <div class="help-item special-power"><span class="help-k purple">🛡️ Rün Kalkanı</span><span class="help-desc">⚔️ Valyria Koruması (Çarpma/Sarsıntı Yok)</span></div>
+    <div class="help-item special-power"><span class="help-k cyan">🌌 Hiper-Süzülüş</span><span class="help-desc">🌌 Kozmik Hız (Seyir Hızı 137 km/s)</span></div>
+    <div class="help-item special-power"><span class="help-k pink">🌸 Nilüfer Haresi</span><span class="help-desc">🌸 Cennet Nilüferi (Tüm Skorlar 2X)</span></div>
+
+    <div class="help-section-title">🛠️ KAMERA, DÜNYA & SOSYAL</div>
+    <div class="help-item"><span class="help-k">M</span><span class="help-desc">🗺️ Uçuş Radarı (Aç/Kapat)</span></div>
+    <div class="help-item"><span class="help-k">C</span><span class="help-desc">📸 360° Foto Modu [Boşluk: Çek]</span></div>
+    <div class="help-item"><span class="help-k">V</span><span class="help-desc">🎥 Kamera (1. / 3. Şahıs)</span></div>
+    <div class="help-item"><span class="help-k">T</span><span class="help-desc">🌅 Gün Döngüsü (Gündüz / Batım / Gece)</span></div>
+    <div class="help-item"><span class="help-k">L</span><span class="help-desc">📜 Müzik Çalma Listesi Menüsü</span></div>
+    <div class="help-item"><span class="help-k">F</span><span class="help-desc">🤝 Formasyon Uçuşu (Arkadaşla)</span></div>
+    <div class="help-item"><span class="help-k">J / Y / X</span><span class="help-desc">🎨 Gökyüzü Çizimi (Aç / Renk / Sil)</span></div>
+    <div class="help-item"><span class="help-k">1 - 4</span><span class="help-desc">💬 Canlı İfade (❤️🎵👋✨)</span></div>
+  </div>
+  <div class="help-footer">
+    <button type="button" class="help-done-btn" onclick="toggleHelpPanel(false)">✓ Anladım, Kapat [ESC veya H]</button>
+  </div>
+</div>
+
 <div id="hud">
   <!-- Crosshair kaldırıldı - manzara temiz kalsın -->
   <div id="top-bar">
-    <div class="pill" id="multiplayer-hud-pill" style="border-color: rgba(0,229,255,0.5); background: rgba(5,20,30,0.85);">🌐 <b>Lobi:</b> <span id="val-lobby-status" style="color:#00e5ff; font-weight:bold;">Tek Kişilik</span></div>
+    <div class="pill" id="multiplayer-hud-pill" style="display:none; border-color: rgba(0,229,255,0.5); background: rgba(5,20,30,0.85);">🌐 <b>Lobi:</b> <span id="val-lobby-status" style="color:#00e5ff; font-weight:bold;">Tek Kişilik</span></div>
     <div class="pill" id="friend-hud-pill" style="display:none; border-color: #00ffaa; background: rgba(5,30,20,0.85);">📍 <b>Arkadaşın:</b> <span id="val-friend-dist" style="color:#00ffaa; font-weight:bold;">--</span></div>
-    <div class="pill" id="music-sync-pill" style="border-color: rgba(244,114,182,0.6); background: rgba(30,10,25,0.85);">📻 <b>Ortak Radyo:</b> <span id="val-sync-status" style="color:#f472b6; font-weight:bold;">Senkronize</span></div>
+    <div class="pill" id="music-sync-pill" style="display:none; border-color: rgba(244,114,182,0.6); background: rgba(30,10,25,0.85);">📻 <b>Ortak Radyo:</b> <span id="val-sync-status" style="color:#f472b6; font-weight:bold;">Senkronize</span></div>
     <div class="pill" id="skywrite-hud-pill" style="border-color: rgba(255,215,0,0.6); background: rgba(30,25,5,0.85);">🎨 <b>Çizim:</b> <span id="val-draw-status" style="color:#ffd700; font-weight:bold;">Kapalı</span></div>
     <div class="pill">⭐ <b>Halka:</b> <span id="val-rings">0</span></div>
     <div class="pill" id="easter-egg-hud-pill" style="border-color: rgba(255,215,0,0.6); background: rgba(30,22,5,0.85);">🗝️ <b>Sırlar:</b> <span id="val-easter-eggs" style="color:#ffd700; font-weight:bold;">0 / 4</span></div>
+    <div class="pill" id="powers-hud-pill" style="display:none; border-color: rgba(255,215,0,0.8); background: rgba(35,15,5,0.9);">🔮 <b>Kadim Güçler:</b> <span id="val-powers-icons"></span></div>
     <div class="pill pill-btn" id="map-toggle-btn" onclick="toggleRadarVisibility()" style="border-color: rgba(240,195,95,0.6); background: rgba(25,20,10,0.85);">🗺️ <b>Harita [M]:</b> <span id="val-map-status" style="color:#00ffaa; font-weight:bold;">Açık</span></div>
     <div class="pill pill-btn" id="help-toggle-btn" onclick="toggleHelpPanel()">⌨️ <b>Kılavuz [H]</b></div>
-  </div>
-
-  <!-- Oyun İçi Açılır Kontrol Kılavuzu (H Tuşu ile Açılır/Kapanır) -->
-  <div id="help-panel">
-    <div class="help-header">
-      <span class="help-title">⌨️ Kontrol Kılavuzu & Kısayollar</span>
-      <span class="help-close" onclick="toggleHelpPanel(false)">✖</span>
-    </div>
-    <div class="help-grid">
-      <div class="help-item"><span class="help-k">🖱️ FARE</span><span class="help-desc">Yönlendir / Bakış</span></div>
-      <div class="help-item"><span class="help-k">W / S</span><span class="help-desc">Havada: Hızlan/Fren | Yerde: Yürü</span></div>
-      <div class="help-item"><span class="help-k">A / D</span><span class="help-desc">Yatış / Yerde Dönüş</span></div>
-      <div class="help-item"><span class="help-k">SPACE</span><span class="help-desc">⬆️ Göğe Tırman / Yerden Havalan</span></div>
-      <div class="help-item"><span class="help-k">CTRL / Q</span><span class="help-desc">⬇️ Alçal & Süzülerek Dal</span></div>
-      <div class="help-item"><span class="help-k">E</span><span class="help-desc">🦅 Yere Kon / Dinlen Modu</span></div>
-      <div class="help-item"><span class="help-k">SHIFT</span><span class="help-desc">⚡ Turbo Kükreme</span></div>
-      <div class="help-item"><span class="help-k">M</span><span class="help-desc">🗺️ Uçuş Radarı (Aç/Kapat)</span></div>
-      <div class="help-item"><span class="help-k">L</span><span class="help-desc">📜 Şarkı Listesi Menüsü</span></div>
-      <div class="help-item"><span class="help-k">F</span><span class="help-desc">🤝 Formasyon Uçuşu</span></div>
-      <div class="help-item"><span class="help-k">R</span><span class="help-desc">🎨 Çizim Aç / Kapat</span></div>
-      <div class="help-item"><span class="help-k">Y</span><span class="help-desc">🌈 Çizim Rengi Değiştir</span></div>
-      <div class="help-item"><span class="help-k">X</span><span class="help-desc">🧹 Çizimi Temizle</span></div>
-      <div class="help-item"><span class="help-k">1 - 4</span><span class="help-desc">💬 Emote (❤️🎵👋✨)</span></div>
-      <div class="help-item"><span class="help-k">C</span><span class="help-desc">📸 Foto Modu [Boşluk: Çek]</span></div>
-      <div class="help-item"><span class="help-k">V</span><span class="help-desc">🎥 Kamera (1./3. Şahıs)</span></div>
-      <div class="help-item"><span class="help-k">T</span><span class="help-desc">🌌 Gündüz / Günbatımı / Aurora</span></div>
-      <div class="help-item"><span class="help-k">G</span><span class="help-desc">⚡ Fırtına Efekti</span></div>
-      <div class="help-item"><span class="help-k">N / P</span><span class="help-desc">🎵 Şarkı İleri / Geri</span></div>
-      <div class="help-item"><span class="help-k">H</span><span class="help-desc">⌨️ Kılavuzu Kapat</span></div>
-    </div>
   </div>
   <div id="hud-flight">
     <div class="hud-cell">
@@ -1229,13 +1226,16 @@ function togglePlaylistMenu(forceState){
 let isHelpPanelOpen = false;
 function toggleHelpPanel(forceState){
   const panel = document.getElementById('help-panel');
+  const backdrop = document.getElementById('help-modal-backdrop');
   if(!panel) return;
   isHelpPanelOpen = typeof forceState === 'boolean' ? forceState : !isHelpPanelOpen;
   if(isHelpPanelOpen){
     panel.classList.add('open');
+    if(backdrop) backdrop.classList.add('open');
     if(document.pointerLockElement) document.exitPointerLock();
   } else {
     panel.classList.remove('open');
+    if(backdrop) backdrop.classList.remove('open');
   }
 }
 
@@ -1643,6 +1643,7 @@ function startExperience(){
     splashEl.style.display = 'none';
   }
   gameActive = true;
+  document.body.classList.add('game-started');
   if(typeof updateLeaderboard === 'function') updateLeaderboard();
   document.body.requestPointerLock();
 }
@@ -3669,6 +3670,22 @@ const EASTER_EGGS = [
   { id: 'oasis', name: '🌸 Kayıp Cennet Nilüferi', pos: new THREE.Vector3(oasisCoords.x, -7.0, oasisCoords.z), group: oasisGroup, rotObj: lotusCore }
 ];
 
+// ═══════════════════════════════════════════════════
+//  KADİM EASTER EGG SÜPER GÜÇLERİ SİSTEMİ
+// ═══════════════════════════════════════════════════
+const UNLOCKED_POWERS = {
+  roar: false,        // 🥚 Kadim Altın Yumurta: [R] Kadim Ejderha Kükremesi (+26 m/s İtiş & Şok Dalgası)
+  shield: false,      // ⚔️ Valyria Kılıcı: 🛡️ Valyria Rün Kalkanı (Çarpma Koruması)
+  hyperGlide: false,  // 🌌 Kozmik Monolit: 🌌 Kozmik Hiper-Süzülüş (+%35 Hız, Yıldız Tozu)
+  bloomDouble: false  // 🌸 Cennet Nilüferi: 🌸 Cennet Nilüferi Haresi (Tüm Puanlar 2X)
+};
+let roarCooldownTimer = 0;
+let valyriaShieldGroup = null;
+let valyriaShieldMesh = null;
+let lotusPetalParticles = null;
+let cosmicWingTrailParticles = null;
+const activeShockwaves = [];
+
 function playEasterEggSound(){
   if(!audioCtx) return;
   const now = audioCtx.currentTime;
@@ -3693,6 +3710,286 @@ function playEasterEggSound(){
   osc2.stop(now + 1.8);
 }
 
+function playRoarShockwaveSound(){
+  if(!audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(140, now);
+    osc.frequency.exponentialRampToValueAtTime(32, now + 1.2);
+    gain.gain.setValueAtTime(0.75, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 1.4);
+
+    const bufferSize = Math.floor(audioCtx.sampleRate * 0.9);
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i = 0; i < bufferSize; i++){
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (audioCtx.sampleRate * 0.35));
+    }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(460, now);
+    filter.frequency.linearRampToValueAtTime(110, now + 0.9);
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.setValueAtTime(0.7, now);
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+    noise.connect(filter);
+    filter.connect(noiseGain);
+    noiseGain.connect(audioCtx.destination);
+    noise.start(now);
+  } catch(e){}
+}
+
+function spawnShockwaveRing(pos){
+  const sGeo = new THREE.TorusGeometry(3.5, 0.45, 12, 32);
+  const sMat = new THREE.MeshBasicMaterial({
+    color: 0xffd700,
+    transparent: true,
+    opacity: 0.95,
+    wireframe: true,
+    blending: THREE.AdditiveBlending
+  });
+  const sMesh = new THREE.Mesh(sGeo, sMat);
+  sMesh.position.copy(pos);
+  if(dragonRig) sMesh.quaternion.copy(dragonRig.quaternion);
+  scene.add(sMesh);
+  activeShockwaves.push({ mesh: sMesh, mat: sMat, life: 0.85, maxLife: 0.85 });
+}
+
+function triggerAncientRoar(){
+  if(!UNLOCKED_POWERS.roar){
+    if(elRingPopup){
+      elRingPopup.textContent = "🔒 Kükreme Kilitli! Kadim Altın Yumurtayı Keşfet!";
+      elRingPopup.style.color = '#ffd700';
+      elRingPopup.style.opacity = '1';
+      setTimeout(() => { elRingPopup.style.opacity = '0'; }, 2200);
+    }
+    return;
+  }
+  if(roarCooldownTimer > 0){
+    if(elRingPopup){
+      elRingPopup.textContent = `⏳ Kükreme Hazırlanıyor: ${roarCooldownTimer.toFixed(1)}s`;
+      elRingPopup.style.color = '#ffd700';
+      elRingPopup.style.opacity = '1';
+      setTimeout(() => { elRingPopup.style.opacity = '0'; }, 1200);
+    }
+    return;
+  }
+
+  roarCooldownTimer = 5.5;
+  playRoarShockwaveSound();
+  spawnShockwaveRing(dragonPos);
+
+  // Roket İtişi (+26 m/s)
+  flightSpeed = Math.min(130, flightSpeed + 26.0);
+  if(typeof triggerSpeedWarp === 'function') triggerSpeedWarp(0xffd700);
+
+  if(elRingPopup){
+    elRingPopup.textContent = "💥 KADİM EJDERHA KÜKREMESİ! (+26 m/s İTİŞ) 💥";
+    elRingPopup.style.color = '#ffd700';
+    elRingPopup.style.textShadow = '0 0 35px #ffd700, 0 0 60px #ff5500';
+    elRingPopup.style.opacity = '1';
+    elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.35)';
+    setTimeout(() => {
+      elRingPopup.style.opacity = '0';
+      elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    }, 2500);
+  }
+}
+
+let _glowTexCache = null;
+function getGlowParticleTexture(){
+  if(_glowTexCache) return _glowTexCache;
+  const c = document.createElement('canvas');
+  c.width = 32; c.height = 32;
+  const ctx = c.getContext('2d');
+  const g = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+  g.addColorStop(0, 'rgba(255,255,255,1)');
+  g.addColorStop(0.3, 'rgba(255,255,255,0.75)');
+  g.addColorStop(0.7, 'rgba(255,255,255,0.18)');
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 32, 32);
+  _glowTexCache = new THREE.CanvasTexture(c);
+  return _glowTexCache;
+}
+
+function initValyriaShield(){
+  if(valyriaShieldGroup) return;
+  valyriaShieldGroup = new THREE.Group();
+  
+  const icoGeo = new THREE.IcosahedronGeometry(4.4, 1);
+  const icoMat = new THREE.MeshStandardMaterial({
+    color: 0xdf80ff,
+    emissive: 0xaa22ff,
+    emissiveIntensity: 0.90,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.70,
+    roughness: 0.2,
+    metalness: 0.8
+  });
+  valyriaShieldMesh = new THREE.Mesh(icoGeo, icoMat);
+  valyriaShieldGroup.add(valyriaShieldMesh);
+
+  const innerGeo = new THREE.SphereGeometry(3.8, 14, 14);
+  const innerMat = new THREE.MeshBasicMaterial({
+    color: 0x6600cc,
+    transparent: true,
+    opacity: 0.12,
+    blending: THREE.AdditiveBlending
+  });
+  const innerMesh = new THREE.Mesh(innerGeo, innerMat);
+  valyriaShieldGroup.add(innerMesh);
+
+  scene.add(valyriaShieldGroup);
+}
+
+function initCosmicTrail(){
+  if(cosmicWingTrailParticles) return;
+  const count = 75;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  for(let i = 0; i < count; i++){
+    pos[i*3] = dragonPos.x;
+    pos[i*3+1] = -9999;
+    pos[i*3+2] = dragonPos.z;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const mat = new THREE.PointsMaterial({
+    map: getGlowParticleTexture(),
+    color: 0x00ffff,
+    size: 5.5,
+    sizeAttenuation: false,
+    transparent: true,
+    opacity: 0.85,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+  cosmicWingTrailParticles = new THREE.Points(geo, mat);
+  scene.add(cosmicWingTrailParticles);
+}
+
+function initLotusPetals(){
+  if(lotusPetalParticles) return;
+  const count = 60;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  for(let i = 0; i < count; i++){
+    pos[i*3] = dragonPos.x + (Math.random() - 0.5) * 14;
+    pos[i*3+1] = dragonPos.y + (Math.random() - 0.5) * 6;
+    pos[i*3+2] = dragonPos.z + (Math.random() - 0.5) * 14;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const mat = new THREE.PointsMaterial({
+    map: getGlowParticleTexture(),
+    color: 0xff66cc,
+    size: 6.5,
+    sizeAttenuation: false,
+    transparent: true,
+    opacity: 0.85,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending
+  });
+  lotusPetalParticles = new THREE.Points(geo, mat);
+  scene.add(lotusPetalParticles);
+}
+
+function updateUnlockedPowersHUD(){
+  const pill = document.getElementById('powers-hud-pill');
+  const icons = document.getElementById('val-powers-icons');
+  if(!pill || !icons) return;
+
+  const badges = [];
+  if(UNLOCKED_POWERS.roar) badges.push('<span style="color:#ffd700;font-weight:bold;">💥 [R] Kükreme</span>');
+  if(UNLOCKED_POWERS.shield) badges.push('<span style="color:#e080ff;font-weight:bold;">🛡️ Kalkan</span>');
+  if(UNLOCKED_POWERS.hyperGlide) badges.push('<span style="color:#00ffff;font-weight:bold;">🌌 Hiper-Hız</span>');
+  if(UNLOCKED_POWERS.bloomDouble) badges.push('<span style="color:#ff80c0;font-weight:bold;">🌸 2X Puan</span>');
+
+  if(badges.length > 0){
+    pill.style.display = 'flex';
+    icons.innerHTML = badges.join(' &nbsp;|&nbsp; ');
+  }
+}
+
+let cosmicTrailIndex = 0;
+function updateActivePowers(dt){
+  if(roarCooldownTimer > 0){
+    roarCooldownTimer = Math.max(0, roarCooldownTimer - dt);
+  }
+
+  // 1. Şok dalgası halkaları animasyonu
+  for(let i = activeShockwaves.length - 1; i >= 0; i--){
+    const sw = activeShockwaves[i];
+    sw.life -= dt;
+    const progress = 1.0 - (sw.life / sw.maxLife);
+    const sc = 1.0 + progress * 14.0;
+    sw.mesh.scale.set(sc, sc, sc);
+    sw.mat.opacity = Math.max(0, (sw.life / sw.maxLife) * 0.95);
+    if(sw.life <= 0){
+      scene.remove(sw.mesh);
+      sw.mesh.geometry.dispose();
+      sw.mat.dispose();
+      activeShockwaves.splice(i, 1);
+    }
+  }
+
+  // 2. Valyria Kalkanı
+  if(UNLOCKED_POWERS.shield && valyriaShieldGroup){
+    valyriaShieldGroup.position.copy(dragonPos);
+    valyriaShieldGroup.rotation.x += dt * 1.5;
+    valyriaShieldGroup.rotation.y += dt * 2.2;
+
+    // Yakın zemin/dağ kinetik koruması (stallsız sekme)
+    if(typeof getSurfaceHeightAt === 'function' && !isLanded){
+      const gY = getSurfaceHeightAt(dragonPos.x, dragonPos.z, dragonPos.y);
+      if(dragonPos.y < gY + 12.0){
+        dragonPos.y += (gY + 14.0 - dragonPos.y) * Math.min(1.0, dt * 8.0);
+        if(valyriaShieldMesh) valyriaShieldMesh.material.emissiveIntensity = 2.2;
+      } else if(valyriaShieldMesh && valyriaShieldMesh.material.emissiveIntensity > 0.95){
+        valyriaShieldMesh.material.emissiveIntensity += (0.95 - valyriaShieldMesh.material.emissiveIntensity) * dt * 3.0;
+      }
+    }
+  }
+
+  // 3. Kozmik Yıldız Tozu Kanat İzi
+  if(UNLOCKED_POWERS.hyperGlide && cosmicWingTrailParticles && dragonRig){
+    const posArr = cosmicWingTrailParticles.geometry.attributes.position.array;
+    const idx = (cosmicTrailIndex % 25) * 3;
+    posArr[idx] = dragonPos.x + (Math.random() - 0.5) * 4.0;
+    posArr[idx + 1] = dragonPos.y + (Math.random() - 0.5) * 2.0;
+    posArr[idx + 2] = dragonPos.z + (Math.random() - 0.5) * 4.0;
+    cosmicWingTrailParticles.geometry.attributes.position.needsUpdate = true;
+    cosmicTrailIndex++;
+  }
+
+  // 4. Cennet Nilüferi Yaprakları
+  if(UNLOCKED_POWERS.bloomDouble && lotusPetalParticles){
+    const pArr = lotusPetalParticles.geometry.attributes.position.array;
+    const t = clock.getElapsedTime();
+    for(let i = 0; i < 60; i++){
+      const i3 = i * 3;
+      pArr[i3]     += Math.sin(t * 2.0 + i) * dt * 4.0;
+      pArr[i3 + 1] += (Math.cos(t * 1.5 + i) - 0.4) * dt * 3.0;
+      pArr[i3 + 2] += Math.cos(t * 2.0 + i) * dt * 4.0;
+      if(Math.abs(pArr[i3] - dragonPos.x) > 25 || Math.abs(pArr[i3+1] - dragonPos.y) > 20 || Math.abs(pArr[i3+2] - dragonPos.z) > 25){
+        pArr[i3]   = dragonPos.x + (Math.random() - 0.5) * 16;
+        pArr[i3+1] = dragonPos.y + (Math.random() - 0.5) * 8;
+        pArr[i3+2] = dragonPos.z + (Math.random() - 0.5) * 16;
+      }
+    }
+    lotusPetalParticles.geometry.attributes.position.needsUpdate = true;
+  }
+}
+
 function updateEasterEggs(dt){
   const t = clock.getElapsedTime();
   if(goldEggMesh) goldEggMesh.rotation.y += dt * 0.9;
@@ -3710,21 +4007,42 @@ function checkEasterEggs(pos){
     if(!discoveredEggs[ee.id] && pos.distanceTo(ee.pos) < 22.0){
       discoveredEggs[ee.id] = true;
       easterEggsFoundCount++;
-      playerScore += 500;
+      const mult = UNLOCKED_POWERS.bloomDouble ? 2 : 1;
+      playerScore += 500 * mult;
       if(elScore) elScore.textContent = playerScore;
 
       playEasterEggSound();
 
+      let powerMsg = "";
+      if(ee.id === 'egg'){
+        UNLOCKED_POWERS.roar = true;
+        powerMsg = "💥 KADİM KÜKREME AÇILDI! [R Tuşuyla +26 m/s İtiş]";
+      } else if(ee.id === 'sword'){
+        UNLOCKED_POWERS.shield = true;
+        initValyriaShield();
+        powerMsg = "🛡️ VALYRİA RÜN KALKANI AÇILDI! (Çarpma Koruması)";
+      } else if(ee.id === 'monolith'){
+        UNLOCKED_POWERS.hyperGlide = true;
+        initCosmicTrail();
+        powerMsg = "🌌 KOZMİK HİPER-SÜZÜLÜŞ AÇILDI! (+%35 Seyir Hızı)";
+      } else if(ee.id === 'oasis'){
+        UNLOCKED_POWERS.bloomDouble = true;
+        initLotusPetals();
+        powerMsg = "🌸 CENNET NİLÜFERİ AÇILDI! (Tüm Skorlar 2X)";
+      }
+
+      updateUnlockedPowersHUD();
+
       if(elRingPopup){
-        elRingPopup.textContent = `✨ EASTER EGG! ${ee.name} (+500P) ✨`;
+        elRingPopup.innerHTML = `✨ EASTER EGG BULUNDU! ✨<br/><span style="font-size:0.95rem;color:#fff;">${ee.name}</span><br/><span style="color:#00ffff;font-size:0.92rem;font-weight:900;">${powerMsg}</span>`;
         elRingPopup.style.color = '#ffd700';
         elRingPopup.style.textShadow = '0 0 30px #ffd700, 0 0 50px #ff6600';
         elRingPopup.style.opacity = '1';
-        elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.3)';
+        elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.25)';
         setTimeout(() => {
           elRingPopup.style.opacity = '0';
           elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
-        }, 3200);
+        }, 4200);
       }
 
       const eggBadge = document.getElementById('val-easter-eggs');
@@ -3733,14 +4051,14 @@ function checkEasterEggs(pos){
       if(easterEggsFoundCount === totalEasterEggs){
         setTimeout(() => {
           if(elRingPopup){
-            elRingPopup.textContent = "🏆 TÜM KADİM SIRLAR ÇÖZÜLDÜ! EFSANEVİ SÜVARİ! 🏆";
-            elRingPopup.style.color = "#00ffff";
+            elRingPopup.innerHTML = "👑 TÜM KADİM GÜÇLER MÜHÜRLENDİ! 👑<br/><span style=\"color:#00ffff;font-size:1.1rem;\">EFSANEVİ VALYRİA EJDERHA LORDU</span>";
+            elRingPopup.style.color = "#ffd700";
             elRingPopup.style.textShadow = "0 0 35px #00ffff, 0 0 60px #ff00ff";
             elRingPopup.style.opacity = "1";
             elRingPopup.style.transform = "translate(-50%, -50%) scale(1.35)";
-            setTimeout(() => { elRingPopup.style.opacity = "0"; }, 4200);
+            setTimeout(() => { elRingPopup.style.opacity = "0"; }, 5000);
           }
-        }, 3500);
+        }, 4500);
       }
     }
   }
@@ -3972,7 +4290,8 @@ function checkRingCollision(pos){
 
       ringCombo++;
       ringComboTimer = 8.5;
-      const typeBonus = r.type ? r.type.score : 100;
+      const mult = (typeof UNLOCKED_POWERS !== 'undefined' && UNLOCKED_POWERS.bloomDouble) ? 2 : 1;
+      const typeBonus = (r.type ? r.type.score : 100) * mult;
       const comboBonus = typeBonus * ringCombo;
       playerScore += comboBonus;
       if(elScore) elScore.textContent = playerScore;
@@ -4492,8 +4811,8 @@ gltfLoader.load('vashlovani_tower.glb', (gltf) => {
 function destroyWatchtower(tw){
   if(!tw.alive) return;
   tw.alive = false;
-  towersDestroyedCount++;
-  playerScore += 500;
+  const tMult = (typeof UNLOCKED_POWERS !== 'undefined' && UNLOCKED_POWERS.bloomDouble) ? 2 : 1;
+  playerScore += 500 * tMult;
   if(elScore) elScore.textContent = playerScore;
   if(elTowers) elTowers.textContent = towersDestroyedCount + '/' + TOWER_COORDS.length;
 
@@ -4762,12 +5081,12 @@ function applyDragonCustomization(){
   const titleEl = document.getElementById('splash-dragon-title');
   const badgeImg = document.getElementById('splash-dragon-badge');
   const speciesNames = {
-    meleys: 'Asil Ejderha (Meleys)',
-    demon: 'Kadim İblis (Volkanik)',
+    meleys: 'Asil Ejderha',
+    demon: 'Kadim İblis',
     wyvern: 'Zırhlı Wyvern'
   };
-  const sName = speciesNames[currentSpecies] || 'Ejderha';
-  if(titleEl) titleEl.textContent = `${sName} — ${pal.name}`;
+  const sName = speciesNames[currentSpecies] || 'Asil Ejderha';
+  if(titleEl) titleEl.textContent = `${sName.toUpperCase()} • ${pal.name.toUpperCase()}`;
   if(badgeImg){
     badgeImg.style.filter = `${pal.badgeGlow} ${pal.badgeFilter || ''}`;
   }
@@ -4819,6 +5138,9 @@ function selectDragonColor(colorKey, btn){
   currentColorKey = colorKey;
   document.querySelectorAll('.color-chip').forEach(c => c.classList.remove('active'));
   if(btn) btn.classList.add('active');
+  const colorNames = { bordo: 'Asil Bordo', obsidian: 'Obsidyen Gece', gold: 'Antik Altın', sapphire: 'Safir Gök Mavisi', emerald: 'Mistik Zümrüt', silver: 'Ay Gümüşü' };
+  const colNameEl = document.getElementById('active-color-name');
+  if(colNameEl && colorNames[colorKey]) colNameEl.textContent = colorNames[colorKey];
   applyDragonCustomization();
   if(typeof sendMultiplayerData === 'function' && typeof activeConnection !== 'undefined' && activeConnection && activeConnection.open){
     sendMultiplayerData({
@@ -5309,6 +5631,9 @@ window.addEventListener('keydown', e => {
     togglePhotoMode();
   }
   if(e.code === 'KeyR'){
+    triggerAncientRoar();
+  }
+  if(e.code === 'KeyJ'){
     toggleSkywriting();
   }
   if(e.code === 'KeyY'){
@@ -7029,8 +7354,8 @@ function animate(){
       while(yaw > Math.PI) yaw -= Math.PI * 2;
       while(yaw < -Math.PI) yaw += Math.PI * 2;
 
-      const CRUISE_SPEED = 26.0; // ~94 km/h sakin ve asil süzülüş hızı
-      const SPRINT_SPEED = 48.0; // ~172 km/h W tuşuyla güçlü uçuş hızı
+      const CRUISE_SPEED = (typeof UNLOCKED_POWERS !== 'undefined' && UNLOCKED_POWERS.hyperGlide) ? 38.0 : 26.0; // Kozmik güçle ~137 km/h, normalde ~94 km/h
+      const SPRINT_SPEED = (typeof UNLOCKED_POWERS !== 'undefined' && UNLOCKED_POWERS.hyperGlide) ? 62.0 : 48.0; // Kozmik güçle ~223 km/h, normalde ~172 km/h
 
       if(keys['KeyA'] || keys['ArrowLeft'])  yaw += 1.6 * dt;
       if(keys['KeyD'] || keys['ArrowRight']) yaw -= 1.6 * dt;
@@ -7138,6 +7463,9 @@ function animate(){
     }
     checkEasterEggs(dragonPos);
     updateEasterEggs(dt);
+    if(typeof updateActivePowers === 'function'){
+      updateActivePowers(dt);
+    }
 
     // Fırtına Yağmur & Şimşek Dinamiği
     if(isStormActive){
@@ -7453,6 +7781,21 @@ if(urlParams.get('autostart') === '1' || hrefStr.includes('autostart')){
     isFirstPerson = false;
     if(elCamInd) elCamInd.textContent = '🎥 3. ŞAHIS (Takip Kamerası)';
   }
+}
+
+if(urlParams.get('help') === '1' || hrefStr.includes('help=1')){
+  toggleHelpPanel(true);
+}
+
+if(urlParams.get('testpowers') === '1' || hrefStr.includes('testpowers=1')){
+  UNLOCKED_POWERS.roar = true;
+  UNLOCKED_POWERS.shield = true;
+  initValyriaShield();
+  UNLOCKED_POWERS.hyperGlide = true;
+  initCosmicTrail();
+  UNLOCKED_POWERS.bloomDouble = true;
+  initLotusPetals();
+  updateUnlockedPowersHUD();
 }
 </script>
 </body>
