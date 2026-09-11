@@ -936,13 +936,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
     <!-- TAB 4: KONTROLLER -->
     <div class="tab-pane" id="tab-controls">
       <div class="splash-keys-grid">
+        <div class="splash-key-item"><span class="k-badge">🖱️ SOL TIK</span><span>🔥 Alev Püskürt (Dracarys)</span></div>
         <div class="splash-key-item"><span class="k-badge">🖱️ FARE</span><span>Yönlendir / Bakış Açısı</span></div>
-        <div class="splash-key-item"><span class="k-badge">W / S</span><span>Hızlan / Fren Yap</span></div>
-        <div class="splash-key-item"><span class="k-badge">A / D</span><span>Yatış & Keskin Dönüş</span></div>
-        <div class="splash-key-item"><span class="k-badge">SPACE</span><span>⬆️ Yüksel & Göğe Tırman</span></div>
+        <div class="splash-key-item"><span class="k-badge">W / S</span><span>Havada: Hızlan/Fren | Yerde: Yürü</span></div>
+        <div class="splash-key-item"><span class="k-badge">A / D</span><span>Yatış / Yerde Dönüş</span></div>
+        <div class="splash-key-item"><span class="k-badge">SPACE</span><span>⬆️ Göğe Tırman / Yerden Havalan</span></div>
         <div class="splash-key-item"><span class="k-badge">CTRL / Q</span><span>⬇️ Alçal & Süzülerek Dal</span></div>
-        <div class="splash-key-item"><span class="k-badge">E</span><span>🦅 Yere Kon / Havalan</span></div>
+        <div class="splash-key-item"><span class="k-badge">E</span><span>🦅 Yere Kon / Dinlen Modu</span></div>
         <div class="splash-key-item"><span class="k-badge">SHIFT</span><span>⚡ Turbo Kükreme Hızlanması</span></div>
+        <div class="splash-key-item"><span class="k-badge">M</span><span>🗺️ Uçuş Radarı / Harita (Aç/Kapa)</span></div>
+        <div class="splash-key-item"><span class="k-badge">L</span><span>📜 Şarkı Listesi Menüsü</span></div>
         <div class="splash-key-item"><span class="k-badge">F</span><span>🤝 Formasyon / Takip Uçuşu</span></div>
         <div class="splash-key-item"><span class="k-badge">R</span><span>🎨 Gökyüzü Çizimi (Aç/Kapa)</span></div>
         <div class="splash-key-item"><span class="k-badge">Y</span><span>🌈 Çizim Rengi Değiştir</span></div>
@@ -953,7 +956,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
         <div class="splash-key-item"><span class="k-badge">T</span><span>🌌 Gündüz / Günbatımı / Aurora</span></div>
         <div class="splash-key-item"><span class="k-badge">G</span><span>⚡ Fırtına & Şimşek Efekti</span></div>
         <div class="splash-key-item"><span class="k-badge">N / P</span><span>🎶 Sonraki / Önceki Şarkı</span></div>
-        <div class="splash-key-item"><span class="k-badge">M</span><span>📜 Şarkı Listesi Menüsü</span></div>
       </div>
     </div>
 
@@ -968,6 +970,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <div id="canvas-container"></div>
 <div id="vignette"></div>
 <div id="wind-blur"></div>
+<canvas id="speed-lines" style="position:fixed;inset:0;pointer-events:none;z-index:39;opacity:0;transition:opacity .15s ease;"></canvas>
 <div id="turbo-fx"></div>
 <div id="fire-fx" style="display:none;"></div>
 <div id="cam-mode-indicator">🎥 1. ŞAHIS KOKPİT (Sırt Üstü Bakış)</div>
@@ -1059,14 +1062,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <span class="help-close" onclick="toggleHelpPanel(false)">✖</span>
     </div>
     <div class="help-grid">
+      <div class="help-item"><span class="help-k">🔥 SOL TIK</span><span class="help-desc">Alev Püskürt (Dracarys)</span></div>
       <div class="help-item"><span class="help-k">🖱️ FARE</span><span class="help-desc">Yönlendir / Bakış</span></div>
-      <div class="help-item"><span class="help-k">W / S</span><span class="help-desc">Hızlan / Fren Yap</span></div>
-      <div class="help-item"><span class="help-k">A / D</span><span class="help-desc">Yatış & Keskin Dönüş</span></div>
-      <div class="help-item"><span class="help-k">SPACE</span><span class="help-desc">⬆️ Yüksel & Göğe Tırman</span></div>
+      <div class="help-item"><span class="help-k">W / S</span><span class="help-desc">Havada: Hızlan/Fren | Yerde: Yürü</span></div>
+      <div class="help-item"><span class="help-k">A / D</span><span class="help-desc">Yatış / Yerde Dönüş</span></div>
+      <div class="help-item"><span class="help-k">SPACE</span><span class="help-desc">⬆️ Göğe Tırman / Yerden Havalan</span></div>
       <div class="help-item"><span class="help-k">CTRL / Q</span><span class="help-desc">⬇️ Alçal & Süzülerek Dal</span></div>
-      <div class="help-item"><span class="help-k">E</span><span class="help-desc">🦅 Yere Kon / Havalan</span></div>
+      <div class="help-item"><span class="help-k">E</span><span class="help-desc">🦅 Yere Kon / Dinlen Modu</span></div>
       <div class="help-item"><span class="help-k">SHIFT</span><span class="help-desc">⚡ Turbo Kükreme</span></div>
-      <div class="help-item"><span class="help-k">M</span><span class="help-desc">🗺️ Haritayı Aç / Kapat</span></div>
+      <div class="help-item"><span class="help-k">M</span><span class="help-desc">🗺️ Uçuş Radarı (Aç/Kapat)</span></div>
+      <div class="help-item"><span class="help-k">L</span><span class="help-desc">📜 Şarkı Listesi Menüsü</span></div>
       <div class="help-item"><span class="help-k">F</span><span class="help-desc">🤝 Formasyon Uçuşu</span></div>
       <div class="help-item"><span class="help-k">R</span><span class="help-desc">🎨 Çizim Aç / Kapat</span></div>
       <div class="help-item"><span class="help-k">Y</span><span class="help-desc">🌈 Çizim Rengi Değiştir</span></div>
@@ -1077,7 +1082,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <div class="help-item"><span class="help-k">T</span><span class="help-desc">🌌 Gündüz / Günbatımı / Aurora</span></div>
       <div class="help-item"><span class="help-k">G</span><span class="help-desc">⚡ Fırtına Efekti</span></div>
       <div class="help-item"><span class="help-k">N / P</span><span class="help-desc">🎵 Şarkı İleri / Geri</span></div>
-      <div class="help-item"><span class="help-k">L</span><span class="help-desc">📜 Şarkı Menüsü</span></div>
       <div class="help-item"><span class="help-k">H</span><span class="help-desc">⌨️ Kılavuzu Kapat</span></div>
     </div>
   </div>
@@ -1597,6 +1601,96 @@ function playDragonRoarSound(){
   }catch(e){}
 }
 
+function playSonicBoomSound(isMagma = false){
+  if(!audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    // 1. Derin Sub-Bass Patlaması (Sonic Boom Thud)
+    const subOsc = audioCtx.createOscillator();
+    const subGain = audioCtx.createGain();
+    subOsc.type = isMagma ? 'sawtooth' : 'sine';
+    subOsc.frequency.setValueAtTime(isMagma ? 140 : 110, now);
+    subOsc.frequency.exponentialRampToValueAtTime(26, now + 0.50);
+    subGain.gain.setValueAtTime(0.44 * currentVolume, now);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.58);
+    subOsc.connect(subGain);
+    subGain.connect(audioCtx.destination);
+    subOsc.start(now);
+    subOsc.stop(now + 0.58);
+
+    // 2. Yüksek Hızlı Hava Yarıcı Rüzgar Islığı (Air Pressure Whoosh)
+    const bLen = Math.floor(audioCtx.sampleRate * 0.45);
+    const nBuf = audioCtx.createBuffer(1, bLen, audioCtx.sampleRate);
+    const nData = nBuf.getChannelData(0);
+    for(let i = 0; i < bLen; i++) nData[i] = Math.random() * 2 - 1;
+    const nSrc = audioCtx.createBufferSource();
+    nSrc.buffer = nBuf;
+
+    const bFilter = audioCtx.createBiquadFilter();
+    bFilter.type = 'bandpass';
+    bFilter.frequency.setValueAtTime(420, now);
+    bFilter.frequency.linearRampToValueAtTime(1350, now + 0.16);
+    bFilter.frequency.linearRampToValueAtTime(280, now + 0.45);
+    bFilter.Q.value = 2.8;
+
+    const nGain = audioCtx.createGain();
+    nGain.gain.setValueAtTime(0.30 * currentVolume, now);
+    nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+
+    nSrc.connect(bFilter);
+    bFilter.connect(nGain);
+    nGain.connect(audioCtx.destination);
+    nSrc.start(now);
+    nSrc.stop(now + 0.45);
+  } catch(e){}
+}
+
+let fireStreamAudioNodes = null;
+
+function playFireStreamSound(){
+  if(!audioCtx || fireStreamAudioNodes) return;
+  try {
+    const now = audioCtx.currentTime;
+    const bLen = Math.floor(audioCtx.sampleRate * 1.5);
+    const buf = audioCtx.createBuffer(1, bLen, audioCtx.sampleRate);
+    const dat = buf.getChannelData(0);
+    for(let i = 0; i < bLen; i++) dat[i] = (Math.random() * 2 - 1) * 0.75;
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buf;
+    noise.loop = true;
+
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(420, now);
+
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.001, now);
+    gain.gain.linearRampToValueAtTime(0.32 * currentVolume, now + 0.10);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    noise.start(now);
+    fireStreamAudioNodes = { noise, gain, filter };
+  } catch(e){}
+}
+
+function stopFireStreamSound(){
+  if(!fireStreamAudioNodes || !audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    fireStreamAudioNodes.gain.gain.linearRampToValueAtTime(0.0001, now + 0.14);
+    setTimeout(() => {
+      if(fireStreamAudioNodes){
+        try { fireStreamAudioNodes.noise.stop(); } catch(e){}
+        fireStreamAudioNodes = null;
+      }
+    }, 160);
+  } catch(e){
+    fireStreamAudioNodes = null;
+  }
+}
+
 function triggerTurboRoar(){
   if(!gameActive || turboRoarCooldown > 0) return;
   turboRoarCooldown = 4.5;
@@ -1604,6 +1698,8 @@ function triggerTurboRoar(){
 
   flightSpeed = Math.min(flightSpeed + 42, 130);
   playDragonRoarSound();
+  playSonicBoomSound(true);
+  if(typeof triggerSpeedWarp === 'function') triggerSpeedWarp(0xff9900);
 
   const turboEl = document.getElementById('turbo-fx');
   if(turboEl){
@@ -3902,8 +3998,14 @@ function checkRingCollision(pos){
       const maxSpd = r.type ? r.type.maxSpeed : 85.0;
       flightSpeed = Math.min(flightSpeed + boostVal, maxSpd);
 
-      // Ses efekti (türe göre dinamik frekans)
-      if(r.type && r.type.id === 'crimson'){
+      // Ses efekti (türe göre dinamik frekans) & Sonik Patlama Bas Vuruşu
+      const isCrimson = (r.type && r.type.id === 'crimson');
+      playSonicBoomSound(isCrimson);
+      if(typeof triggerSpeedWarp === 'function'){
+        triggerSpeedWarp(r.type ? r.type.hex : 0xffffff);
+      }
+
+      if(isCrimson){
         playRingChime(ringCombo + 4);
         if(typeof playTurboRoarSound === 'function') playTurboRoarSound();
       } else if(r.type && r.type.id === 'sapphire'){
@@ -4802,6 +4904,8 @@ function applyModelSpecificSettings(key, gltf){
     gltf.scene.position.set(0, -3.40, 0.20);
     gltf.scene.scale.set(8.2, 8.2, 8.2);
     gltf.flyClip = THREE.AnimationClip.findByName(gltf.animations, 'flying') || gltf.animations[0];
+    gltf.idleClip = THREE.AnimationClip.findByName(gltf.animations, 'idle');
+    gltf.runClip = THREE.AnimationClip.findByName(gltf.animations, 'running');
 
     // 🐉 BAŞ VE BOYUN SALLANMASINI DÜZELT & STABİLİZE ET (Head Thrashing Dampener)
     if(gltf.flyClip && !gltf.flyClip._headStabilized){
@@ -4963,15 +5067,26 @@ function activateDragonModel(key){
 
   if(modelData.flyClip){
     mixer = new THREE.AnimationMixer(realDragonScene);
-    const action = mixer.clipAction(modelData.flyClip);
+    modelData.flyAction = mixer.clipAction(modelData.flyClip);
     if(key === 'wyvern'){
-      action.timeScale = 0.35; // Uyumlu ve asil kanat çırpışı (hızlı çırpma engellendi)
+      modelData.flyAction.timeScale = 0.35; // Uyumlu ve asil kanat çırpışı (hızlı çırpma engellendi)
     } else if(key === 'demon'){
-      action.timeScale = 0.55; // Heybetli, güçlü kanat ritmi
+      modelData.flyAction.timeScale = 0.55; // Heybetli, güçlü kanat ritmi
     } else {
-      action.timeScale = 0.85;
+      modelData.flyAction.timeScale = 0.85;
     }
-    action.play();
+    modelData.flyAction.play();
+
+    if(key === 'demon'){
+      if(modelData.idleClip){
+        modelData.idleAction = mixer.clipAction(modelData.idleClip);
+        modelData.idleAction.timeScale = 0.85;
+      }
+      if(modelData.runClip){
+        modelData.runAction = mixer.clipAction(modelData.runClip);
+        modelData.runAction.timeScale = 1.15;
+      }
+    }
   }
 
   applyDragonCustomization();
@@ -5190,9 +5305,6 @@ window.addEventListener('keydown', e => {
       takeoffLanding();
     }
   }
-  if(e.code === 'KeyW' && isLanded){
-    takeoffLanding();
-  }
   if(e.code === 'Escape'){
     closePolaroidModal();
     toggleHelpPanel(false);
@@ -5226,6 +5338,25 @@ window.addEventListener('keydown', e => {
 });
 window.addEventListener('keyup', e => {
   keys[e.code] = false;
+});
+
+// 🔥 DRACARYS ALEV NEFESİ KONTROLÜ (Sol Tık ile Alev Püskürtme)
+window.addEventListener('mousedown', e => {
+  if(e.button === 0 && gameActive && !isPhotoMode){
+    const target = e.target;
+    if(target && (target.closest('#playlist-menu') || target.closest('#help-panel') || target.closest('#lobby-box') || target.closest('#polaroid-modal') || target.closest('#hud-music'))){
+      return;
+    }
+    isFiring = true;
+    playFireStreamSound();
+  }
+});
+
+window.addEventListener('mouseup', e => {
+  if(e.button === 0){
+    isFiring = false;
+    stopFireStreamSound();
+  }
 });
 
 container.addEventListener('click', () => {
@@ -5283,6 +5414,7 @@ let remoteFireVel = [];
 
 let remoteTargetPos = new THREE.Vector3(0, 95, 0);
 let remoteTargetQuat = new THREE.Quaternion();
+let remoteTargetVel = new THREE.Vector3(0, 0, 0);
 let remoteTargetPitch = 0;
 let remoteTargetYaw = 0;
 let remoteTargetRoll = 0;
@@ -5291,6 +5423,234 @@ let remoteTargetFwd = new THREE.Vector3(0, 0, -1);
 let remoteIsFirstPacket = true;
 let isSpawningRemote = false;
 let remoteIsLanded = false;
+let remoteIsWalking = false;
+
+// ═══════════════════════════════════════════════════
+//  ZEMİN OFSETLERİ, YERDE YÜRÜME & EĞİM HİZALAMASI
+// ═══════════════════════════════════════════════════
+const DRAGON_GROUND_OFFSETS = {
+  meleys: 3.55,
+  demon: 4.85,
+  wyvern: 2.25
+};
+
+function getDragonFeetOffset(species){
+  return DRAGON_GROUND_OFFSETS[species || currentSpecies] || 3.55;
+}
+
+let walkStepTimer = 0;
+
+function getSurfaceSlope(x, z, headingYaw){
+  const fwdDist = 3.6;
+  const sideDist = 2.4;
+  const fX = x - Math.sin(headingYaw) * fwdDist;
+  const fZ = z - Math.cos(headingYaw) * fwdDist;
+  const bX = x + Math.sin(headingYaw) * fwdDist;
+  const bZ = z + Math.cos(headingYaw) * fwdDist;
+  const fY = getSurfaceHeightAt(fX, fZ, dragonPos.y);
+  const bY = getSurfaceHeightAt(bX, bZ, dragonPos.y);
+  const pitchSlope = Math.atan2(fY - bY, fwdDist * 2.0);
+
+  const rX = x + Math.cos(headingYaw) * sideDist;
+  const rZ = z - Math.sin(headingYaw) * sideDist;
+  const lX = x - Math.cos(headingYaw) * sideDist;
+  const lZ = z + Math.sin(headingYaw) * sideDist;
+  const rY = getSurfaceHeightAt(rX, rZ, dragonPos.y);
+  const lY = getSurfaceHeightAt(lX, lZ, dragonPos.y);
+  const rollSlope = Math.atan2(rY - lY, sideDist * 2.0);
+
+  return { pitch: pitchSlope, roll: rollSlope };
+}
+
+function updateDemonGroundAnimation(isWalking){
+  const demonData = loadedDragonModels['demon'];
+  if(currentSpecies !== 'demon' || !demonData || !demonData.runAction) return;
+
+  if(isWalking){
+    if(demonData.runAction && !demonData.runAction.isRunning()){
+      demonData.runAction.reset().fadeIn(0.2).play();
+      if(demonData.idleAction) demonData.idleAction.fadeOut(0.2);
+      if(demonData.flyAction) demonData.flyAction.fadeOut(0.2);
+    }
+  } else {
+    if(demonData.idleAction && !demonData.idleAction.isRunning()){
+      demonData.idleAction.reset().fadeIn(0.25).play();
+      if(demonData.runAction) demonData.runAction.fadeOut(0.25);
+      if(demonData.flyAction) demonData.flyAction.fadeOut(0.25);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  RADYAL HIZ ÇİZGİLERİ SİSTEMİ (Radial Speed Warp Lines)
+// ═══════════════════════════════════════════════════
+const speedLinesCanvas = document.getElementById('speed-lines');
+let speedLinesCtx = null;
+const SPEED_LINE_COUNT = 75;
+const speedLines = [];
+let activeWarpHex = 0xffffff;
+let warpAuraTimer = 0;
+
+function initSpeedLines(){
+  if(!speedLinesCanvas) return;
+  speedLinesCtx = speedLinesCanvas.getContext('2d');
+  function resizeSpeedCanvas(){
+    speedLinesCanvas.width = window.innerWidth;
+    speedLinesCanvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeSpeedCanvas);
+  resizeSpeedCanvas();
+
+  for(let i = 0; i < SPEED_LINE_COUNT; i++){
+    speedLines.push({
+      angle: Math.random() * Math.PI * 2,
+      dist: Math.random(),
+      speed: 0.9 + Math.random() * 1.7,
+      len: 0.08 + Math.random() * 0.18,
+      width: 1.2 + Math.random() * 2.2,
+      alpha: 0.35 + Math.random() * 0.65
+    });
+  }
+}
+
+function triggerSpeedWarp(hex = 0xffffff){
+  activeWarpHex = hex;
+  warpAuraTimer = 1.35;
+}
+
+function updateSpeedLines(dt, speed){
+  if(!speedLinesCanvas || !speedLinesCtx) return;
+  const isHighSpeed = (speed > 48.0) || (warpAuraTimer > 0);
+  if(!isHighSpeed){
+    if(speedLinesCanvas.style.opacity !== '0'){
+      speedLinesCanvas.style.opacity = '0';
+      speedLinesCtx.clearRect(0, 0, speedLinesCanvas.width, speedLinesCanvas.height);
+    }
+    return;
+  }
+
+  if(warpAuraTimer > 0) warpAuraTimer -= dt;
+
+  const spdFactor = Math.min(1.0, Math.max(0.0, (speed - 48.0) / 55.0));
+  const targetOpacity = Math.min(1.0, spdFactor * 0.92 + (warpAuraTimer > 0 ? 0.38 : 0.0));
+  speedLinesCanvas.style.opacity = targetOpacity.toFixed(2);
+
+  const w = speedLinesCanvas.width;
+  const h = speedLinesCanvas.height;
+  const cx = w * 0.5;
+  const cy = h * 0.5;
+  const maxR = Math.hypot(cx, cy);
+
+  speedLinesCtx.clearRect(0, 0, w, h);
+
+  let colR = 255, colG = 255, colB = 255;
+  if(warpAuraTimer > 0){
+    colR = (activeWarpHex >> 16) & 255;
+    colG = (activeWarpHex >> 8) & 255;
+    colB = activeWarpHex & 255;
+  } else if(speed > 90){
+    colR = 255; colG = 200; colB = 120;
+  } else if(speed > 68){
+    colR = 140; colG = 230; colB = 255;
+  }
+
+  for(let i = 0; i < SPEED_LINE_COUNT; i++){
+    const line = speedLines[i];
+    line.dist += dt * line.speed * (1.2 + spdFactor * 2.5);
+    if(line.dist > 1.0){
+      line.dist = 0.05 + Math.random() * 0.15;
+      line.angle = Math.random() * Math.PI * 2;
+    }
+
+    const rStart = line.dist * maxR;
+    const rEnd = Math.min(maxR, rStart + line.len * maxR * (1.0 + spdFactor * 1.5));
+    if(rStart < maxR * 0.22) continue;
+
+    const cosA = Math.cos(line.angle);
+    const sinA = Math.sin(line.angle);
+    const x1 = cx + cosA * rStart;
+    const y1 = cy + sinA * rStart;
+    const x2 = cx + cosA * rEnd;
+    const y2 = cy + sinA * rEnd;
+
+    const a = line.alpha * targetOpacity * Math.min(1.0, (rStart - maxR * 0.2) / (maxR * 0.25));
+    speedLinesCtx.strokeStyle = `rgba(${colR},${colG},${colB},${a.toFixed(2)})`;
+    speedLinesCtx.lineWidth = line.width;
+    speedLinesCtx.beginPath();
+    speedLinesCtx.moveTo(x1, y1);
+    speedLinesCtx.lineTo(x2, y2);
+    speedLinesCtx.stroke();
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  AYAK BASMA TOZ PARÇACIKLARI (Ground Footstep Dust)
+// ═══════════════════════════════════════════════════
+const DUST_PARTICLE_COUNT = 30;
+const dustGeo = new THREE.BufferGeometry();
+const dustPos = new Float32Array(DUST_PARTICLE_COUNT * 3);
+const dustVel = [];
+const dustLife = new Float32Array(DUST_PARTICLE_COUNT);
+for(let i = 0; i < DUST_PARTICLE_COUNT; i++){
+  dustPos[i * 3 + 1] = -9999;
+  dustVel.push(new THREE.Vector3());
+  dustLife[i] = 0;
+}
+dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+const dustMat = new THREE.PointsMaterial({
+  color: 0xdfd4bc,
+  size: 2.4,
+  transparent: true,
+  opacity: 0,
+  blending: THREE.NormalBlending,
+  depthWrite: false
+});
+const dustParticles = new THREE.Points(dustGeo, dustMat);
+scene.add(dustParticles);
+
+function spawnFootstepDust(pos, yawAngle){
+  const pArr = dustGeo.attributes.position.array;
+  for(let k = 0; k < 3; k++){
+    for(let j = 0; j < DUST_PARTICLE_COUNT; j++){
+      if(dustLife[j] <= 0){
+        dustLife[j] = 0.75 + Math.random() * 0.35;
+        pArr[j * 3]     = pos.x + (Math.random() - 0.5) * 2.2;
+        pArr[j * 3 + 1] = pos.y - getDragonFeetOffset(currentSpecies) + 0.15;
+        pArr[j * 3 + 2] = pos.z + (Math.random() - 0.5) * 2.2;
+        dustVel[j].set(
+          (Math.random() - 0.5) * 1.5,
+          0.8 + Math.random() * 0.9,
+          (Math.random() - 0.5) * 1.5
+        );
+        break;
+      }
+    }
+  }
+}
+
+function updateFootstepDust(dt){
+  let anyActive = false;
+  const pArr = dustGeo.attributes.position.array;
+  for(let i = 0; i < DUST_PARTICLE_COUNT; i++){
+    if(dustLife[i] > 0){
+      dustLife[i] -= dt;
+      pArr[i * 3]     += dustVel[i].x * dt;
+      pArr[i * 3 + 1] += dustVel[i].y * dt;
+      pArr[i * 3 + 2] += dustVel[i].z * dt;
+      dustVel[i].y -= dt * 0.85;
+      anyActive = true;
+      if(dustLife[i] <= 0){
+        pArr[i * 3 + 1] = -9999;
+      }
+    }
+  }
+  if(anyActive){
+    dustMat.opacity = 0.60;
+    dustGeo.attributes.position.needsUpdate = true;
+  } else {
+    dustMat.opacity = 0;
+  }
+}
 
 // Chill Mod Özellikleri Durum Değişkenleri
 let isLanded = false;
@@ -5501,16 +5861,25 @@ function updateRemotePlayerFlight(dt){
     return;
   }
 
+  // Öngörülü Dead-Reckoning Ekstrapolasyonu:
+  // İnternet paketleri arasında (30-100ms) hedef konumu hız vektörü yönünde süzdürmeye devam et
+  // Böylece arkadaşın ejderhası asla havada aniden takılıp donmaz!
+  if(!remoteIsLanded){
+    remoteTargetPos.addScaledVector(remoteTargetVel, dt);
+  } else if(remoteIsWalking){
+    remoteTargetPos.addScaledVector(remoteTargetVel, dt);
+  }
+
   // Pozisyon yumuşatma (lerp)
-  remoteDragonRig.position.lerp(remoteTargetPos, Math.min(1.0, dt * 14.0));
+  remoteDragonRig.position.lerp(remoteTargetPos, Math.min(1.0, dt * 11.0));
 
   // Kuaterniyon rotasyon yumuşatma (slerp) - Euler taklaları ve gimballock bozulmalarını sıfırlar!
-  remoteDragonRig.quaternion.slerp(remoteTargetQuat, Math.min(1.0, dt * 14.0));
+  remoteDragonRig.quaternion.slerp(remoteTargetQuat, Math.min(1.0, dt * 11.0));
 
   if(remoteMixer){
     let baseRate = (remoteSpecies === 'wyvern' ? 0.35 : (remoteSpecies === 'demon' ? 0.55 : 0.85));
     if(remoteIsLanded){
-      remoteMixer.timeScale = 0.05;
+      remoteMixer.timeScale = remoteIsWalking ? 0.45 : 0.05;
     } else {
       remoteMixer.timeScale = baseRate * (0.8 + (remoteTargetSpeed / 98) * 0.6);
     }
@@ -5609,6 +5978,15 @@ function handleRemotePacket(data){
 
     remoteTargetSpeed = data.s || 45;
     remoteIsLanded = !!data.l;
+    remoteIsWalking = !!data.w;
+    remoteIsFiring = !!data.f;
+
+    if(data.v && data.v.length === 3){
+      remoteTargetVel.set(data.v[0], data.v[1], data.v[2]);
+    } else {
+      _camDirVec.set(0, 0, -1).applyQuaternion(remoteTargetQuat);
+      remoteTargetVel.copy(_camDirVec).multiplyScalar(remoteTargetSpeed);
+    }
 
     if(data.sp && (data.sp !== remoteSpecies || data.c !== remoteColorKey || !remoteDragonScene)){
       spawnRemoteDragon(data.sp, data.c || 'bordo');
@@ -5679,22 +6057,23 @@ function toggleLanding(){
     return;
   }
   const surfaceY = getSurfaceHeightAt(dragonPos.x, dragonPos.z, dragonPos.y);
+  const feetOffset = getDragonFeetOffset(currentSpecies);
   const alt = dragonPos.y - surfaceY;
   if(alt < 55){
     isLanded = true;
-    landHeightTarget = surfaceY + 0.65;
+    landHeightTarget = surfaceY + feetOffset;
     flightSpeed = 0;
     const isSkyIsland = (surfaceY > 200);
     const lobbyStatus = document.getElementById('val-lobby-status');
     if(lobbyStatus){
-      lobbyStatus.textContent = isSkyIsland ? '🏝️ Gök Adasında Dinleniyor (Kalkış: Boşluk/W)' : '🦅 Dinleniyor (Kalkış: Boşluk/W)';
+      lobbyStatus.textContent = isSkyIsland ? '🏝️ Gök Adasında Dinleniyor (Yürüme: W/S, Kalkış: Boşluk)' : '🦅 Dinleniyor (Yürüme: W/S, Kalkış: Boşluk)';
       lobbyStatus.style.color = isSkyIsland ? '#00ffcc' : '#70c050';
     }
     const ind = document.getElementById('cam-mode-indicator');
     if(ind){
-      ind.textContent = isSkyIsland ? '🏝️ GÖK ADASINA İNİŞ YAPILDI! (Kalkış: Boşluk / W)' : '🌿 YERE İNİŞ YAPILDI (Kalkış: Boşluk / W)';
+      ind.textContent = isSkyIsland ? '🏝️ GÖK ADASINA İNİŞ YAPILDI! (Yürüme: W/S/A/D, Kalkış: Boşluk)' : '🌿 YERE İNİŞ YAPILDI (Yürüme: W/S/A/D, Kalkış: Boşluk)';
       ind.style.opacity = '1';
-      setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2400);
+      setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2600);
     }
   } else {
     const ind = document.getElementById('cam-mode-indicator');
@@ -5709,8 +6088,18 @@ function toggleLanding(){
 function takeoffLanding(){
   if(!isLanded) return;
   isLanded = false;
-  flightSpeed = 28;
-  dragonPos.y += 4.5;
+  flightSpeed = 26;
+  pitch = 0.22;
+  dragonPos.y += 4.2;
+  playWhooshSound();
+
+  if(currentSpecies === 'demon' && loadedDragonModels['demon']){
+    const d = loadedDragonModels['demon'];
+    if(d.flyAction) d.flyAction.reset().fadeIn(0.3).play();
+    if(d.runAction) d.runAction.fadeOut(0.3);
+    if(d.idleAction) d.idleAction.fadeOut(0.3);
+  }
+
   const lobbyStatus = document.getElementById('val-lobby-status');
   if(lobbyStatus && (!activeConnection || !activeConnection.open)){
     lobbyStatus.textContent = 'Tek Başına Uçuş';
@@ -6142,15 +6531,29 @@ function setupNetworkSendLoop(){
   if(networkSendTimer) clearInterval(networkSendTimer);
   networkSendTimer = setInterval(() => {
     if(activeConnection && activeConnection.open && gameActive){
+      const isWalkingNow = isLanded && (keys['KeyW'] || keys['KeyS'] || keys['ArrowUp'] || keys['ArrowDown']);
+      const curSpd = isLanded ? (isWalkingNow ? 5.8 : 0) : flightSpeed;
+      const vX = _forward.x * curSpd;
+      const vY = isLanded ? 0 : _forward.y * curSpd;
+      const vZ = _forward.z * curSpd;
+
       activeConnection.send({
         t: 's',
-        p: [dragonPos.x, dragonPos.y, dragonPos.z],
-        q: [dragonRig.quaternion.x, dragonRig.quaternion.y, dragonRig.quaternion.z, dragonRig.quaternion.w],
-        r: [pitch, yaw, roll],
-        s: flightSpeed,
+        p: [Math.round(dragonPos.x * 100) / 100, Math.round(dragonPos.y * 100) / 100, Math.round(dragonPos.z * 100) / 100],
+        v: [Math.round(vX * 10) / 10, Math.round(vY * 10) / 10, Math.round(vZ * 10) / 10],
+        q: [
+          Math.round(dragonRig.quaternion.x * 1000) / 1000,
+          Math.round(dragonRig.quaternion.y * 1000) / 1000,
+          Math.round(dragonRig.quaternion.z * 1000) / 1000,
+          Math.round(dragonRig.quaternion.w * 1000) / 1000
+        ],
+        r: [Math.round(pitch * 1000) / 1000, Math.round(yaw * 1000) / 1000, Math.round(roll * 1000) / 1000],
+        s: Math.round(curSpd),
         sp: currentSpecies,
         c: currentColorKey,
         l: isLanded ? 1 : 0,
+        w: isWalkingNow ? 1 : 0,
+        f: (isFiring && fireStrength > 0.05) ? 1 : 0,
         m: [currentTrackIdx, Math.round(bgm.currentTime || 0), bgm.paused ? 1 : 0],
         rg: ringsCollected
       });
@@ -6466,7 +6869,12 @@ function animate(){
 
   if(mixer){
     if(isLanded){
-      mixer.timeScale = 0.05; // Dinlenme modunda hafif kanat süzülmesi
+      const isWalkingNow = (keys['KeyW'] || keys['KeyS'] || keys['ArrowUp'] || keys['ArrowDown']);
+      if(currentSpecies === 'demon' && loadedDragonModels['demon'] && loadedDragonModels['demon'].runAction){
+        mixer.timeScale = 1.0;
+      } else {
+        mixer.timeScale = isWalkingNow ? 0.35 : 0.05; // Dinlenme modunda hafif kanat süzülmesi
+      }
     } else {
       mixer.timeScale = 1.0 + (flightSpeed / 98) * 0.75;
     }
@@ -6521,10 +6929,47 @@ function animate(){
   if(gameActive){
     if(isLanded){
       flightSpeed = 0;
-      pitch *= 0.90;
-      roll *= 0.85;
-      dragonPos.y += (landHeightTarget - dragonPos.y) * Math.min(1.0, dt * 5.0);
+
+      // 🐾 Yerde Yürüme Kontrolleri (W: İleri, S: Geri, A/D: Dönüş)
+      const walkIntent = (keys['KeyW'] || keys['ArrowUp']) ? 1 : (keys['KeyS'] || keys['ArrowDown']) ? -0.55 : 0;
+      const isWalking = (walkIntent !== 0);
+
+      if(keys['KeyA'] || keys['ArrowLeft'])  yaw += 1.8 * dt;
+      if(keys['KeyD'] || keys['ArrowRight']) yaw -= 1.8 * dt;
+      yaw -= mouseDX * 0.0022;
       mouseDX = 0; mouseDY = 0;
+
+      // Model Taban Ayak Seviyesi (Yerin dibine batmayı %100 önler)
+      const curSurfaceY = getSurfaceHeightAt(dragonPos.x, dragonPos.z, dragonPos.y);
+      const feetOffset = getDragonFeetOffset(currentSpecies);
+      landHeightTarget = curSurfaceY + feetOffset;
+      dragonPos.y += (landHeightTarget - dragonPos.y) * Math.min(1.0, dt * 9.0);
+
+      // Eğim Hizalaması (Dağ yamaçlarına ve adaya asil oturuş)
+      const slope = getSurfaceSlope(dragonPos.x, dragonPos.z, yaw);
+      const walkBob = isWalking ? Math.sin(walkStepTimer * 2) * 0.03 : 0;
+      const walkRoll = isWalking ? Math.sin(walkStepTimer) * 0.04 : 0;
+
+      pitch += (slope.pitch + walkBob - pitch) * Math.min(1.0, dt * 7.0);
+      roll  += (slope.roll + walkRoll - roll)   * Math.min(1.0, dt * 7.0);
+
+      // İleri yönü güncelle (Kamera ve hareket için her zaman hizalı)
+      const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+      const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+      _forward.set(-sinY * cosP, sinP, -cosY * cosP);
+
+      if(isWalking){
+        const walkSpeed = (walkIntent > 0) ? 5.8 : 3.4;
+        dragonPos.x += _forward.x * walkSpeed * walkIntent * dt;
+        dragonPos.z += _forward.z * walkSpeed * walkIntent * dt;
+        walkStepTimer += dt * (walkIntent > 0 ? 6.2 : 4.0);
+        if(walkStepTimer > Math.PI * 2){
+          walkStepTimer -= Math.PI * 2;
+          spawnFootstepDust(dragonPos, yaw);
+        }
+      }
+
+      updateDemonGroundAnimation(isWalking);
     } else if(isFormationFlight && remotePlayer && remotePlayer.active && remoteDragonRig){
       const fQuat = remoteDragonRig.quaternion;
       _tempVec1.set(14.0, 0.8, -4.0).applyQuaternion(fQuat).add(remoteDragonRig.position);
@@ -6722,24 +7167,55 @@ function animate(){
     updateSkyRays(dt);
     updateWindChimes(dt);
     if(typeof updateFireflies === 'function') updateFireflies(dt);
+    updateFootstepDust(dt);
+    updateSpeedLines(dt, flightSpeed);
 
-    // 4. Alev Parçacıkları (Vektör Havuzu)
+    // Dinamik FOV Genişlemesi (Speed Sensation)
+    let targetFov = 60.0;
+    if(isPhotoMode){
+      targetFov = 50.0;
+    } else if(isLanded){
+      targetFov = 58.0;
+    } else {
+      if(flightSpeed > 85.0){
+        targetFov = 82.0 + Math.min(7.0, (flightSpeed - 85.0) * 0.22); // Magma Turbo: 82°-89°
+      } else if(flightSpeed > 55.0){
+        targetFov = 68.0 + (flightSpeed - 55.0) / 30.0 * 14.0; // Sprint: 68°-82°
+      } else {
+        targetFov = 60.0 + (flightSpeed / 55.0) * 8.0; // Cruise: 60°-68°
+      }
+    }
+    if(Math.abs(camera.fov - targetFov) > 0.05){
+      camera.fov += (targetFov - camera.fov) * Math.min(1.0, dt * 5.5);
+      camera.updateProjectionMatrix();
+    }
+
+    // 4. Alev Parçacıkları (Vektör Havuzu & Canlı Dracarys Sol Tık)
+    if(isFiring && gameActive && !isPhotoMode){
+      fireStrength = Math.min(1.0, fireStrength + dt * 4.5);
+    } else {
+      fireStrength = Math.max(0.0, fireStrength - dt * 3.5);
+    }
+
     const positions = fireParticles.geometry.attributes.position.array;
     if(fireStrength > 0.05){
-      fireMat.opacity = fireStrength * 0.9;
+      fireMat.opacity = fireStrength * 0.92;
+      fireLight.intensity = fireStrength * (4.0 + Math.random() * 2.0);
+      fireLight.distance = 35.0 + fireStrength * 30.0;
+
       _mouthOffset.set(0, 0.18, -1.85).applyQuaternion(dragonRig.quaternion);
       _mouthPos.copy(dragonPos).add(_mouthOffset);
 
       for(let i=0; i<FIRE_PARTICLES; i++){
         const idx = i*3;
-        if(positions[idx+2] === 0 || Math.random() < 0.18){
+        if(positions[idx+2] === 0 || Math.random() < 0.22){
           positions[idx]   = _mouthPos.x + (Math.random()-0.5)*0.35;
           positions[idx+1] = _mouthPos.y + (Math.random()-0.5)*0.35;
           positions[idx+2] = _mouthPos.z + (Math.random()-0.5)*0.35;
-          fireVel[i].copy(_forward).multiplyScalar(flightSpeed * 1.9 + Math.random()*22);
-          fireVel[i].x += (Math.random()-0.5)*5;
-          fireVel[i].y += (Math.random()-0.5)*5;
-          fireVel[i].z += (Math.random()-0.5)*5;
+          fireVel[i].copy(_forward).multiplyScalar(flightSpeed * 1.6 + 44.0 + Math.random()*26);
+          fireVel[i].x += (Math.random()-0.5)*7.0;
+          fireVel[i].y += (Math.random()-0.5)*7.0;
+          fireVel[i].z += (Math.random()-0.5)*7.0;
         } else {
           positions[idx]   += fireVel[i].x * dt;
           positions[idx+1] += fireVel[i].y * dt;
@@ -6749,6 +7225,43 @@ function animate(){
       fireParticles.geometry.attributes.position.needsUpdate = true;
     } else {
       fireMat.opacity = 0;
+      fireLight.intensity = 0;
+    }
+
+    // Uzak Oyuncu Ateş Nefesi (Multiplayer Dracarys Sync)
+    if(remotePlayer && remotePlayer.active && remoteFireParticles && remoteDragonRig){
+      if(remoteIsFiring){
+        remoteFireStrength = Math.min(1.0, remoteFireStrength + dt * 4.5);
+      } else {
+        remoteFireStrength = Math.max(0.0, remoteFireStrength - dt * 3.5);
+      }
+
+      if(remoteFireStrength > 0.05){
+        remoteFireMat.opacity = remoteFireStrength * 0.92;
+        _tempVec1.set(0, 0.18, -1.85).applyQuaternion(remoteDragonRig.quaternion).add(remoteDragonRig.position);
+        _camDirVec.set(0, 0, -1).applyQuaternion(remoteDragonRig.quaternion);
+
+        const rPositions = remoteFireParticles.geometry.attributes.position.array;
+        for(let i = 0; i < 40; i++){
+          const idx = i * 3;
+          if(rPositions[idx + 1] === -9999 || Math.random() < 0.25){
+            rPositions[idx]     = _tempVec1.x + (Math.random() - 0.5) * 0.4;
+            rPositions[idx + 1] = _tempVec1.y + (Math.random() - 0.5) * 0.4;
+            rPositions[idx + 2] = _tempVec1.z + (Math.random() - 0.5) * 0.4;
+            remoteFireVel[i].copy(_camDirVec).multiplyScalar(remoteTargetSpeed * 1.6 + 44.0 + Math.random() * 26);
+            remoteFireVel[i].x += (Math.random() - 0.5) * 7.0;
+            remoteFireVel[i].y += (Math.random() - 0.5) * 7.0;
+            remoteFireVel[i].z += (Math.random() - 0.5) * 7.0;
+          } else {
+            rPositions[idx]     += remoteFireVel[i].x * dt;
+            rPositions[idx + 1] += remoteFireVel[i].y * dt;
+            rPositions[idx + 2] += remoteFireVel[i].z * dt;
+          }
+        }
+        remoteFireParticles.geometry.attributes.position.needsUpdate = true;
+      } else {
+        remoteFireMat.opacity = 0;
+      }
     }
 
     // 5. KAMERA POZİSYONLANDIRMASI (Havuzlanmış Vektörler)
@@ -6779,9 +7292,18 @@ function animate(){
         } else {
           _camOffset.set(0, 3.5, 8.8);
         }
+        // Yüksek hızda geriye esneme (Thrust distance lag)
+        _camOffset.z += Math.min(5.2, (flightSpeed / 125.0) * 5.2);
       }
       _camOffset.applyQuaternion(dragonRig.quaternion);
       camera.position.copy(dragonPos).add(_camOffset);
+
+      // Yüksek hızda aerodinamik rüzgar titreşimi (buffeting micro-shake)
+      if(flightSpeed > 55.0 && !isPhotoMode){
+        const buffeting = Math.min(0.16, (flightSpeed - 55.0) / 70.0 * 0.16);
+        camera.position.x += (Math.random() - 0.5) * buffeting;
+        camera.position.y += (Math.random() - 0.5) * buffeting;
+      }
       if(!isFirstPerson){
         const camGroundY = Math.max(-8.5, getTerrainHeight(camera.position.x, camera.position.z));
         if(camera.position.y < camGroundY + 3.0){
@@ -6790,8 +7312,8 @@ function animate(){
       }
 
       const lookDist = 40;
-      _lookTarget.copy(dragonPos).add(_camOffset).addScaledVector(_forward, lookDist);
       if(isFirstPerson) {
+        _lookTarget.copy(dragonPos).add(_camOffset).addScaledVector(_forward, lookDist);
         if(currentSpecies === 'meleys'){
           _lookTarget.y -= 0.15;
         } else if(currentSpecies === 'demon'){
@@ -6801,6 +7323,9 @@ function animate(){
         } else {
           _lookTarget.y -= 0.15;
         }
+      } else {
+        _tempVec1.set(0, 1.2, 0).applyQuaternion(dragonRig.quaternion);
+        _lookTarget.copy(dragonPos).add(_tempVec1).addScaledVector(_forward, lookDist);
       }
       camera.lookAt(_lookTarget);
     }
@@ -6847,6 +7372,7 @@ function animate(){
 
 // Başlat ve Çalma Listesini Hazırla
 initPlaylistUI();
+initSpeedLines();
 renderRadarStaticBg();
 animate();
 
