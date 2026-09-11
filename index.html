@@ -558,12 +558,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <span><span class="k-badge">W / S</span> Hız</span>
       <span><span class="k-badge">A / D</span> Yatış / Dönüş</span>
       <span><span class="k-badge">E</span> 🦅 Yere Kon / Kalk</span>
-      <span><span class="k-badge">F</span> 🤝 Formasyon Uçuşu</span>
+      <span><span class="k-badge">F</span> 🤝 Formasyon</span>
+      <span><span class="k-badge">R</span> 🎨 Gökyüzü Çizimi</span>
+      <span><span class="k-badge">Y</span> 🌈 Çizim Rengi</span>
+      <span><span class="k-badge">X</span> 🧹 Çizimi Sil</span>
       <span><span class="k-badge">1 - 4</span> 💬 Emote (❤️🎵👋✨)</span>
       <span><span class="k-badge">C</span> 📸 Fotoğraf Modu</span>
-      <span><span class="k-badge">SHIFT</span> 🚀 Hızlı Süzülüş</span>
+      <span><span class="k-badge">SHIFT</span> 🚀 Süzülüş</span>
       <span><span class="k-badge">V</span> 🎥 Kamera</span>
-      <span><span class="k-badge">T / G</span> 🌅 Gökyüzü & Fırtına</span>
+      <span><span class="k-badge">T / G</span> 🌅 Zaman / Fırtına</span>
       <span><span class="k-badge">N / P</span> 🎶 Şarkı</span>
     </div>
   </div>
@@ -598,6 +601,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
     <div class="pill" id="multiplayer-hud-pill" style="border-color: rgba(0,229,255,0.5); background: rgba(5,20,30,0.85);">🌐 <b>Lobi:</b> <span id="val-lobby-status" style="color:#00e5ff; font-weight:bold;">Tek Kişilik</span></div>
     <div class="pill" id="friend-hud-pill" style="display:none; border-color: #00ffaa; background: rgba(5,30,20,0.85);">📍 <b>Arkadaşın:</b> <span id="val-friend-dist" style="color:#00ffaa; font-weight:bold;">--</span></div>
     <div class="pill" id="music-sync-pill" style="border-color: rgba(244,114,182,0.6); background: rgba(30,10,25,0.85);">📻 <b>Ortak Radyo:</b> <span id="val-sync-status" style="color:#f472b6; font-weight:bold;">Senkronize</span></div>
+    <div class="pill" id="skywrite-hud-pill" style="border-color: rgba(255,215,0,0.6); background: rgba(30,25,5,0.85);"><b>R:</b> 🎨 Çizim: <span id="val-draw-status" style="color:#ffd700; font-weight:bold;">Kapalı</span></div>
+    <div class="pill"><b>Y:</b> 🌈 Renk</div>
+    <div class="pill"><b>X:</b> 🧹 Sil</div>
     <div class="pill">⭐ <b>Halka:</b> <span id="val-rings">0</span></div>
     <div class="pill"><b>E:</b> 🦅 Kon/Kalk</div>
     <div class="pill"><b>F:</b> 🤝 Formasyon</div>
@@ -1368,6 +1374,356 @@ function updateDynamicDayCycle(dt){
   sunLight.position.set(dragonPos.x + Math.cos(sunAngle) * 450, 750 + Math.sin(sunAngle) * 120, dragonPos.z + Math.sin(sunAngle) * 350);
 }
 
+// ═══════════════════════════════════════════════════
+//  CANLI DOĞA: GÖÇMEN KUŞ SÜRÜSÜ (Flock of Birds)
+// ═══════════════════════════════════════════════════
+const BIRD_COUNT = 55;
+const birdGeo = new THREE.BufferGeometry();
+const bVerts = new Float32Array([
+  -1.4, 0.2, 0.4,   0, 0, -0.6,   0, 0, 0.6,
+   1.4, 0.2, 0.4,   0, 0, 0.6,    0, 0, -0.6
+]);
+birdGeo.setAttribute('position', new THREE.BufferAttribute(bVerts, 3));
+birdGeo.computeVertexNormals();
+
+const birdMat = new THREE.MeshStandardMaterial({
+  color: 0xe6f4ff,
+  roughness: 0.5,
+  metalness: 0.1,
+  side: THREE.DoubleSide
+});
+
+const birdInstMesh = new THREE.InstancedMesh(birdGeo, birdMat, BIRD_COUNT);
+birdInstMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+scene.add(birdInstMesh);
+
+const birdData = [];
+const _dummyBird = new THREE.Object3D();
+const _flockCenter = new THREE.Vector3(0, 95, -150);
+
+for(let i = 0; i < BIRD_COUNT; i++){
+  birdData.push({
+    pos: new THREE.Vector3(
+      (Math.random() - 0.5) * 120,
+      85 + Math.random() * 45,
+      (Math.random() - 0.5) * 120
+    ),
+    vel: new THREE.Vector3((Math.random() - 0.5) * 10, 0, (Math.random() - 0.5) * 10).normalize().multiplyScalar(22 + Math.random() * 8),
+    phase: Math.random() * Math.PI * 2,
+    wingSpeed: 9 + Math.random() * 5
+  });
+}
+
+let birdEscortTimer = 0;
+
+function updateBirdFlock(dt){
+  const t = Date.now() * 0.00032;
+  _flockCenter.set(Math.sin(t) * 480, 115 + Math.sin(t * 1.8) * 35, Math.cos(t) * 480);
+
+  const distToDragon = dragonPos.distanceTo(_flockCenter);
+  const isEscortingDragon = (distToDragon < 95);
+
+  if(isEscortingDragon){
+    birdEscortTimer = Math.min(birdEscortTimer + dt * 2.0, 1.0);
+  } else {
+    birdEscortTimer = Math.max(birdEscortTimer - dt * 0.8, 0.0);
+  }
+
+  for(let i = 0; i < BIRD_COUNT; i++){
+    const b = birdData[i];
+    b.phase += dt * b.wingSpeed;
+
+    let targetPos = _flockCenter;
+    if(birdEscortTimer > 0.08){
+      const wingSide = (i % 2 === 0 ? 1 : -1);
+      const wingOffset = wingSide * (12 + (i * 0.55));
+      _tempVec1.set(wingOffset, 2.0 + Math.sin(i) * 2.5, 9 + i * 1.1).applyQuaternion(dragonRig.quaternion).add(dragonPos);
+      targetPos = _tempVec1;
+    }
+
+    _tempVec2.subVectors(targetPos, b.pos).normalize().multiplyScalar(26);
+    b.vel.lerp(_tempVec2, Math.min(1.0, dt * (isEscortingDragon ? 4.5 : 1.8)));
+    b.pos.addScaledVector(b.vel, dt);
+
+    _dummyBird.position.copy(b.pos);
+    _dummyBird.rotation.y = Math.atan2(-b.vel.x, -b.vel.z);
+    _dummyBird.rotation.x = Math.max(-0.6, Math.min(0.6, b.vel.y / 28));
+    _dummyBird.rotation.z = Math.sin(b.phase) * 0.45;
+    _dummyBird.scale.set(1.5, 1.5 + Math.sin(b.phase) * 0.35, 1.5);
+    _dummyBird.updateMatrix();
+
+    birdInstMesh.setMatrixAt(i, _dummyBird.matrix);
+  }
+  birdInstMesh.instanceMatrix.needsUpdate = true;
+}
+
+// ═══════════════════════════════════════════════════
+//  CANLI DOĞA: MİSTİK GÖL CANLISI (Lakeside Creature Breach)
+// ═══════════════════════════════════════════════════
+const whaleGroup = new THREE.Group();
+whaleGroup.position.set(40, -22, 120);
+
+const whaleMat = new THREE.MeshStandardMaterial({
+  color: 0x162c42,
+  roughness: 0.28,
+  metalness: 0.65
+});
+const whaleBellyMat = new THREE.MeshStandardMaterial({
+  color: 0x82bfe5,
+  roughness: 0.4,
+  metalness: 0.2
+});
+const whaleGlowMat = new THREE.MeshStandardMaterial({
+  color: 0x00ffcc,
+  emissive: 0x00a884,
+  emissiveIntensity: 1.1,
+  roughness: 0.2
+});
+
+const whaleGeo = new THREE.CylinderGeometry(4.2, 1.8, 28, 12);
+whaleGeo.rotateX(Math.PI / 2);
+const whaleMesh = new THREE.Mesh(whaleGeo, whaleMat);
+whaleGroup.add(whaleMesh);
+
+const bellyGeo = new THREE.CylinderGeometry(3.6, 1.4, 26, 10);
+bellyGeo.rotateX(Math.PI / 2);
+bellyGeo.translate(0, -1.1, 0);
+const bellyMesh = new THREE.Mesh(bellyGeo, whaleBellyMat);
+whaleGroup.add(bellyMesh);
+
+for(let s = -1; s <= 1; s += 2){
+  const finGeo = new THREE.BoxGeometry(8, 0.6, 3.8);
+  finGeo.translate(s * 4.5, 0, -2);
+  const finMesh = new THREE.Mesh(finGeo, whaleMat);
+  finMesh.rotation.z = s * 0.25;
+  whaleGroup.add(finMesh);
+}
+
+const tailGeo = new THREE.BoxGeometry(11, 0.7, 3.5);
+tailGeo.translate(0, 0, -14);
+const tailMesh = new THREE.Mesh(tailGeo, whaleMat);
+whaleGroup.add(tailMesh);
+
+const ridgeGeo = new THREE.BoxGeometry(0.8, 1.5, 20);
+ridgeGeo.translate(0, 3.8, 0);
+const ridgeMesh = new THREE.Mesh(ridgeGeo, whaleGlowMat);
+whaleGroup.add(ridgeMesh);
+
+scene.add(whaleGroup);
+
+let whaleBreachTimer = 6.0;
+let whaleProgress = -1;
+
+function updateLakeWhale(dt){
+  if(whaleProgress < 0){
+    whaleBreachTimer -= dt;
+    if(whaleBreachTimer <= 0){
+      whaleBreachTimer = 24.0 + Math.random() * 8.0;
+      whaleProgress = 0.0;
+    }
+    whaleGroup.position.y = -22;
+    return;
+  }
+
+  whaleProgress += dt * 0.38;
+  if(whaleProgress >= 1.0){
+    whaleProgress = -1;
+    return;
+  }
+
+  const arcY = Math.sin(whaleProgress * Math.PI) * 26.0 - 6.0;
+  const forwardZ = 120 + whaleProgress * 70;
+  whaleGroup.position.set(40 + Math.sin(whaleProgress * Math.PI) * 15, arcY, forwardZ);
+
+  const pitchAngle = Math.sin((whaleProgress - 0.45) * Math.PI) * 0.95;
+  whaleGroup.rotation.set(-pitchAngle, 0, Math.sin(whaleProgress * Math.PI) * 0.2);
+
+  if(Math.abs(arcY) < 4.0 && typeof sprayGeo !== 'undefined'){
+    const sPos = sprayGeo.attributes.position.array;
+    for(let k = 0; k < 2; k++){
+      const pIdx = (Math.floor(Math.random() * SPRAY_COUNT)) * 3;
+      sPos[pIdx] = whaleGroup.position.x + (Math.random() - 0.5) * 14;
+      sPos[pIdx + 1] = 0.5 + Math.random() * 1.5;
+      sPos[pIdx + 2] = whaleGroup.position.z + (Math.random() - 0.5) * 14;
+      const vIdx = Math.floor(pIdx / 3);
+      sprayVel[vIdx].set((Math.random() - 0.5) * 10, 5.5 + Math.random() * 4.5, (Math.random() - 0.5) * 10);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  GÖKYÜZÜ ÇİZİMİ (SKYWRITING): YAZI, KALP & DESENLER
+// ═══════════════════════════════════════════════════
+let isSkywriting = false;
+let currentDrawColorIdx = 0;
+const DRAW_COLORS = [
+  { name: 'Altın Sarısı 🌟', hex: 0xffd700, str: '#ffd700' },
+  { name: 'Neon Turkuaz 💎', hex: 0x00f3ff, str: '#00f3ff' },
+  { name: 'Gül Pembesi 🌸', hex: 0xff66b2, str: '#ff66b2' },
+  { name: 'Bulut Beyazı ☁️', hex: 0xffffff, str: '#ffffff' }
+];
+
+const MAX_TRAIL_PTS = 1400;
+const drawGeo = new THREE.BufferGeometry();
+const drawPositions = new Float32Array(MAX_TRAIL_PTS * 3);
+const drawColors = new Float32Array(MAX_TRAIL_PTS * 3);
+for(let i = 0; i < MAX_TRAIL_PTS; i++){
+  drawPositions[i * 3] = 0;
+  drawPositions[i * 3 + 1] = -9999;
+  drawPositions[i * 3 + 2] = 0;
+  drawColors[i * 3] = 1;
+  drawColors[i * 3 + 1] = 0.85;
+  drawColors[i * 3 + 2] = 0;
+}
+drawGeo.setAttribute('position', new THREE.BufferAttribute(drawPositions, 3));
+drawGeo.setAttribute('color', new THREE.BufferAttribute(drawColors, 3));
+const drawMat = new THREE.PointsMaterial({
+  vertexColors: true,
+  size: 3.2,
+  transparent: true,
+  opacity: 0.88,
+  blending: THREE.AdditiveBlending
+});
+const skywritePoints = new THREE.Points(drawGeo, drawMat);
+scene.add(skywritePoints);
+
+const remoteDrawGeo = new THREE.BufferGeometry();
+const remoteDrawPositions = new Float32Array(MAX_TRAIL_PTS * 3);
+const remoteDrawColors = new Float32Array(MAX_TRAIL_PTS * 3);
+for(let i = 0; i < MAX_TRAIL_PTS; i++){
+  remoteDrawPositions[i * 3] = 0;
+  remoteDrawPositions[i * 3 + 1] = -9999;
+  remoteDrawPositions[i * 3 + 2] = 0;
+  remoteDrawColors[i * 3] = 0;
+  remoteDrawColors[i * 3 + 1] = 0.95;
+  remoteDrawColors[i * 3 + 2] = 1;
+}
+remoteDrawGeo.setAttribute('position', new THREE.BufferAttribute(remoteDrawPositions, 3));
+remoteDrawGeo.setAttribute('color', new THREE.BufferAttribute(remoteDrawColors, 3));
+const remoteDrawPoints = new THREE.Points(remoteDrawGeo, drawMat);
+scene.add(remoteDrawPoints);
+
+let localTrailHead = 0;
+let remoteTrailHead = 0;
+let lastDrawEmitTime = 0;
+const _lastLocalPt = new THREE.Vector3(0, -9999, 0);
+
+function toggleSkywriting(){
+  if(!gameActive) return;
+  isSkywriting = !isSkywriting;
+  const statusEl = document.getElementById('val-draw-status');
+  if(statusEl){
+    statusEl.textContent = isSkywriting ? 'Açık (' + DRAW_COLORS[currentDrawColorIdx].name + ')' : 'Kapalı';
+    statusEl.style.color = isSkywriting ? DRAW_COLORS[currentDrawColorIdx].str : '#ffd700';
+  }
+  const ind = document.getElementById('cam-mode-indicator');
+  if(ind){
+    ind.textContent = isSkywriting ? '🎨 GÖKYÜZÜ ÇİZİMİ AÇIK [R: Kapat, Y: Renk, X: Temizle]' : '🎨 GÖKYÜZÜ ÇİZİMİ KAPATILDI';
+    ind.style.opacity = '1';
+    setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+  }
+}
+
+function cycleDrawColor(){
+  currentDrawColorIdx = (currentDrawColorIdx + 1) % DRAW_COLORS.length;
+  const cur = DRAW_COLORS[currentDrawColorIdx];
+  const statusEl = document.getElementById('val-draw-status');
+  if(statusEl && isSkywriting){
+    statusEl.textContent = 'Açık (' + cur.name + ')';
+    statusEl.style.color = cur.str;
+  }
+  const ind = document.getElementById('cam-mode-indicator');
+  if(ind){
+    ind.textContent = '🌈 Çizim Rengi: ' + cur.name;
+    ind.style.opacity = '1';
+    setTimeout(()=>{ ind.style.opacity = '0.35'; }, 1800);
+  }
+}
+
+function clearSkywriting(){
+  const pos = drawGeo.attributes.position.array;
+  for(let i = 0; i < MAX_TRAIL_PTS; i++){
+    pos[i * 3 + 1] = -9999;
+  }
+  drawGeo.attributes.position.needsUpdate = true;
+  localTrailHead = 0;
+
+  if(activeConnection && activeConnection.open){
+    activeConnection.send({ t: 'dr_clr' });
+  }
+
+  const ind = document.getElementById('cam-mode-indicator');
+  if(ind){
+    ind.textContent = '🧹 Gökyüzü Çizimlerin Temizlendi';
+    ind.style.opacity = '1';
+    setTimeout(()=>{ ind.style.opacity = '0.35'; }, 1800);
+  }
+}
+
+function clearRemoteSkywriting(){
+  const pos = remoteDrawGeo.attributes.position.array;
+  for(let i = 0; i < MAX_TRAIL_PTS; i++){
+    pos[i * 3 + 1] = -9999;
+  }
+  remoteDrawGeo.attributes.position.needsUpdate = true;
+  remoteTrailHead = 0;
+}
+
+function addRemoteDrawPoint(x, y, z, colorHex){
+  const pos = remoteDrawGeo.attributes.position.array;
+  const col = remoteDrawGeo.attributes.color.array;
+  const idx = remoteTrailHead * 3;
+  pos[idx] = x;
+  pos[idx + 1] = y;
+  pos[idx + 2] = z;
+
+  const cObj = new THREE.Color(colorHex || 0x00f3ff);
+  col[idx] = cObj.r;
+  col[idx + 1] = cObj.g;
+  col[idx + 2] = cObj.b;
+
+  remoteTrailHead = (remoteTrailHead + 1) % MAX_TRAIL_PTS;
+  remoteDrawGeo.attributes.position.needsUpdate = true;
+  remoteDrawGeo.attributes.color.needsUpdate = true;
+}
+
+function updateLocalSkywriting(dt){
+  if(!isSkywriting || !gameActive) return;
+
+  _tempVec1.set(0, 0.4, 2.8).applyQuaternion(dragonRig.quaternion).add(dragonPos);
+  if(_lastLocalPt.distanceTo(_tempVec1) > 2.0){
+    _lastLocalPt.copy(_tempVec1);
+
+    const pos = drawGeo.attributes.position.array;
+    const col = drawGeo.attributes.color.array;
+    const idx = localTrailHead * 3;
+
+    pos[idx] = _tempVec1.x;
+    pos[idx + 1] = _tempVec1.y;
+    pos[idx + 2] = _tempVec1.z;
+
+    const curColor = DRAW_COLORS[currentDrawColorIdx];
+    const cObj = new THREE.Color(curColor.hex);
+    col[idx] = cObj.r;
+    col[idx + 1] = cObj.g;
+    col[idx + 2] = cObj.b;
+
+    localTrailHead = (localTrailHead + 1) % MAX_TRAIL_PTS;
+    drawGeo.attributes.position.needsUpdate = true;
+    drawGeo.attributes.color.needsUpdate = true;
+
+    const now = Date.now();
+    if(now - lastDrawEmitTime > 65 && activeConnection && activeConnection.open){
+      lastDrawEmitTime = now;
+      activeConnection.send({
+        t: 'dr',
+        p: [Math.round(_tempVec1.x * 10) / 10, Math.round(_tempVec1.y * 10) / 10, Math.round(_tempVec1.z * 10) / 10],
+        c: curColor.hex
+      });
+    }
+  }
+}
+
 
 function toggleStormMode(){
   isStormActive = !isStormActive;
@@ -1843,6 +2199,102 @@ const waterfallMesh = new THREE.Mesh(waterfallGeo, waterfallMat);
 waterfallMesh.position.set(-620, 48, 180);
 waterfallMesh.rotation.set(0.3, -Math.PI / 3, 0);
 scene.add(waterfallMesh);
+
+// ═══════════════════════════════════════════════════
+//  YÜZEN GÖKYÜZÜ ADALARI & DOĞAL TAŞ KEMERLER
+// ═══════════════════════════════════════════════════
+const worldFeaturesGroup = new THREE.Group();
+scene.add(worldFeaturesGroup);
+
+const islandStoneMat = new THREE.MeshStandardMaterial({
+  color: 0x48403a,
+  roughness: 0.88,
+  metalness: 0.05,
+  flatShading: true
+});
+const islandGrassMat = new THREE.MeshStandardMaterial({
+  color: 0x2e8b28,
+  roughness: 0.80,
+  metalness: 0.02
+});
+const crystalGlowMat = new THREE.MeshStandardMaterial({
+  color: 0x00f3ff,
+  emissive: 0x0099cc,
+  emissiveIntensity: 1.25,
+  roughness: 0.15,
+  metalness: 0.5
+});
+
+const FLOATING_ISLANDS_DATA = [
+  { x: -380, y: 225, z: -460, r: 48, h: 42, crystalCol: 0x00f3ff },
+  { x: 540,  y: 195, z: 290,  r: 58, h: 46, crystalCol: 0xffd700 },
+  { x: 140,  y: 270, z: -210, r: 40, h: 36, crystalCol: 0xd946ef }
+];
+
+FLOATING_ISLANDS_DATA.forEach(data => {
+  const isGrp = new THREE.Group();
+  isGrp.position.set(data.x, data.y, data.z);
+
+  // Alt kaya gövdesi (Ters koni / piramit şekli)
+  const rockGeo = new THREE.CylinderGeometry(data.r, data.r * 0.18, data.h, 12, 3);
+  rockGeo.translate(0, -data.h * 0.5, 0);
+  const rPos = rockGeo.attributes.position;
+  for(let i = 0; i < rPos.count; i++){
+    if(rPos.getY(i) < 0){
+      rPos.setX(i, rPos.getX(i) + (Math.sin(i * 3.7) * 4.5));
+      rPos.setZ(i, rPos.getZ(i) + (Math.cos(i * 4.2) * 4.5));
+    }
+  }
+  rockGeo.computeVertexNormals();
+  const rockMesh = new THREE.Mesh(rockGeo, islandStoneMat);
+  isGrp.add(rockMesh);
+
+  // Üst yeşil çimenlik plato
+  const topGeo = new THREE.CylinderGeometry(data.r + 1.2, data.r, 4.5, 14);
+  topGeo.translate(0, 1.2, 0);
+  const topMesh = new THREE.Mesh(topGeo, islandGrassMat);
+  isGrp.add(topMesh);
+
+  // Mistik parıldayan kristal kule
+  const cMat = crystalGlowMat.clone();
+  cMat.color.setHex(data.crystalCol);
+  cMat.emissive.setHex(data.crystalCol);
+  const crysGeo = new THREE.OctahedronGeometry(6.5, 0);
+  crysGeo.scale(1.0, 2.2, 1.0);
+  crysGeo.translate(0, 12, 0);
+  const crysMesh = new THREE.Mesh(crysGeo, cMat);
+  isGrp.add(crysMesh);
+
+  const cLight = new THREE.PointLight(data.crystalCol, 3.2, 85);
+  cLight.position.set(0, 14, 0);
+  isGrp.add(cLight);
+
+  // Altından sarkan asılı taş dikitler
+  for(let k = 0; k < 4; k++){
+    const spikeGeo = new THREE.ConeGeometry(3.5, 14, 5);
+    spikeGeo.translate(0, -7, 0);
+    const spike = new THREE.Mesh(spikeGeo, islandStoneMat);
+    const ang = (k / 4) * Math.PI * 2;
+    spike.position.set(Math.cos(ang) * (data.r * 0.45), -data.h + 5, Math.sin(ang) * (data.r * 0.45));
+    isGrp.add(spike);
+  }
+
+  worldFeaturesGroup.add(isGrp);
+});
+
+// Doğal Dev Taş Kemerler (İçinden uçulabilir doğal kaya kapıları)
+const ARCH_DATA = [
+  { x: -160, y: 68, z: 420, r: 36, tube: 8.5, rotY: 0.4 },
+  { x: 380,  y: 88, z: -440, r: 38, tube: 9.0, rotY: -0.7 }
+];
+ARCH_DATA.forEach(ad => {
+  const archGeo = new THREE.TorusGeometry(ad.r, ad.tube, 8, 26, Math.PI);
+  const archMesh = new THREE.Mesh(archGeo, islandStoneMat);
+  archMesh.position.set(ad.x, ad.y, ad.z);
+  archMesh.rotation.y = ad.rotY;
+  archMesh.rotation.z = Math.PI; // Kemer yukarı baksın
+  worldFeaturesGroup.add(archMesh);
+});
 
 // ═══════════════════════════════════════════════════
 //  GERÇEK 3D DAĞ GÖZETLEME KULELERİ (MEDIEVAL & VASHLOVANI GLB)
@@ -2689,6 +3141,15 @@ window.addEventListener('keydown', e => {
   if(e.code === 'KeyC'){
     togglePhotoMode();
   }
+  if(e.code === 'KeyR'){
+    toggleSkywriting();
+  }
+  if(e.code === 'KeyY'){
+    cycleDrawColor();
+  }
+  if(e.code === 'KeyX'){
+    clearSkywriting();
+  }
   if(e.code === 'Digit1') triggerEmote('❤️');
   if(e.code === 'Digit2') triggerEmote('🎵');
   if(e.code === 'Digit3') triggerEmote('👋');
@@ -3105,6 +3566,10 @@ function handleRemotePacket(data){
     }
   } else if(data.t === 'em'){
     showRemoteEmote(data.e);
+  } else if(data.t === 'dr'){
+    addRemoteDrawPoint(data.p[0], data.p[1], data.p[2], data.c);
+  } else if(data.t === 'dr_clr'){
+    clearRemoteSkywriting();
   }
 }
 
@@ -3834,6 +4299,9 @@ function animate(){
     updateWaterSpray(dt);
     updateWingTrails(dt);
     updateDynamicDayCycle(dt);
+    updateBirdFlock(dt);
+    updateLakeWhale(dt);
+    updateLocalSkywriting(dt);
 
     // 4. Alev Parçacıkları (Vektör Havuzu)
     const positions = fireParticles.geometry.attributes.position.array;
@@ -3937,6 +4405,8 @@ function animate(){
     );
     _lookTarget.set(dragonPos.x, dragonPos.y + 0.1, dragonPos.z);
     camera.lookAt(_lookTarget);
+    updateBirdFlock(dt);
+    updateLakeWhale(dt);
   }
 
   renderer.render(scene, camera);
