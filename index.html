@@ -366,18 +366,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   font-family:monospace;font-size:12px;display:none;max-width:80%;
 }
 
-/* ── Uçan Emote Baloncukları & Fotoğraf Modu ── */
+/* ── Uçan Emote Baloncukları (3D Takip Eden Cam Panel) ── */
 .floating-emote{
   position:fixed;pointer-events:none;z-index:95;
-  font-size:2.6rem;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.8)) drop-shadow(0 0 20px rgba(255,200,50,0.7));
-  animation:emoteFly 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  display:none;align-items:center;justify-content:center;gap:8px;
+  background:rgba(18,8,24,0.88);
+  border:1.5px solid rgba(255,215,0,0.85);
+  box-shadow:0 8px 26px rgba(0,0,0,0.8), 0 0 18px rgba(255,215,0,0.45);
+  border-radius:28px;
+  padding:6px 14px;
+  backdrop-filter:blur(8px);
   user-select:none;
+  transform:translate(-50%, -50%);
+  transition:none;
 }
-@keyframes emoteFly{
-  0%{transform:translate(-50%,0) scale(0.3);opacity:0;}
-  20%{transform:translate(-50%,-24px) scale(1.35);opacity:1;}
-  70%{transform:translate(-50%,-55px) scale(1.05);opacity:0.95;}
-  100%{transform:translate(-50%,-90px) scale(0.8);opacity:0;}
+.floating-emote.friend{
+  border-color:rgba(0,243,255,0.9);
+  box-shadow:0 8px 26px rgba(0,0,0,0.8), 0 0 18px rgba(0,243,255,0.5);
+}
+.floating-emote .emote-icon{
+  font-size:2.2rem;line-height:1;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.6));
+}
+.floating-emote .emote-badge{
+  font-size:0.75rem;font-weight:800;color:#00f3ff;letter-spacing:0.5px;
+  text-transform:uppercase;text-shadow:0 0 8px rgba(0,243,255,0.7);
 }
 #photo-mode-hint{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
@@ -1595,7 +1607,10 @@ const DRAW_COLORS = [
   { name: 'Bulut Beyazı ☁️', hex: 0xffffff, str: '#ffffff' }
 ];
 
-const MAX_TRAIL_PTS = 1600;
+const MAX_TRAIL_PTS = 2200;
+const MAX_TRAIL_LINES = 1800;
+
+// 1. Yerel Çizim Parçacıkları (Yumuşak Parıltı Pufu)
 const drawGeo = new THREE.BufferGeometry();
 const drawPositions = new Float32Array(MAX_TRAIL_PTS * 3);
 const drawColors = new Float32Array(MAX_TRAIL_PTS * 3);
@@ -1613,15 +1628,44 @@ drawGeo.setAttribute('color', new THREE.BufferAttribute(drawColors, 3));
 const drawMat = new THREE.PointsMaterial({
   map: glowSmokeTex,
   vertexColors: true,
-  size: 5.2,
+  size: 7.2,
   transparent: true,
-  opacity: 0.90,
+  opacity: 0.92,
   depthWrite: false,
   blending: THREE.AdditiveBlending
 });
 const skywritePoints = new THREE.Points(drawGeo, drawMat);
+skywritePoints.frustumCulled = false; // Frustum culling engellendi: asla silinmez
 scene.add(skywritePoints);
 
+// 2. Yerel Çizim Çizgileri (Kesintisiz Parlak 3D Vektör Şeridi)
+const lineGeo = new THREE.BufferGeometry();
+const linePositions = new Float32Array(MAX_TRAIL_LINES * 2 * 3);
+const lineColors = new Float32Array(MAX_TRAIL_LINES * 2 * 3);
+for(let i = 0; i < MAX_TRAIL_LINES * 2; i++){
+  linePositions[i * 3] = 0;
+  linePositions[i * 3 + 1] = -9999;
+  linePositions[i * 3 + 2] = 0;
+  lineColors[i * 3] = 1;
+  lineColors[i * 3 + 1] = 0.85;
+  lineColors[i * 3 + 2] = 0;
+}
+lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+lineGeo.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
+
+const lineMat = new THREE.LineBasicMaterial({
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.95,
+  linewidth: 3,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending
+});
+const skywriteLines = new THREE.LineSegments(lineGeo, lineMat);
+skywriteLines.frustumCulled = false;
+scene.add(skywriteLines);
+
+// 3. Uzak Oyuncu (Arkadaş) Çizim Parçacıkları
 const remoteDrawGeo = new THREE.BufferGeometry();
 const remoteDrawPositions = new Float32Array(MAX_TRAIL_PTS * 3);
 const remoteDrawColors = new Float32Array(MAX_TRAIL_PTS * 3);
@@ -1636,14 +1680,68 @@ for(let i = 0; i < MAX_TRAIL_PTS; i++){
 remoteDrawGeo.setAttribute('position', new THREE.BufferAttribute(remoteDrawPositions, 3));
 remoteDrawGeo.setAttribute('color', new THREE.BufferAttribute(remoteDrawColors, 3));
 const remoteDrawPoints = new THREE.Points(remoteDrawGeo, drawMat);
+remoteDrawPoints.frustumCulled = false;
 scene.add(remoteDrawPoints);
 
+// 4. Uzak Oyuncu Çizim Çizgileri
+const remoteLineGeo = new THREE.BufferGeometry();
+const remoteLinePositions = new Float32Array(MAX_TRAIL_LINES * 2 * 3);
+const remoteLineColors = new Float32Array(MAX_TRAIL_LINES * 2 * 3);
+for(let i = 0; i < MAX_TRAIL_LINES * 2; i++){
+  remoteLinePositions[i * 3] = 0;
+  remoteLinePositions[i * 3 + 1] = -9999;
+  remoteLinePositions[i * 3 + 2] = 0;
+  remoteLineColors[i * 3] = 0;
+  remoteLineColors[i * 3 + 1] = 0.95;
+  remoteLineColors[i * 3 + 2] = 1;
+}
+remoteLineGeo.setAttribute('position', new THREE.BufferAttribute(remoteLinePositions, 3));
+remoteLineGeo.setAttribute('color', new THREE.BufferAttribute(remoteLineColors, 3));
+const remoteSkywriteLines = new THREE.LineSegments(remoteLineGeo, lineMat);
+remoteSkywriteLines.frustumCulled = false;
+scene.add(remoteSkywriteLines);
+
 let localTrailHead = 0;
+let localLineHead = 0;
 let remoteTrailHead = 0;
+let remoteLineHead = 0;
+
 let lastDrawEmitTime = 0;
 let hasLastLocalPt = false;
 const _lastLocalPt = new THREE.Vector3();
 const _interpPt = new THREE.Vector3();
+
+let hasLastRemotePt = false;
+let lastRemoteDrawTime = 0;
+const _lastRemotePt = new THREE.Vector3();
+
+function addLocalLineSegment(p1, p2, hex){
+  const pos = lineGeo.attributes.position.array;
+  const col = lineGeo.attributes.color.array;
+  const idx = localLineHead * 6;
+  pos[idx] = p1.x; pos[idx+1] = p1.y; pos[idx+2] = p1.z;
+  pos[idx+3] = p2.x; pos[idx+4] = p2.y; pos[idx+5] = p2.z;
+  const c = new THREE.Color(hex);
+  col[idx] = c.r; col[idx+1] = c.g; col[idx+2] = c.b;
+  col[idx+3] = c.r; col[idx+4] = c.g; col[idx+5] = c.b;
+  localLineHead = (localLineHead + 1) % MAX_TRAIL_LINES;
+  lineGeo.attributes.position.needsUpdate = true;
+  lineGeo.attributes.color.needsUpdate = true;
+}
+
+function addRemoteLineSegment(p1, p2, hex){
+  const pos = remoteLineGeo.attributes.position.array;
+  const col = remoteLineGeo.attributes.color.array;
+  const idx = remoteLineHead * 6;
+  pos[idx] = p1.x; pos[idx+1] = p1.y; pos[idx+2] = p1.z;
+  pos[idx+3] = p2.x; pos[idx+4] = p2.y; pos[idx+5] = p2.z;
+  const c = new THREE.Color(hex);
+  col[idx] = c.r; col[idx+1] = c.g; col[idx+2] = c.b;
+  col[idx+3] = c.r; col[idx+4] = c.g; col[idx+5] = c.b;
+  remoteLineHead = (remoteLineHead + 1) % MAX_TRAIL_LINES;
+  remoteLineGeo.attributes.position.needsUpdate = true;
+  remoteLineGeo.attributes.color.needsUpdate = true;
+}
 
 function toggleSkywriting(){
   if(!gameActive) return;
@@ -1685,7 +1783,15 @@ function clearSkywriting(){
     pos[i * 3 + 1] = -9999;
   }
   drawGeo.attributes.position.needsUpdate = true;
+
+  const lpos = lineGeo.attributes.position.array;
+  for(let i = 0; i < MAX_TRAIL_LINES * 2; i++){
+    lpos[i * 3 + 1] = -9999;
+  }
+  lineGeo.attributes.position.needsUpdate = true;
+
   localTrailHead = 0;
+  localLineHead = 0;
   hasLastLocalPt = false;
 
   if(activeConnection && activeConnection.open){
@@ -1706,10 +1812,30 @@ function clearRemoteSkywriting(){
     pos[i * 3 + 1] = -9999;
   }
   remoteDrawGeo.attributes.position.needsUpdate = true;
+
+  const lpos = remoteLineGeo.attributes.position.array;
+  for(let i = 0; i < MAX_TRAIL_LINES * 2; i++){
+    lpos[i * 3 + 1] = -9999;
+  }
+  remoteLineGeo.attributes.position.needsUpdate = true;
+
   remoteTrailHead = 0;
+  remoteLineHead = 0;
+  hasLastRemotePt = false;
 }
 
 function addRemoteDrawPoint(x, y, z, colorHex){
+  const newPt = new THREE.Vector3(x, y, z);
+  const now = Date.now();
+  const hex = colorHex || 0x00f3ff;
+
+  if(hasLastRemotePt && (now - lastRemoteDrawTime < 2000) && _lastRemotePt.distanceTo(newPt) < 65){
+    addRemoteLineSegment(_lastRemotePt, newPt, hex);
+  }
+  _lastRemotePt.copy(newPt);
+  hasLastRemotePt = true;
+  lastRemoteDrawTime = now;
+
   const pos = remoteDrawGeo.attributes.position.array;
   const col = remoteDrawGeo.attributes.color.array;
   const idx = remoteTrailHead * 3;
@@ -1717,7 +1843,7 @@ function addRemoteDrawPoint(x, y, z, colorHex){
   pos[idx + 1] = y;
   pos[idx + 2] = z;
 
-  const cObj = new THREE.Color(colorHex || 0x00f3ff);
+  const cObj = new THREE.Color(hex);
   col[idx] = cObj.r;
   col[idx + 1] = cObj.g;
   col[idx + 2] = cObj.b;
@@ -1736,7 +1862,7 @@ function addSingleLocalPuff(pt, curColor){
   pos[idx + 1] = pt.y;
   pos[idx + 2] = pt.z;
 
-  const cObj = new THREE.Color(curColor.hex);
+  const cObj = new THREE.Color(curColor.hex !== undefined ? curColor.hex : curColor);
   col[idx] = cObj.r;
   col[idx + 1] = cObj.g;
   col[idx + 2] = cObj.b;
@@ -1763,20 +1889,21 @@ function updateLocalSkywriting(dt){
   }
 
   const dist = _lastLocalPt.distanceTo(_tempVec1);
-  if(dist > 0.65){
-    const steps = Math.min(6, Math.max(1, Math.floor(dist / 0.65)));
+  if(dist > 0.45){
+    const steps = Math.min(6, Math.max(1, Math.floor(dist / 0.45)));
     for(let s = 1; s <= steps; s++){
       const alpha = s / steps;
       _interpPt.lerpVectors(_lastLocalPt, _tempVec1, alpha);
       addSingleLocalPuff(_interpPt, curColor);
     }
+    addLocalLineSegment(_lastLocalPt, _tempVec1, curColor.hex);
     _lastLocalPt.copy(_tempVec1);
 
     drawGeo.attributes.position.needsUpdate = true;
     drawGeo.attributes.color.needsUpdate = true;
 
     const now = Date.now();
-    if(now - lastDrawEmitTime > 60 && activeConnection && activeConnection.open){
+    if(now - lastDrawEmitTime > 50 && activeConnection && activeConnection.open){
       lastDrawEmitTime = now;
       activeConnection.send({
         t: 'dr',
@@ -3659,18 +3786,98 @@ function showRemoteEmote(emoji){
   spawnFloatingEmote(emoji, true);
 }
 
+const activeEmotes = [];
+const _camDirVecEmote = new THREE.Vector3();
+const _toEmoteVec = new THREE.Vector3();
+const _emoteProj = new THREE.Vector3();
+
 function spawnFloatingEmote(emoji, isFriend){
   const container = document.getElementById('emote-container');
   if(!container) return;
+
   const el = document.createElement('div');
-  el.className = 'floating-emote';
-  el.textContent = (isFriend ? '🤝 ' : '') + emoji;
-  el.style.left = (isFriend ? '58%' : '42%');
-  el.style.bottom = '22%';
+  el.className = 'floating-emote' + (isFriend ? ' friend' : '');
+  el.innerHTML = (isFriend ? '<span class="emote-badge">🤝 DOSTUN</span>' : '') + `<span class="emote-icon">${emoji}</span>`;
   container.appendChild(el);
-  setTimeout(() => {
-    if(el.parentNode) el.parentNode.removeChild(el);
-  }, 2200);
+
+  let startPos;
+  if(isFriend){
+    if(remotePlayer && remotePlayer.active && remoteDragonRig){
+      const headY = (remoteSpecies === 'demon' ? 4.8 : 3.0);
+      startPos = remoteDragonRig.position.clone().add(new THREE.Vector3(0, headY, 0));
+    } else {
+      startPos = dragonPos.clone().add(new THREE.Vector3(0, 3.0, 0));
+    }
+  } else {
+    if(isFirstPerson){
+      // 1. Şahıs kamerasında oyuncunun görüş alanında göğe yükselsin
+      startPos = camera.position.clone().addScaledVector(_forward, 4.5).add(new THREE.Vector3(0, -0.2, 0));
+    } else {
+      // 3. Şahıs kamerasında ejderhamızın başı/sırtı üstünden yükselsin
+      const headY = (currentSpecies === 'demon' ? 4.8 : 3.0);
+      startPos = dragonPos.clone().add(new THREE.Vector3(0, headY, 0));
+    }
+  }
+
+  activeEmotes.push({
+    el: el,
+    pos: startPos,
+    age: 0,
+    maxAge: 2.5,
+    velY: 2.8
+  });
+}
+
+function updateActiveEmotes(dt){
+  if(activeEmotes.length === 0) return;
+  camera.getWorldDirection(_camDirVecEmote);
+
+  for(let i = activeEmotes.length - 1; i >= 0; i--){
+    const em = activeEmotes[i];
+    em.age += dt;
+    if(em.age >= em.maxAge){
+      if(em.el.parentNode) em.el.parentNode.removeChild(em.el);
+      activeEmotes.splice(i, 1);
+      continue;
+    }
+
+    em.pos.y += em.velY * dt;
+
+    _toEmoteVec.subVectors(em.pos, camera.position);
+    const dot = _toEmoteVec.dot(_camDirVecEmote);
+    if(dot > 0.08){
+      _emoteProj.copy(em.pos).project(camera);
+      if(_emoteProj.z < 1.0 && Math.abs(_emoteProj.x) <= 1.25 && Math.abs(_emoteProj.y) <= 1.25){
+        const sx = (_emoteProj.x * 0.5 + 0.5) * window.innerWidth;
+        const sy = (-_emoteProj.y * 0.5 + 0.5) * window.innerHeight;
+
+        const prog = em.age / em.maxAge;
+        let scale = 1.0;
+        let op = 1.0;
+        if(prog < 0.15){
+          scale = 0.5 + (prog / 0.15) * 0.65;
+          op = prog / 0.15;
+        } else if(prog > 0.70){
+          const fadeProg = (prog - 0.70) / 0.30;
+          scale = 1.15 - fadeProg * 0.25;
+          op = 1.0 - fadeProg;
+        } else {
+          scale = 1.15;
+          op = 1.0;
+        }
+
+        em.el.style.display = 'flex';
+        em.el.style.left = Math.round(sx) + 'px';
+        em.el.style.top = Math.round(sy) + 'px';
+        em.el.style.transform = `translate(-50%, -50%) scale(${scale.toFixed(2)})`;
+        em.el.style.opacity = op.toFixed(2);
+      } else {
+        em.el.style.display = 'none';
+      }
+    } else {
+      em.el.style.display = 'none';
+    }
+  }
 }
 
 function setLobbyMode(mode){
@@ -4375,6 +4582,9 @@ function animate(){
     updateBirdFlock(dt);
     updateLakeWhale(dt);
   }
+
+  // 3D Takip Eden Emote Baloncukları Güncellemesi
+  updateActiveEmotes(dt);
 
   renderer.render(scene, camera);
 }
