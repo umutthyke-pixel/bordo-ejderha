@@ -83,11 +83,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   border-radius:26px;padding:16px 22px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
   display:flex;flex-direction:column;gap:12px;box-sizing:border-box;user-select:none;
 }
-.cockpit-row{display:flex;align-items:center;justify-content:space-between;gap:16px;}
-.cockpit-col-species{flex:1.6;display:flex;flex-direction:column;gap:6px;}
-.cockpit-col-colors{flex:1.1;display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.cockpit-row{display:flex;align-items:stretch;justify-content:space-between;gap:20px;}
+.cockpit-col-species{flex:1;display:flex;flex-direction:column;gap:7px;}
+.cockpit-col-colors{flex:1;display:flex;flex-direction:column;gap:7px;}
 .cockpit-sub-title{
   font-size:.66rem;font-weight:800;letter-spacing:1.4px;color:#fca5a5;text-transform:uppercase;
+  display:flex;align-items:center;gap:6px;
 }
 .cust-types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
 .cust-btn{
@@ -104,14 +105,46 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 .cust-btn .cust-svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;}
 .species-desc{font-size:.58rem;opacity:.8;font-weight:600;}
 
-.color-chips{display:flex;gap:8px;align-items:center;}
+.color-header-row{display:flex;justify-content:space-between;align-items:center;width:100%;}
+.color-name-badge{
+  background:rgba(215,25,65,0.22);border:1px solid rgba(255,120,150,0.45);
+  color:#ffebef;padding:2px 9px;border-radius:10px;font-size:.64rem;font-weight:800;
+  letter-spacing:1px;text-transform:uppercase;box-shadow:0 0 10px rgba(220,30,60,0.3);
+}
+.color-chips{
+  display:flex;gap:10px;align-items:center;justify-content:space-between;
+  background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:5px 12px;box-sizing:border-box;
+}
 .color-chip{
-  width:24px;height:24px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.3);
+  width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid rgba(255,255,255,0.35);
   transition:all .18s cubic-bezier(0.2,0.8,0.2,1);box-shadow:0 3px 8px rgba(0,0,0,0.8);
 }
-.color-chip:hover{transform:scale(1.22);border-color:rgba(255,255,255,0.7)}
-.color-chip.active{border-color:#fff;box-shadow:0 0 14px rgba(255,255,255,0.95), 0 0 8px rgba(255,80,120,0.85);transform:scale(1.22)}
-.color-name-display{font-size:.65rem;font-weight:700;color:#ffe6eb;letter-spacing:1px;text-transform:uppercase;}
+.color-chip:hover{transform:scale(1.22);border-color:rgba(255,255,255,0.75);}
+.color-chip.active{border-color:#fff;box-shadow:0 0 16px rgba(255,255,255,0.95), 0 0 10px rgba(255,80,120,0.85);transform:scale(1.22)}
+
+.accessory-toggles{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;width:100%;margin-top:2px;
+}
+.acc-toggle-btn{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);
+  color:#ead5da;padding:7px 8px;border-radius:12px;font-size:.69rem;font-weight:700;
+  cursor:pointer;transition:all .18s;outline:none;display:flex;align-items:center;
+  justify-content:center;gap:6px;text-align:center;white-space:nowrap;user-select:none;
+}
+.acc-toggle-btn:hover{
+  background:rgba(255,255,255,0.14);color:#fff;border-color:rgba(255,255,255,0.3);transform:translateY(-1px);
+}
+.acc-toggle-btn.active{
+  background:linear-gradient(135deg,rgba(215,25,65,0.9),rgba(255,120,40,0.75));
+  border-color:#ff99b0;color:#fff;box-shadow:0 0 14px rgba(225,35,70,0.55);
+}
+.acc-status-dot{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.35);transition:all .18s;
+}
+.acc-toggle-btn.active .acc-status-dot{
+  background:#00ffaa;box-shadow:0 0 8px #00ffaa;transform:scale(1.25);
+}
 
 .cockpit-row-mid{
   background:rgba(0,0,0,0.32);border:1px solid rgba(255,255,255,0.08);border-radius:16px;
@@ -768,9 +801,9 @@ body:not(.game-started) #radar-wrap {
 
       <!-- Renk Paleti & Donanım -->
       <div class="cockpit-col-colors">
-        <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+        <div class="color-header-row">
           <div class="cockpit-sub-title">🎨 Renk Paleti</div>
-          <div class="color-name-display" id="active-color-name">Asil Bordo</div>
+          <div class="color-name-badge" id="active-color-name">Asil Bordo</div>
         </div>
         <div class="color-chips">
           <div class="color-chip active" style="background:#550818;" title="Asil Bordo" onclick="selectDragonColor('bordo', this)"></div>
@@ -780,15 +813,17 @@ body:not(.game-started) #radar-wrap {
           <div class="color-chip" style="background:#105728;" title="Mistik Zümrüt" onclick="selectDragonColor('emerald', this)"></div>
           <div class="color-chip" style="background:#cad5de;" title="Ay Gümüşü" onclick="selectDragonColor('silver', this)"></div>
         </div>
-        <div class="accessory-toggles" style="display:flex;gap:6px;margin-top:2px;">
+
+        <div class="cockpit-sub-title" style="margin-top:3px;">✨ Donanım & Görsel Efektler</div>
+        <div class="accessory-toggles">
           <button type="button" class="acc-toggle-btn" id="acc-btn-armor" onclick="toggleAccessoryBtn('armor')">
-            <span class="acc-status-dot"></span> 🛡️ Zırh
+            <span class="acc-status-dot"></span> 🛡️ Kadim Zırh
           </button>
           <button type="button" class="acc-toggle-btn" id="acc-btn-wingembers" onclick="toggleAccessoryBtn('wingembers')">
-            <span class="acc-status-dot"></span> ✨ Kıvılcım
+            <span class="acc-status-dot"></span> ✨ Kıvılcım İzi
           </button>
           <button type="button" class="acc-toggle-btn" id="acc-btn-eyeglow" onclick="toggleAccessoryBtn('eyeglow')">
-            <span class="acc-status-dot"></span> 🔥 Göz Işığı
+            <span class="acc-status-dot"></span> 🔥 Ejder Gözü
           </button>
         </div>
       </div>
@@ -1291,18 +1326,24 @@ function initAudio(){
 
 function setVolume(v){
   currentVolume = Math.max(0, Math.min(1, v));
-  bgm.volume = currentVolume;
-  document.getElementById('vol-slider').value = currentVolume;
-  document.getElementById('vol-percent').textContent = Math.round(currentVolume * 100) + '%';
+  // Rahatlatıcı / Chill arka plan deneyimi için logaritmik yumuşak eğri:
+  // Slider %25'te başlarken ses şiddeti tatlı, sakin bir arka plan fon müziğine sönümlenir (~0.045)
+  bgm.volume = Math.pow(currentVolume, 1.7) * 0.45;
+  const slider = document.getElementById('vol-slider');
+  if(slider) slider.value = currentVolume;
+  const pct = document.getElementById('vol-percent');
+  if(pct) pct.textContent = Math.round(currentVolume * 100) + '%';
   const icon = document.getElementById('vol-icon');
-  if(currentVolume === 0){
-    icon.textContent = '🔇';
-  } else if(currentVolume < 0.4){
-    icon.textContent = '🔈';
-  } else if(currentVolume < 0.75){
-    icon.textContent = '🔉';
-  } else {
-    icon.textContent = '🔊';
+  if(icon){
+    if(currentVolume === 0){
+      icon.textContent = '🔇';
+    } else if(currentVolume < 0.4){
+      icon.textContent = '🔈';
+    } else if(currentVolume < 0.75){
+      icon.textContent = '🔉';
+    } else {
+      icon.textContent = '🔊';
+    }
   }
 }
 
@@ -4519,16 +4560,564 @@ function checkSanctuaryCollision(pos){
 }
 
 // ═══════════════════════════════════════════════════
-//  DAĞ ŞELALESİ & VADİ DERESİ (Mountain Waterfall)
+//  EFSANEVİ DÜNYA KEŞİF NOKTALARI (Legendary World Landmarks)
 // ═══════════════════════════════════════════════════
-const waterfallGeo = new THREE.PlaneGeometry(22, 120, 4, 16);
+const worldLandmarksGroup = new THREE.Group();
+scene.add(worldLandmarksGroup);
+
+// ── 1. 🌋 AKTİF VOLKAN KRATERİ & MAGMA HAVUZU & TERMAL GEYSER (-950, 950) ──
+const volcanoPos = new THREE.Vector3(-950, 0, 950);
+const volcanoBaseY = typeof getTerrainHeight === 'function' ? Math.max(0, getTerrainHeight(volcanoPos.x, volcanoPos.z)) : 10;
+const volcanoCraterY = volcanoBaseY + 95.0;
+
+const volcanoGroup = new THREE.Group();
+volcanoGroup.position.set(volcanoPos.x, volcanoBaseY, volcanoPos.z);
+
+// Volkan Bazalt Dağ Gövdesi
+const volcanoBaseGeo = new THREE.CylinderGeometry(58, 165, 100, 16, 2, true);
+const volcanoMat = new THREE.MeshStandardMaterial({
+  color: 0x221a18, roughness: 0.96, metalness: 0.15, flatShading: true
+});
+const volcanoBaseMesh = new THREE.Mesh(volcanoBaseGeo, volcanoMat);
+volcanoBaseMesh.position.y = 50.0;
+volcanoGroup.add(volcanoBaseMesh);
+
+// İç Krater Eğimi
+const volcanoInnerGeo = new THREE.CylinderGeometry(56, 44, 28, 16, 1, true);
+const volcanoInnerMat = new THREE.MeshStandardMaterial({
+  color: 0x2a1410, roughness: 0.9, flatShading: true, side: THREE.BackSide
+});
+const volcanoInnerMesh = new THREE.Mesh(volcanoInnerGeo, volcanoInnerMat);
+volcanoInnerMesh.position.y = 86.0;
+volcanoGroup.add(volcanoInnerMesh);
+
+// Magma Lav Havuzu
+const magmaGeo = new THREE.CircleGeometry(46, 20);
+magmaGeo.rotateX(-Math.PI / 2);
+const magmaMat = new THREE.MeshStandardMaterial({
+  color: 0xff3300,
+  emissive: 0xff4500,
+  emissiveIntensity: 1.45,
+  roughness: 0.35,
+  metalness: 0.2
+});
+const magmaMesh = new THREE.Mesh(magmaGeo, magmaMat);
+magmaMesh.position.y = 82.0;
+volcanoGroup.add(magmaMesh);
+
+// Volkan Magma Işığı
+const volcanoLight = new THREE.PointLight(0xff4400, 4.2, 220);
+volcanoLight.position.y = 92.0;
+volcanoGroup.add(volcanoLight);
+
+// Yükselen Kor ve Kıvılcım Parçacıkları (50 adet)
+const VOLCANO_EMBER_COUNT = 50;
+const volcanoEmberGeo = new THREE.BufferGeometry();
+const volcanoEmberPos = new Float32Array(VOLCANO_EMBER_COUNT * 3);
+const volcanoEmberSpeeds = new Float32Array(VOLCANO_EMBER_COUNT);
+for(let i = 0; i < VOLCANO_EMBER_COUNT; i++){
+  const r = Math.random() * 38;
+  const th = Math.random() * Math.PI * 2;
+  volcanoEmberPos[i * 3]     = Math.cos(th) * r;
+  volcanoEmberPos[i * 3 + 1] = 84.0 + Math.random() * 60;
+  volcanoEmberPos[i * 3 + 2] = Math.sin(th) * r;
+  volcanoEmberSpeeds[i]      = 14.0 + Math.random() * 22.0;
+}
+volcanoEmberGeo.setAttribute('position', new THREE.BufferAttribute(volcanoEmberPos, 3));
+const volcanoEmberMat = new THREE.PointsMaterial({
+  map: getGlowParticleTexture(),
+  color: 0xff6a00,
+  size: 6.5,
+  sizeAttenuation: false,
+  transparent: true,
+  opacity: 0.88,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending
+});
+const volcanoEmberPoints = new THREE.Points(volcanoEmberGeo, volcanoEmberMat);
+volcanoGroup.add(volcanoEmberPoints);
+worldLandmarksGroup.add(volcanoGroup);
+
+// ── 2. 🌊 GÖRKEMLİ KADİM DAĞ ŞELALESİ & GÖKKUŞAĞI HARESİ (450, -260) ──
+const waterfallPos = new THREE.Vector3(450, 0, -260);
+const waterfallBaseY = typeof getTerrainHeight === 'function' ? Math.max(0, getTerrainHeight(waterfallPos.x, waterfallPos.z)) : 5;
+const waterfallTopY = waterfallBaseY + 125.0;
+
+const waterfallGroup = new THREE.Group();
+waterfallGroup.position.set(waterfallPos.x, waterfallBaseY, waterfallPos.z);
+
+// Şelale Arka Kayalık Uçurumu
+const cliffGeo = new THREE.BoxGeometry(64, 130, 24);
+const cliffMat = new THREE.MeshStandardMaterial({ color: 0x3d474d, roughness: 0.95, flatShading: true });
+const cliffMesh = new THREE.Mesh(cliffGeo, cliffMat);
+cliffMesh.position.set(0, 65, -14);
+waterfallGroup.add(cliffMesh);
+
+// Ana Şelale Akan Su Perdesi
+const waterfallGeo = new THREE.PlaneGeometry(38, 128, 4, 16);
 const waterfallMat = new THREE.MeshStandardMaterial({
-  color: 0x5cd6ff, roughness: 0.12, metalness: 0.8, transparent: true, opacity: 0.82
+  color: 0x4ce0ff,
+  roughness: 0.1,
+  metalness: 0.7,
+  transparent: true,
+  opacity: 0.82,
+  side: THREE.DoubleSide
 });
 const waterfallMesh = new THREE.Mesh(waterfallGeo, waterfallMat);
-waterfallMesh.position.set(-620, 48, 180);
-waterfallMesh.rotation.set(0.3, -Math.PI / 3, 0);
-scene.add(waterfallMesh);
+waterfallMesh.position.set(0, 64, 0);
+waterfallGroup.add(waterfallMesh);
+
+// Taban Dökülme Göleti & Köpük Halkası
+const plungeRingGeo = new THREE.RingGeometry(8, 36, 18);
+plungeRingGeo.rotateX(-Math.PI / 2);
+const plungeMat = new THREE.MeshStandardMaterial({
+  color: 0x88f4ff,
+  emissive: 0x228899,
+  emissiveIntensity: 0.55,
+  transparent: true,
+  opacity: 0.75,
+  side: THREE.DoubleSide
+});
+const plungeMesh = new THREE.Mesh(plungeRingGeo, plungeMat);
+plungeMesh.position.set(0, 2.5, 18);
+waterfallGroup.add(plungeMesh);
+
+// Su Parıltısı Işığı
+const waterfallLight = new THREE.PointLight(0x55d5ff, 3.2, 95);
+waterfallLight.position.set(0, 18, 20);
+waterfallGroup.add(waterfallLight);
+
+// Yükselen Su Sisi Parçacıkları (50 adet)
+const MIST_COUNT = 50;
+const mistGeo = new THREE.BufferGeometry();
+const mistPos = new Float32Array(MIST_COUNT * 3);
+const mistSpeeds = new Float32Array(MIST_COUNT);
+for(let i = 0; i < MIST_COUNT; i++){
+  const r = Math.random() * 24;
+  const th = Math.random() * Math.PI * 2;
+  mistPos[i * 3]     = Math.cos(th) * r;
+  mistPos[i * 3 + 1] = 2.0 + Math.random() * 32;
+  mistPos[i * 3 + 2] = 16.0 + Math.sin(th) * r;
+  mistSpeeds[i]      = 5.0 + Math.random() * 9.0;
+}
+mistGeo.setAttribute('position', new THREE.BufferAttribute(mistPos, 3));
+const mistMat = new THREE.PointsMaterial({
+  map: getGlowParticleTexture(),
+  color: 0xa8f4ff,
+  size: 7.5,
+  sizeAttenuation: false,
+  transparent: true,
+  opacity: 0.70,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending
+});
+const mistPoints = new THREE.Points(mistGeo, mistMat);
+waterfallGroup.add(mistPoints);
+
+// 🌈 Görkemli Cennet Gökkuşağı Haresi (5 Katmanlı İris Rengi Yayı)
+const rainbowGroup = new THREE.Group();
+const RAINBOW_BANDS = [
+  { color: 0xff3b52, r: 42.0 },
+  { color: 0xffb703, r: 40.2 },
+  { color: 0x06d6a0, r: 38.4 },
+  { color: 0x118ab2, r: 36.6 },
+  { color: 0x7b2cbf, r: 34.8 }
+];
+RAINBOW_BANDS.forEach(band => {
+  const arcGeo = new THREE.TorusGeometry(band.r, 0.75, 6, 24, Math.PI);
+  const arcMat = new THREE.MeshBasicMaterial({
+    color: band.color,
+    transparent: true,
+    opacity: 0.58,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    side: THREE.DoubleSide
+  });
+  const arcMesh = new THREE.Mesh(arcGeo, arcMat);
+  rainbowGroup.add(arcMesh);
+});
+rainbowGroup.position.set(0, 18, 38);
+rainbowGroup.rotation.set(-0.25, 0.35, 0);
+waterfallGroup.add(rainbowGroup);
+worldLandmarksGroup.add(waterfallGroup);
+
+// ── 3. 💀 TİTAN EJDERHA BALERİON İSKELETİ & KEMİK GEÇİDİ (-580, -480) ──
+const skeletonPos = new THREE.Vector3(-580, 0, -480);
+const skeletonBaseY = typeof getTerrainHeight === 'function' ? Math.max(0, getTerrainHeight(skeletonPos.x, skeletonPos.z)) : 12;
+
+const skeletonGroup = new THREE.Group();
+skeletonGroup.position.set(skeletonPos.x, skeletonBaseY, skeletonPos.z);
+skeletonGroup.rotation.y = 0.45; // Kanyon koridoruna hizala
+
+const boneMat = new THREE.MeshStandardMaterial({
+  color: 0xd6cfc0,
+  roughness: 0.88,
+  metalness: 0.08,
+  flatShading: true
+});
+
+// 7 Adet Dev Kaburga Kemeri Tüneli (Uçuş Akrobasi Koridoru)
+for(let i = 0; i < 7; i++){
+  const archGroup = new THREE.Group();
+  const zOffset = (i - 3) * 14.0; // 14m aralıklarla 84 metrelik tünel
+  const archScale = 1.0 - Math.abs(i - 3) * 0.07; // Ortada en geniş
+
+  // Sol ve Sağ Kaburga Kavisleri
+  const ribGeo = new THREE.TorusGeometry(18.0 * archScale, 1.35, 6, 16, Math.PI * 0.90);
+  const leftRib = new THREE.Mesh(ribGeo, boneMat);
+  leftRib.rotation.set(0, 0, Math.PI * 0.05);
+  leftRib.position.set(0, 15.0 * archScale, zOffset);
+  archGroup.add(leftRib);
+
+  skeletonGroup.add(archGroup);
+}
+
+// Dev Ejderha Kafatası (Kanyonun Başında)
+const skullGroup = new THREE.Group();
+skullGroup.position.set(0, 16.0, 52.0);
+
+// Üst Kafatası Kemeri
+const craniumGeo = new THREE.ConeGeometry(7.5, 18.0, 7);
+craniumGeo.rotateX(Math.PI * 0.45);
+const craniumMesh = new THREE.Mesh(craniumGeo, boneMat);
+skullGroup.add(craniumMesh);
+
+// Çene Kemikleri
+const jawGeo = new THREE.BoxGeometry(6.5, 3.2, 14.0);
+jawGeo.translate(0, -2.5, 4.0);
+const jawMesh = new THREE.Mesh(jawGeo, boneMat);
+skullGroup.add(jawMesh);
+
+// 4 Adet Kadim Kıvrık Boynuz
+for(let h = 0; h < 4; h++){
+  const side = (h % 2 === 0) ? -1 : 1;
+  const hScale = (h < 2) ? 1.0 : 0.65;
+  const hornGeo = new THREE.ConeGeometry(1.6 * hScale, 16.0 * hScale, 6);
+  hornGeo.rotateX(-0.6);
+  hornGeo.rotateZ(side * 0.55);
+  const hornMesh = new THREE.Mesh(hornGeo, boneMat);
+  hornMesh.position.set(side * (3.8 + (h >= 2 ? 1.5 : 0)), 4.2, -4.0);
+  skullGroup.add(hornMesh);
+}
+
+// Parlayan Amber Ateş Gözler & Işık
+const eyeMat = new THREE.MeshStandardMaterial({
+  color: 0xffaa00,
+  emissive: 0xff7700,
+  emissiveIntensity: 2.2,
+  roughness: 0.2
+});
+const eyeGeo = new THREE.SphereGeometry(1.1, 10, 10);
+const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+leftEye.position.set(-2.8, 1.8, 4.5);
+skullGroup.add(leftEye);
+const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+rightEye.position.set(2.8, 1.8, 4.5);
+skullGroup.add(rightEye);
+
+const skullLight = new THREE.PointLight(0xff9900, 3.8, 65);
+skullLight.position.set(0, 2.0, 6.0);
+skullGroup.add(skullLight);
+
+skeletonGroup.add(skullGroup);
+worldLandmarksGroup.add(skeletonGroup);
+
+// ── 4. ✨ GÖKSEL KUTUP IŞIKLARI (AURORA BOREALIS) & METEORLAR ──
+const skyAuroraRibbonsGroup = new THREE.Group();
+skyAuroraRibbonsGroup.position.set(0, 480, -1150);
+
+const auroraGeo1 = new THREE.PlaneGeometry(1600, 140, 28, 2);
+const auroraMat1 = new THREE.MeshBasicMaterial({
+  color: 0x00ff88,
+  transparent: true,
+  opacity: 0.38,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+  side: THREE.DoubleSide
+});
+const auroraMesh1 = new THREE.Mesh(auroraGeo1, auroraMat1);
+auroraMesh1.rotation.x = 0.25;
+skyAuroraRibbonsGroup.add(auroraMesh1);
+
+const auroraGeo2 = new THREE.PlaneGeometry(1500, 120, 24, 2);
+const auroraMat2 = new THREE.MeshBasicMaterial({
+  color: 0xb5179e,
+  transparent: true,
+  opacity: 0.28,
+  depthWrite: false,
+  blending: THREE.AdditiveBlending,
+  side: THREE.DoubleSide
+});
+const auroraMesh2 = new THREE.Mesh(auroraGeo2, auroraMat2);
+auroraMesh2.position.set(80, -25, 40);
+auroraMesh2.rotation.x = 0.28;
+skyAuroraRibbonsGroup.add(auroraMesh2);
+
+worldLandmarksGroup.add(skyAuroraRibbonsGroup);
+
+// Kayan Yıldız (Meteor) Çizgisi
+const meteorGeo = new THREE.BufferGeometry();
+const meteorPos = new Float32Array(6);
+meteorGeo.setAttribute('position', new THREE.BufferAttribute(meteorPos, 3));
+const meteorMat = new THREE.LineBasicMaterial({
+  color: 0xffffff,
+  transparent: true,
+  opacity: 0.0,
+  blending: THREE.AdditiveBlending,
+  linewidth: 2
+});
+const meteorLine = new THREE.Line(meteorGeo, meteorMat);
+scene.add(meteorLine);
+let meteorState = { active: false, timer: 4.0, life: 0, maxLife: 0.8, start: new THREE.Vector3(), end: new THREE.Vector3() };
+
+// ── 5. SES EFEKTLERİ (Web Audio Sentezi) ──
+function playVolcanoWhooshSound(){
+  if(!audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(80, now);
+    osc.frequency.exponentialRampToValueAtTime(35, now + 1.2);
+    gain.gain.setValueAtTime(0.45, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 1.2);
+  } catch(e){}
+}
+
+function playWaterfallSplashSound(){
+  if(!audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.35);
+    osc.frequency.exponentialRampToValueAtTime(220, now + 0.9);
+    gain.gain.setValueAtTime(0.35, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.9);
+  } catch(e){}
+}
+
+function playSkeletonEchoSound(){
+  if(!audioCtx) return;
+  try {
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(110, now);
+    osc.frequency.setValueAtTime(165, now + 0.25);
+    osc.frequency.setValueAtTime(220, now + 0.5);
+    gain.gain.setValueAtTime(0.55, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 1.5);
+  } catch(e){}
+}
+
+// ── 6. KEŞİF NOKTALARI DİNAMİK GÜNCELLEME & ETKİLEŞİM SİSTEMİ ──
+let landmarkCooldowns = { volcano: 0, waterfall: 0, skeleton: 0 };
+
+function checkWorldLandmarksInteractions(pos, dt){
+  if(landmarkCooldowns.volcano > 0) landmarkCooldowns.volcano -= dt;
+  if(landmarkCooldowns.waterfall > 0) landmarkCooldowns.waterfall -= dt;
+  if(landmarkCooldowns.skeleton > 0) landmarkCooldowns.skeleton -= dt;
+
+  // 1. Volkan Krateri Termal Akım Etkileşimi
+  const vDist2D = Math.hypot(pos.x - volcanoPos.x, pos.z - volcanoPos.z);
+  if(vDist2D < 65.0 && pos.y >= volcanoCraterY - 8.0 && pos.y <= volcanoCraterY + 180.0){
+    // Yumuşak dikey termal itiş lifti
+    pos.y += 38.0 * dt;
+    if(flightSpeed < 90.0) flightSpeed = Math.min(95.0, flightSpeed + 15.0 * dt);
+
+    if(landmarkCooldowns.volcano <= 0){
+      landmarkCooldowns.volcano = 9.0;
+      const mult = (typeof UNLOCKED_POWERS !== 'undefined' && UNLOCKED_POWERS.bloomDouble) ? 2 : 1;
+      playerScore += 75 * mult;
+      if(elScore) elScore.textContent = playerScore;
+      playVolcanoWhooshSound();
+
+      if(elRingPopup){
+        elRingPopup.innerHTML = `🌋 VOLKANİK TERMAL AKIM!<br/><span style="color:#ffcc00;font-size:0.95rem;">+38 m/s İrtifa Kazancı & Termal İtiş (+${75 * mult}P)</span>`;
+        elRingPopup.style.color = '#ff4400';
+        elRingPopup.style.textShadow = '0 0 25px #ff4400, 0 0 45px #ffbb00';
+        elRingPopup.style.opacity = '1';
+        elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.15)';
+        setTimeout(() => {
+          elRingPopup.style.opacity = '0';
+          elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+        }, 3200);
+      }
+    }
+  }
+
+  // 2. Kadim Dağ Şelalesi & Gökkuşağı Haresi
+  const wDist2D = Math.hypot(pos.x - waterfallPos.x, pos.z - waterfallPos.z);
+  if(wDist2D < 55.0 && pos.y >= waterfallBaseY && pos.y <= waterfallTopY + 25.0){
+    if(landmarkCooldowns.waterfall <= 0){
+      landmarkCooldowns.waterfall = 10.0;
+      const mult = (typeof UNLOCKED_POWERS !== 'undefined' && UNLOCKED_POWERS.bloomDouble) ? 2 : 1;
+      playerScore += 150 * mult;
+      if(elScore) elScore.textContent = playerScore;
+      playWaterfallSplashSound();
+
+      if(elRingPopup){
+        elRingPopup.innerHTML = `🌈 CENNET GÖKKUŞAĞI & DAĞ ŞELALESİ!<br/><span style="color:#00ffff;font-size:0.95rem;">Kutsal Su Damlaları & Ferahlık (+${150 * mult}P)</span>`;
+        elRingPopup.style.color = '#5cd6ff';
+        elRingPopup.style.textShadow = '0 0 25px #00ffff, 0 0 50px #ff66cc';
+        elRingPopup.style.opacity = '1';
+        elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.2)';
+        setTimeout(() => {
+          elRingPopup.style.opacity = '0';
+          elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+        }, 3400);
+      }
+    }
+  }
+
+  // 3. Balerion İskelet Tüneli Akrobatik Uçuşu
+  const sDist2D = Math.hypot(pos.x - skeletonPos.x, pos.z - skeletonPos.z);
+  if(sDist2D < 42.0 && pos.y >= skeletonBaseY && pos.y <= skeletonBaseY + 45.0){
+    if(landmarkCooldowns.skeleton <= 0){
+      landmarkCooldowns.skeleton = 12.0;
+      const mult = (typeof UNLOCKED_POWERS !== 'undefined' && UNLOCKED_POWERS.bloomDouble) ? 2 : 1;
+      playerScore += 350 * mult;
+      if(elScore) elScore.textContent = playerScore;
+      playSkeletonEchoSound();
+
+      if(elRingPopup){
+        elRingPopup.innerHTML = `💀 BALERİON'UN KEMİK GEÇİDİ!<br/><span style="color:#ffd700;font-size:0.95rem;">Akrobatik İskelet Tüneli Uçuşu (+${350 * mult}P)</span>`;
+        elRingPopup.style.color = '#fff2b2';
+        elRingPopup.style.textShadow = '0 0 25px #ffd700, 0 0 45px #ff7700';
+        elRingPopup.style.opacity = '1';
+        elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.25)';
+        setTimeout(() => {
+          elRingPopup.style.opacity = '0';
+          elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+        }, 3600);
+      }
+    }
+  }
+}
+
+function updateWorldLandmarks(dt){
+  const t = clock.getElapsedTime();
+
+  // Volkan Magma Embers & Işık Nabzı
+  if(volcanoEmberPoints){
+    const posArr = volcanoEmberGeo.attributes.position.array;
+    for(let i = 0; i < VOLCANO_EMBER_COUNT; i++){
+      const idx = i * 3;
+      posArr[idx + 1] += volcanoEmberSpeeds[i] * dt;
+      posArr[idx]     += Math.sin(t * 1.5 + i) * dt * 4.0;
+      posArr[idx + 2] += Math.cos(t * 1.5 + i) * dt * 4.0;
+      if(posArr[idx + 1] > 165.0){
+        const r = Math.random() * 38;
+        const th = Math.random() * Math.PI * 2;
+        posArr[idx]     = Math.cos(th) * r;
+        posArr[idx + 1] = 84.0;
+        posArr[idx + 2] = Math.sin(th) * r;
+      }
+    }
+    volcanoEmberGeo.attributes.position.needsUpdate = true;
+  }
+  if(magmaMat){
+    magmaMat.emissiveIntensity = 1.35 + Math.sin(t * 2.4) * 0.35;
+  }
+  if(volcanoLight){
+    volcanoLight.intensity = 3.6 + Math.sin(t * 3.0) * 0.8;
+  }
+
+  // Şelale Su Akışı & Sis Haresi
+  if(mistPoints){
+    const mArr = mistGeo.attributes.position.array;
+    for(let i = 0; i < MIST_COUNT; i++){
+      const idx = i * 3;
+      mArr[idx + 1] += mistSpeeds[i] * dt;
+      mArr[idx]     += Math.sin(t * 2.0 + i) * dt * 3.0;
+      mArr[idx + 2] += Math.cos(t * 2.0 + i) * dt * 3.0;
+      if(mArr[idx + 1] > 42.0){
+        const r = Math.random() * 24;
+        const th = Math.random() * Math.PI * 2;
+        mArr[idx]     = Math.cos(th) * r;
+        mArr[idx + 1] = 2.0;
+        mArr[idx + 2] = 16.0 + Math.sin(th) * r;
+      }
+    }
+    mistGeo.attributes.position.needsUpdate = true;
+  }
+  if(waterfallMat){
+    waterfallMat.opacity = 0.78 + Math.sin(t * 4.0) * 0.08;
+  }
+
+  // Kutup Işıkları (Aurora) Dalgalanması
+  if(auroraMesh1 && auroraGeo1){
+    const vArr = auroraGeo1.attributes.position.array;
+    const vCount = vArr.length / 3;
+    for(let i = 0; i < vCount; i++){
+      const idx = i * 3;
+      vArr[idx + 1] = Math.sin(t * 0.8 + vArr[idx] * 0.005) * 22.0;
+    }
+    auroraGeo1.attributes.position.needsUpdate = true;
+  }
+  if(auroraMesh2 && auroraGeo2){
+    const vArr = auroraGeo2.attributes.position.array;
+    const vCount = vArr.length / 3;
+    for(let i = 0; i < vCount; i++){
+      const idx = i * 3;
+      vArr[idx + 1] = Math.cos(t * 0.7 + vArr[idx] * 0.006) * 18.0;
+    }
+    auroraGeo2.attributes.position.needsUpdate = true;
+  }
+
+  // Kayan Yıldız (Meteor) Döngüsü
+  meteorState.timer -= dt;
+  if(meteorState.timer <= 0 && !meteorState.active){
+    meteorState.active = true;
+    meteorState.life = meteorState.maxLife;
+    meteorState.timer = 8.0 + Math.random() * 8.0;
+    const startX = (Math.random() - 0.5) * 1200;
+    const startY = 480 + Math.random() * 140;
+    const startZ = -900 - Math.random() * 400;
+    meteorState.start.set(startX, startY, startZ);
+    meteorState.end.set(startX - 220, startY - 90, startZ + 180);
+    meteorMat.opacity = 0.95;
+  }
+  if(meteorState.active){
+    meteorState.life -= dt;
+    const progress = 1.0 - (meteorState.life / meteorState.maxLife);
+    const headX = THREE.MathUtils.lerp(meteorState.start.x, meteorState.end.x, progress);
+    const headY = THREE.MathUtils.lerp(meteorState.start.y, meteorState.end.y, progress);
+    const headZ = THREE.MathUtils.lerp(meteorState.start.z, meteorState.end.z, progress);
+    const tailP = Math.max(0, progress - 0.22);
+    const tailX = THREE.MathUtils.lerp(meteorState.start.x, meteorState.end.x, tailP);
+    const tailY = THREE.MathUtils.lerp(meteorState.start.y, meteorState.end.y, tailP);
+    const tailZ = THREE.MathUtils.lerp(meteorState.start.z, meteorState.end.z, tailP);
+
+    const mLinePos = meteorGeo.attributes.position.array;
+    mLinePos[0] = headX; mLinePos[1] = headY; mLinePos[2] = headZ;
+    mLinePos[3] = tailX; mLinePos[4] = tailY; mLinePos[5] = tailZ;
+    meteorGeo.attributes.position.needsUpdate = true;
+    meteorMat.opacity = Math.max(0, (meteorState.life / meteorState.maxLife) * 0.95);
+
+    if(meteorState.life <= 0){
+      meteorState.active = false;
+      meteorMat.opacity = 0.0;
+    }
+  }
+}
 
 // ═══════════════════════════════════════════════════
 //  UÇAN GÖKYÜZÜ ADALARI (Floating Sky Islands - Sıfır Lag, Merged Buffer)
@@ -7134,6 +7723,62 @@ function updateRadar(){
     });
   }
 
+  // 3f. Efsanevi Dünya Keşif Noktaları (Volkan 🌋, Şelale 🌊, Balerion İskeleti 💀)
+  if(typeof volcanoPos !== 'undefined'){
+    const vx = cx + volcanoPos.x * scale;
+    const vy = cy + volcanoPos.z * scale;
+    if(Math.hypot(vx - cx, vy - cy) < radius - 3){
+      const vPulse = (Math.sin(Date.now() * 0.005) + 1.0) * 0.5;
+      radarCtx.beginPath();
+      radarCtx.arc(vx, vy, 3.2 + vPulse * 1.5, 0, Math.PI * 2);
+      radarCtx.fillStyle = 'rgba(255, 68, 0, 0.85)';
+      radarCtx.fill();
+      radarCtx.strokeStyle = '#ffd700';
+      radarCtx.lineWidth = 1.0;
+      radarCtx.stroke();
+      radarCtx.font = 'bold 8px sans-serif';
+      radarCtx.textAlign = 'center';
+      radarCtx.fillStyle = '#ffcc00';
+      radarCtx.fillText('🌋', vx, vy + 3);
+    }
+  }
+
+  if(typeof waterfallPos !== 'undefined'){
+    const wx = cx + waterfallPos.x * scale;
+    const wy = cy + waterfallPos.z * scale;
+    if(Math.hypot(wx - cx, wy - cy) < radius - 3){
+      radarCtx.beginPath();
+      radarCtx.arc(wx, wy, 3.5, 0, Math.PI * 2);
+      radarCtx.fillStyle = 'rgba(0, 220, 255, 0.85)';
+      radarCtx.fill();
+      radarCtx.strokeStyle = '#ffffff';
+      radarCtx.lineWidth = 1.0;
+      radarCtx.stroke();
+      radarCtx.font = 'bold 8px sans-serif';
+      radarCtx.textAlign = 'center';
+      radarCtx.fillStyle = '#00ffff';
+      radarCtx.fillText('🌊', wx, wy + 3);
+    }
+  }
+
+  if(typeof skeletonPos !== 'undefined'){
+    const sx = cx + skeletonPos.x * scale;
+    const sy = cy + skeletonPos.z * scale;
+    if(Math.hypot(sx - cx, sy - cy) < radius - 3){
+      radarCtx.beginPath();
+      radarCtx.arc(sx, sy, 3.5, 0, Math.PI * 2);
+      radarCtx.fillStyle = 'rgba(230, 220, 200, 0.9)';
+      radarCtx.fill();
+      radarCtx.strokeStyle = '#ff9900';
+      radarCtx.lineWidth = 1.0;
+      radarCtx.stroke();
+      radarCtx.font = 'bold 8px sans-serif';
+      radarCtx.textAlign = 'center';
+      radarCtx.fillStyle = '#ffffff';
+      radarCtx.fillText('💀', sx, sy + 3);
+    }
+  }
+
   // 4. Dost Ejderha Konumu (Cyan Ok)
   if(remotePlayer && remotePlayer.active && remoteDragonRig){
     const rx = cx + remoteDragonRig.position.x * scale;
@@ -7466,6 +8111,12 @@ function animate(){
     if(typeof updateActivePowers === 'function'){
       updateActivePowers(dt);
     }
+    if(typeof checkWorldLandmarksInteractions === 'function'){
+      checkWorldLandmarksInteractions(dragonPos, dt);
+    }
+    if(typeof updateWorldLandmarks === 'function'){
+      updateWorldLandmarks(dt);
+    }
 
     // Fırtına Yağmur & Şimşek Dinamiği
     if(isStormActive){
@@ -7732,6 +8383,7 @@ function animate(){
     updatePetalsAndSnow(dt);
     updateSkyRays(dt);
     if(typeof updateEasterEggs === 'function') updateEasterEggs(dt);
+    if(typeof updateWorldLandmarks === 'function') updateWorldLandmarks(dt);
   }
 
   // 3D Takip Eden Emote Baloncukları Güncellemesi
@@ -7796,6 +8448,17 @@ if(urlParams.get('testpowers') === '1' || hrefStr.includes('testpowers=1')){
   UNLOCKED_POWERS.bloomDouble = true;
   initLotusPetals();
   updateUnlockedPowersHUD();
+}
+
+if(urlParams.get('testlandmark') === 'volcano' || hrefStr.includes('testlandmark=volcano')){
+  dragonPos.set(-950, 265, 1070);
+  yaw = 0; pitch = -0.65;
+} else if(urlParams.get('testlandmark') === 'waterfall' || hrefStr.includes('testlandmark=waterfall')){
+  dragonPos.set(450, 160, -170);
+  yaw = 0; pitch = -0.35;
+} else if(urlParams.get('testlandmark') === 'skeleton' || hrefStr.includes('testlandmark=skeleton')){
+  dragonPos.set(-580, 85, -390);
+  yaw = 0; pitch = -0.18;
 }
 </script>
 </body>
