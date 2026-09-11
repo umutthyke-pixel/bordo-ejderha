@@ -366,6 +366,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   font-family:monospace;font-size:12px;display:none;max-width:80%;
 }
 
+/* ── Uçan Emote Baloncukları & Fotoğraf Modu ── */
+.floating-emote{
+  position:fixed;pointer-events:none;z-index:95;
+  font-size:2.6rem;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.8)) drop-shadow(0 0 20px rgba(255,200,50,0.7));
+  animation:emoteFly 2.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  user-select:none;
+}
+@keyframes emoteFly{
+  0%{transform:translate(-50%,0) scale(0.3);opacity:0;}
+  20%{transform:translate(-50%,-24px) scale(1.35);opacity:1;}
+  70%{transform:translate(-50%,-55px) scale(1.05);opacity:0.95;}
+  100%{transform:translate(-50%,-90px) scale(0.8);opacity:0;}
+}
+#photo-mode-hint{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:rgba(15,8,12,0.88);border:1px solid rgba(255,215,0,0.6);
+  color:#fef08a;font-size:0.85rem;font-weight:700;padding:8px 22px;border-radius:24px;
+  z-index:100;pointer-events:none;display:none;backdrop-filter:blur(12px);
+  box-shadow:0 0 25px rgba(0,0,0,0.8), 0 0 15px rgba(255,215,0,0.25);
+}
+
 /* ── Çok Oyunculu Lobi Paneli (Modern Glassmorphic) ── */
 .lobby-box{
   margin-top:12px;width:100%;max-width:530px;
@@ -536,10 +557,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <span><span class="k-badge">🖱️ FARE</span> Yönlendir</span>
       <span><span class="k-badge">W / S</span> Hız</span>
       <span><span class="k-badge">A / D</span> Yatış / Dönüş</span>
+      <span><span class="k-badge">E</span> 🦅 Yere Kon / Kalk</span>
+      <span><span class="k-badge">F</span> 🤝 Formasyon Uçuşu</span>
+      <span><span class="k-badge">1 - 4</span> 💬 Emote (❤️🎵👋✨)</span>
+      <span><span class="k-badge">C</span> 📸 Fotoğraf Modu</span>
       <span><span class="k-badge">SHIFT</span> 🚀 Hızlı Süzülüş</span>
       <span><span class="k-badge">V</span> 🎥 Kamera</span>
       <span><span class="k-badge">T / G</span> 🌅 Gökyüzü & Fırtına</span>
-      <span><span class="k-badge">N / P</span> 🎶 Şarkı Değiştir</span>
+      <span><span class="k-badge">N / P</span> 🎶 Şarkı</span>
     </div>
   </div>
 </div>
@@ -551,6 +576,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
 <div id="fire-fx" style="display:none;"></div>
 <div id="cam-mode-indicator">🎥 1. ŞAHIS KOKPİT (Sırt Üstü Bakış)</div>
 <div id="ring-popup">✨ HALKA GEÇİLDİ! +HIZ ✨</div>
+<div id="photo-mode-hint">📸 FOTOĞRAF MODU: Fareyle 360° Açı Ayarla [C ile Çık]</div>
+<div id="emote-container" style="position:fixed;inset:0;pointer-events:none;z-index:90;overflow:hidden;"></div>
 <div id="tower-target-lock" style="display:none;"></div>
 <div id="incoming-warning" style="display:none;"></div>
 <div id="friend-tag" style="position:fixed;display:none;pointer-events:none;z-index:72;transform:translate(-50%,-100%);background:rgba(15,5,12,0.88);border:1px solid #00e5ff;color:#e0f7ff;font-size:0.75rem;font-weight:800;padding:4px 10px;border-radius:8px;box-shadow:0 0 15px rgba(0,229,255,0.45);white-space:nowrap;">🐉 <span id="friend-tag-name">Arkadaşın</span> [<span id="friend-tag-dist">--</span>m]</div>
@@ -570,15 +597,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
   <div id="top-bar">
     <div class="pill" id="multiplayer-hud-pill" style="border-color: rgba(0,229,255,0.5); background: rgba(5,20,30,0.85);">🌐 <b>Lobi:</b> <span id="val-lobby-status" style="color:#00e5ff; font-weight:bold;">Tek Kişilik</span></div>
     <div class="pill" id="friend-hud-pill" style="display:none; border-color: #00ffaa; background: rgba(5,30,20,0.85);">📍 <b>Arkadaşın:</b> <span id="val-friend-dist" style="color:#00ffaa; font-weight:bold;">--</span></div>
+    <div class="pill" id="music-sync-pill" style="border-color: rgba(244,114,182,0.6); background: rgba(30,10,25,0.85);">📻 <b>Ortak Radyo:</b> <span id="val-sync-status" style="color:#f472b6; font-weight:bold;">Senkronize</span></div>
     <div class="pill">⭐ <b>Halka:</b> <span id="val-rings">0</span></div>
-    <div class="pill">🖱️ <b>Fare:</b> Yön</div>
-    <div class="pill"><b>W/S:</b> Hız</div>
-    <div class="pill"><b>SHIFT:</b> ⚡ Hızlı Süzülüş</div>
+    <div class="pill"><b>E:</b> 🦅 Kon/Kalk</div>
+    <div class="pill"><b>F:</b> 🤝 Formasyon</div>
+    <div class="pill"><b>1-4:</b> 💬 Emote</div>
+    <div class="pill"><b>C:</b> 📸 Foto</div>
     <div class="pill"><b>V:</b> 🎥 Kamera</div>
-    <div class="pill"><b>T:</b> 🌅 Gökyüzü</div>
-    <div class="pill" style="border-color: rgba(100,180,255,0.6);"><b>G:</b> ⛈️ Fırtına</div>
-    <div class="pill"><b>M:</b> 📜 Liste</div>
-    <div class="pill"><b>N:</b> ⏭ Sonraki Şarkı</div>
+    <div class="pill"><b>T:</b> 🌅 Zaman</div>
+    <div class="pill"><b>N:</b> ⏭ Şarkı</div>
   </div>
   <div id="hud-flight">
     <div class="hud-cell">
@@ -772,7 +799,7 @@ function updatePlaylistUI(){
   });
 }
 
-function loadTrack(idx, autoPlay = true){
+function loadTrack(idx, autoPlay = true, seekTime = 0, broadcast = true){
   if(idx < 0) idx = PLAYLIST.length - 1;
   if(idx >= PLAYLIST.length) idx = 0;
   currentTrackIdx = idx;
@@ -784,10 +811,23 @@ function loadTrack(idx, autoPlay = true){
   document.getElementById('song-title').textContent = `${track.artist} — ${track.song}`;
   updatePlaylistUI();
 
+  if(seekTime > 0){
+    bgm.currentTime = seekTime;
+  }
+
   if(autoPlay && gameActive){
     bgm.play().then(()=>{
       document.getElementById('music-btn').textContent = '⏸ Duraklat';
     }).catch(()=>{});
+  }
+
+  if(broadcast && typeof activeConnection !== 'undefined' && activeConnection && activeConnection.open){
+    activeConnection.send({
+      t: 'm_sync',
+      id: currentTrackIdx,
+      time: seekTime || 0,
+      paused: bgm.paused
+    });
   }
 }
 
@@ -1094,13 +1134,20 @@ function startExperience(){
   document.body.requestPointerLock();
 }
 
-function toggleMusic(){
+function toggleMusic(broadcast = true){
   if(bgm.paused){
     bgm.play();
     document.getElementById('music-btn').textContent = '⏸ Duraklat';
   } else {
     bgm.pause();
     document.getElementById('music-btn').textContent = '▶ Çal';
+  }
+  if(broadcast && typeof activeConnection !== 'undefined' && activeConnection && activeConnection.open){
+    activeConnection.send({
+      t: 'm_playstate',
+      paused: bgm.paused,
+      time: bgm.currentTime
+    });
   }
 }
 
@@ -1206,6 +1253,121 @@ scene.add(rainPoints);
 
 let lightningTimer = 4.0;
 let lightningFlash = 0;
+
+// ═══════════════════════════════════════════════════
+//  CANLI DOĞA EFEKTLERİ: SU SIÇRAMASI & KANAT İZLERİ
+// ═══════════════════════════════════════════════════
+// 1. Su Yüzeyi Sıyırma Sıçraması (Water Spray)
+const SPRAY_COUNT = 90;
+const sprayGeo = new THREE.BufferGeometry();
+const sprayPositions = new Float32Array(SPRAY_COUNT * 3);
+const sprayVel = [];
+for(let i = 0; i < SPRAY_COUNT; i++){
+  sprayPositions[i * 3] = 0;
+  sprayPositions[i * 3 + 1] = -9999;
+  sprayPositions[i * 3 + 2] = 0;
+  sprayVel.push(new THREE.Vector3());
+}
+sprayGeo.setAttribute('position', new THREE.BufferAttribute(sprayPositions, 3));
+const sprayMat = new THREE.PointsMaterial({
+  color: 0xd8f5ff,
+  size: 1.5,
+  transparent: true,
+  opacity: 0.75
+});
+const waterSprayPoints = new THREE.Points(sprayGeo, sprayMat);
+scene.add(waterSprayPoints);
+
+// 2. Kanat Ucu Buhar İzleri (Wingtip Ribbon Trails)
+const TRAIL_COUNT = 120;
+const trailGeo = new THREE.BufferGeometry();
+const trailPositions = new Float32Array(TRAIL_COUNT * 3);
+for(let i = 0; i < TRAIL_COUNT; i++){
+  trailPositions[i * 3] = 0;
+  trailPositions[i * 3 + 1] = -9999;
+  trailPositions[i * 3 + 2] = 0;
+}
+trailGeo.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+const trailMat = new THREE.PointsMaterial({
+  color: 0x99ddff,
+  size: 1.2,
+  transparent: true,
+  opacity: 0.40
+});
+const wingTrailPoints = new THREE.Points(trailGeo, trailMat);
+scene.add(wingTrailPoints);
+
+let sprayTimer = 0;
+let trailIndex = 0;
+let dynamicDayTime = 0;
+
+function updateWaterSpray(dt){
+  const sPos = sprayGeo.attributes.position.array;
+  const isNearWater = (dragonPos.y < 12.0 && dragonPos.y > -6.0 && Math.abs(dragonPos.x) < 800 && Math.abs(dragonPos.z) < 800);
+  
+  if(isNearWater && flightSpeed > 18){
+    sprayTimer += dt;
+    if(sprayTimer > 0.025){
+      sprayTimer = 0;
+      for(let k = 0; k < 3; k++){
+        const pIdx = (Math.floor(Math.random() * SPRAY_COUNT)) * 3;
+        sPos[pIdx] = dragonPos.x + (Math.random() - 0.5) * 6;
+        sPos[pIdx + 1] = 0.3 + Math.random() * 0.4;
+        sPos[pIdx + 2] = dragonPos.z + (Math.random() - 0.5) * 6;
+        const vIdx = Math.floor(pIdx / 3);
+        sprayVel[vIdx].set(
+          (Math.random() - 0.5) * 8 - _forward.x * (flightSpeed * 0.18),
+          2.6 + Math.random() * 3.4,
+          (Math.random() - 0.5) * 8 - _forward.z * (flightSpeed * 0.18)
+        );
+      }
+    }
+  }
+
+  for(let i = 0; i < SPRAY_COUNT; i++){
+    const idx = i * 3;
+    if(sPos[idx + 1] > -9000){
+      sPos[idx] += sprayVel[i].x * dt;
+      sPos[idx + 1] += sprayVel[i].y * dt;
+      sPos[idx + 2] += sprayVel[i].z * dt;
+      sprayVel[i].y -= 9.8 * dt;
+      if(sPos[idx + 1] <= 0){
+        sPos[idx + 1] = -9999;
+      }
+    }
+  }
+  sprayGeo.attributes.position.needsUpdate = true;
+}
+
+const _leftWingTip = new THREE.Vector3();
+const _rightWingTip = new THREE.Vector3();
+
+function updateWingTrails(dt){
+  const tPos = trailGeo.attributes.position.array;
+  const wingSpan = (currentSpecies === 'demon' ? 12.0 : (currentSpecies === 'wyvern' ? 7.5 : 9.5));
+  _leftWingTip.set(-wingSpan * 0.5, 0.4, -0.6).applyQuaternion(dragonRig.quaternion).add(dragonPos);
+  _rightWingTip.set(wingSpan * 0.5, 0.4, -0.6).applyQuaternion(dragonRig.quaternion).add(dragonPos);
+
+  tPos[trailIndex * 3] = _leftWingTip.x;
+  tPos[trailIndex * 3 + 1] = _leftWingTip.y;
+  tPos[trailIndex * 3 + 2] = _leftWingTip.z;
+  trailIndex = (trailIndex + 1) % TRAIL_COUNT;
+
+  tPos[trailIndex * 3] = _rightWingTip.x;
+  tPos[trailIndex * 3 + 1] = _rightWingTip.y;
+  tPos[trailIndex * 3 + 2] = _rightWingTip.z;
+  trailIndex = (trailIndex + 1) % TRAIL_COUNT;
+
+  trailGeo.attributes.position.needsUpdate = true;
+}
+
+function updateDynamicDayCycle(dt){
+  if(isStormActive) return;
+  dynamicDayTime += dt * 0.012;
+  const sunAngle = dynamicDayTime * 0.25;
+  sunLight.position.set(dragonPos.x + Math.cos(sunAngle) * 450, 750 + Math.sin(sunAngle) * 120, dragonPos.z + Math.sin(sunAngle) * 350);
+}
+
 
 function toggleStormMode(){
   isStormActive = !isStormActive;
@@ -2515,6 +2677,22 @@ window.addEventListener('keydown', e => {
   if(e.code === 'KeyM'){
     togglePlaylistMenu();
   }
+  if(e.code === 'KeyE'){
+    toggleLanding();
+  }
+  if((e.code === 'Space' || e.code === 'KeyW') && isLanded){
+    takeoffLanding();
+  }
+  if(e.code === 'KeyF'){
+    toggleFormationFlight();
+  }
+  if(e.code === 'KeyC'){
+    togglePhotoMode();
+  }
+  if(e.code === 'Digit1') triggerEmote('❤️');
+  if(e.code === 'Digit2') triggerEmote('🎵');
+  if(e.code === 'Digit3') triggerEmote('👋');
+  if(e.code === 'Digit4') triggerEmote('✨');
 });
 window.addEventListener('keyup', e => {
   keys[e.code] = false;
@@ -2529,8 +2707,13 @@ container.addEventListener('click', () => {
 
 document.addEventListener('mousemove', e => {
   if(document.pointerLockElement === document.body){
-    mouseDX += e.movementX;
-    mouseDY += e.movementY;
+    if(isPhotoMode){
+      photoCamAngleX -= e.movementX * 0.003;
+      photoCamAngleY = Math.max(-1.1, Math.min(1.1, photoCamAngleY + e.movementY * 0.003));
+    } else {
+      mouseDX += e.movementX;
+      mouseDY += e.movementY;
+    }
   }
 });
 
@@ -2576,6 +2759,16 @@ let remoteTargetSpeed = 45;
 let remoteTargetFwd = new THREE.Vector3(0, 0, -1);
 let remoteIsFirstPacket = true;
 let isSpawningRemote = false;
+let remoteIsLanded = false;
+
+// Chill Mod Özellikleri Durum Değişkenleri
+let isLanded = false;
+let landHeightTarget = 0;
+let isFormationFlight = false;
+let isPhotoMode = false;
+let photoCamAngleX = 0;
+let photoCamAngleY = 0.22;
+let photoCamDist = 18.0;
 
 const _camDirVec = new THREE.Vector3();
 const _toFriendVec = new THREE.Vector3();
@@ -2768,7 +2961,11 @@ function updateRemotePlayerFlight(dt){
 
   if(remoteMixer){
     let baseRate = (remoteSpecies === 'wyvern' ? 0.35 : (remoteSpecies === 'demon' ? 0.55 : 0.85));
-    remoteMixer.timeScale = baseRate * (0.8 + (remoteTargetSpeed / 98) * 0.6);
+    if(remoteIsLanded){
+      remoteMixer.timeScale = 0.05;
+    } else {
+      remoteMixer.timeScale = baseRate * (0.8 + (remoteTargetSpeed / 98) * 0.6);
+    }
     remoteMixer.update(dt);
   }
 
@@ -2791,7 +2988,7 @@ function updateRemotePlayerHUD(){
   }
 
   const distMeters = Math.round(dragonPos.distanceTo(remoteDragonRig.position));
-  if(elValFriendDist) elValFriendDist.textContent = distMeters + 'm';
+  if(elValFriendDist) elValFriendDist.textContent = distMeters + 'm' + (remoteIsLanded ? ' (Dinleniyor)' : '');
   if(elFriendHudPill) elFriendHudPill.style.display = 'inline-flex';
 
   _tempVec1.copy(remoteDragonRig.position);
@@ -2814,7 +3011,7 @@ function updateRemotePlayerHUD(){
       elFriendTag.style.left = sx + 'px';
       elFriendTag.style.top = sy + 'px';
       elFriendTag.style.display = 'block';
-      if(elFriendTagDist) elFriendTagDist.textContent = distMeters;
+      if(elFriendTagDist) elFriendTagDist.textContent = distMeters + (remoteIsLanded ? ' (Dinleniyor)' : '');
     }
     if(elFriendPointer) elFriendPointer.style.display = 'none';
   } else {
@@ -2835,7 +3032,7 @@ function updateRemotePlayerHUD(){
       elFriendPointer.style.left = px + 'px';
       elFriendPointer.style.top = py + 'px';
       elFriendPointer.style.display = 'block';
-      if(elFriendPointerDist) elFriendPointerDist.textContent = distMeters;
+      if(elFriendPointerDist) elFriendPointerDist.textContent = distMeters + (remoteIsLanded ? ' (Dinleniyor)' : '');
     }
   }
 }
@@ -2863,11 +3060,185 @@ function handleRemotePacket(data){
     }
 
     remoteTargetSpeed = data.s || 45;
+    remoteIsLanded = !!data.l;
 
     if(data.sp && (data.sp !== remoteSpecies || data.c !== remoteColorKey || !remoteDragonScene)){
       spawnRemoteDragon(data.sp, data.c || 'bordo');
     }
+
+    // Ortak Radyo Senkronizasyonu (Host şarkı çalıyorsa misafire aktar)
+    if(data.m && !isHost){
+      const [tIdx, tTime, tPaused] = data.m;
+      if(tIdx !== currentTrackIdx){
+        loadTrack(tIdx, !tPaused, tTime, false);
+      } else {
+        if(Math.abs(bgm.currentTime - tTime) > 3.0){
+          bgm.currentTime = tTime;
+        }
+        if(tPaused && !bgm.paused){
+          bgm.pause();
+          const mBtn = document.getElementById('music-btn');
+          if(mBtn) mBtn.textContent = '▶ Çal';
+        } else if(!tPaused && bgm.paused){
+          bgm.play().then(()=>{
+            const mBtn = document.getElementById('music-btn');
+            if(mBtn) mBtn.textContent = '⏸ Duraklat';
+          }).catch(()=>{});
+        }
+      }
+    }
+  } else if(data.t === 'm_sync'){
+    loadTrack(data.id, !data.paused, data.time || 0, false);
+  } else if(data.t === 'm_playstate'){
+    if(data.paused){
+      bgm.pause();
+      const mBtn = document.getElementById('music-btn');
+      if(mBtn) mBtn.textContent = '▶ Çal';
+    } else {
+      bgm.play().then(()=>{
+        const mBtn = document.getElementById('music-btn');
+        if(mBtn) mBtn.textContent = '⏸ Duraklat';
+      }).catch(()=>{});
+    }
+    if(typeof data.time === 'number' && Math.abs(bgm.currentTime - data.time) > 1.5){
+      bgm.currentTime = data.time;
+    }
+  } else if(data.t === 'em'){
+    showRemoteEmote(data.e);
   }
+}
+
+// ═══════════════════════════════════════════════════
+//  CHILL MOD FONKSİYONLARI: KONMA, FORMASYON, EMOTE & FOTOĞRAF
+// ═══════════════════════════════════════════════════
+function toggleLanding(){
+  if(!gameActive) return;
+  if(isLanded){
+    takeoffLanding();
+    return;
+  }
+  const groundY = Math.max(-8.5, getTerrainHeight(dragonPos.x, dragonPos.z));
+  const alt = dragonPos.y - groundY;
+  if(alt < 55){
+    isLanded = true;
+    landHeightTarget = groundY + 0.65;
+    flightSpeed = 0;
+    const lobbyStatus = document.getElementById('val-lobby-status');
+    if(lobbyStatus){
+      lobbyStatus.textContent = '🦅 Dinleniyor (Kalkış: Boşluk/W)';
+      lobbyStatus.style.color = '#70c050';
+    }
+  } else {
+    const ind = document.getElementById('cam-mode-indicator');
+    if(ind){
+      ind.textContent = '🦅 Konmak için yere veya tepeye biraz daha alçalın (< 50m)';
+      ind.style.opacity = '1';
+      setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+    }
+  }
+}
+
+function takeoffLanding(){
+  if(!isLanded) return;
+  isLanded = false;
+  flightSpeed = 38;
+  const lobbyStatus = document.getElementById('val-lobby-status');
+  if(lobbyStatus && (!activeConnection || !activeConnection.open)){
+    lobbyStatus.textContent = 'Tek Başına Uçuş';
+    lobbyStatus.style.color = '#a0a0b8';
+  } else if(lobbyStatus && activeConnection && activeConnection.open){
+    lobbyStatus.textContent = 'Arkadaşın Bağlı';
+    lobbyStatus.style.color = '#00ff88';
+  }
+}
+
+function toggleFormationFlight(){
+  if(!gameActive) return;
+  if(!remotePlayer || !remotePlayer.active || !remoteDragonRig){
+    const ind = document.getElementById('cam-mode-indicator');
+    if(ind){
+      ind.textContent = '🤝 Formasyon için odada arkadaşın olmalı!';
+      ind.style.opacity = '1';
+      setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+    }
+    return;
+  }
+  const dist = dragonPos.distanceTo(remoteDragonRig.position);
+  if(dist > 220){
+    const ind = document.getElementById('cam-mode-indicator');
+    if(ind){
+      ind.textContent = '🤝 Arkadaşın çok uzakta (>220m), önce biraz yaklaş!';
+      ind.style.opacity = '1';
+      setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+    }
+    return;
+  }
+  isFormationFlight = !isFormationFlight;
+  const lobbyStatus = document.getElementById('val-lobby-status');
+  if(lobbyStatus){
+    lobbyStatus.textContent = isFormationFlight ? '🤝 Formasyonda (Kanat Kanata)' : 'Arkadaşın Bağlı';
+    lobbyStatus.style.color = isFormationFlight ? '#00e5ff' : '#00ff88';
+  }
+  const ind = document.getElementById('cam-mode-indicator');
+  if(ind){
+    ind.textContent = isFormationFlight ? '🤝 FORMASYON UÇUŞU AKTİF (Kanat Kanata Süzülme)' : '🤝 FORMASYON AYRILDI (Serbest Uçuş)';
+    ind.style.opacity = '1';
+    setTimeout(()=>{ ind.style.opacity = '0.35'; }, 2200);
+  }
+}
+
+function togglePhotoMode(){
+  if(!gameActive) return;
+  isPhotoMode = !isPhotoMode;
+  const hint = document.getElementById('photo-mode-hint');
+  const topBar = document.getElementById('top-bar');
+  const miniMap = document.getElementById('radar-canvas');
+  const speedBar = document.getElementById('speed-gauge-wrap');
+  const camInd = document.getElementById('cam-indicator');
+  const lobbyBox = document.getElementById('lobby-hud-box');
+  const crosshair = document.getElementById('crosshair');
+
+  const displayVal = isPhotoMode ? 'none' : '';
+  if(topBar) topBar.style.display = displayVal;
+  if(miniMap) miniMap.style.display = displayVal;
+  if(speedBar) speedBar.style.display = displayVal;
+  if(camInd) camInd.style.display = displayVal;
+  if(lobbyBox) lobbyBox.style.display = displayVal;
+  if(crosshair) crosshair.style.display = displayVal;
+
+  if(hint){
+    hint.style.display = isPhotoMode ? 'block' : 'none';
+  }
+  if(isPhotoMode){
+    photoCamAngleX = yaw;
+    photoCamAngleY = 0.22;
+  }
+}
+
+function triggerEmote(emoji){
+  if(!gameActive) return;
+  spawnFloatingEmote(emoji, false);
+  if(activeConnection && activeConnection.open){
+    activeConnection.send({ t: 'em', e: emoji });
+  }
+}
+
+function showRemoteEmote(emoji){
+  spawnFloatingEmote(emoji, true);
+}
+
+function spawnFloatingEmote(emoji, isFriend){
+  const container = document.getElementById('emote-container');
+  if(!container) return;
+  const el = document.createElement('div');
+  el.className = 'floating-emote';
+  el.textContent = (isFriend ? '🤝 ' : '') + emoji;
+  el.style.left = (isFriend ? '58%' : '42%');
+  el.style.bottom = '22%';
+  container.appendChild(el);
+  setTimeout(() => {
+    if(el.parentNode) el.parentNode.removeChild(el);
+  }, 2200);
 }
 
 function setLobbyMode(mode){
@@ -3060,7 +3431,9 @@ function setupNetworkSendLoop(){
         r: [pitch, yaw, roll],
         s: flightSpeed,
         sp: currentSpecies,
-        c: currentColorKey
+        c: currentColorKey,
+        l: isLanded ? 1 : 0,
+        m: [currentTrackIdx, Math.round(bgm.currentTime || 0), bgm.paused ? 1 : 0]
       });
     }
   }, 35);
@@ -3300,7 +3673,11 @@ function animate(){
   const dt = Math.min(clock.getDelta(), 0.05);
 
   if(mixer){
-    mixer.timeScale = 1.0 + (flightSpeed / 98) * 0.75;
+    if(isLanded){
+      mixer.timeScale = 0.05; // Dinlenme modunda hafif kanat süzülmesi
+    } else {
+      mixer.timeScale = 1.0 + (flightSpeed / 98) * 0.75;
+    }
     mixer.update(dt);
   }
 
@@ -3325,19 +3702,44 @@ function animate(){
   if(turboActiveTime > 0) turboActiveTime -= dt;
 
   if(gameActive){
-    // 1. Dümen & Hız
-    yaw -= mouseDX * 0.0022;
-    pitch -= mouseDY * 0.0022;
-    pitch = Math.max(-Math.PI * 0.35, Math.min(Math.PI * 0.36, pitch));
-    mouseDX = 0; mouseDY = 0;
+    if(isLanded){
+      flightSpeed = 0;
+      pitch *= 0.90;
+      roll *= 0.85;
+      dragonPos.y += (landHeightTarget - dragonPos.y) * Math.min(1.0, dt * 5.0);
+      mouseDX = 0; mouseDY = 0;
+    } else if(isFormationFlight && remotePlayer && remotePlayer.active && remoteDragonRig){
+      const fQuat = remoteDragonRig.quaternion;
+      _tempVec1.set(14.0, 0.8, -4.0).applyQuaternion(fQuat).add(remoteDragonRig.position);
+      dragonPos.lerp(_tempVec1, Math.min(1.0, dt * 6.0));
+      dragonRig.quaternion.slerp(fQuat, Math.min(1.0, dt * 6.0));
+      flightSpeed = remoteTargetSpeed;
+      mouseDX = 0; mouseDY = 0;
+      if(keys['KeyA'] || keys['KeyD'] || keys['KeyS']){
+        toggleFormationFlight();
+      }
+    } else {
+      // 1. Dümen & Hız
+      yaw -= mouseDX * 0.0022;
+      pitch -= mouseDY * 0.0022;
+      pitch = Math.max(-Math.PI * 0.35, Math.min(Math.PI * 0.36, pitch));
+      mouseDX = 0; mouseDY = 0;
 
-    if(keys['KeyA'] || keys['ArrowLeft'])  yaw += 1.6 * dt;
-    if(keys['KeyD'] || keys['ArrowRight']) yaw -= 1.6 * dt;
-    if(keys['KeyW'] || keys['ArrowUp'])    flightSpeed = Math.min(flightSpeed + 30 * dt, 98);
-    if(keys['KeyS'] || keys['ArrowDown'])  flightSpeed = Math.max(flightSpeed - 25 * dt, 12);
+      if(keys['KeyA'] || keys['ArrowLeft'])  yaw += 1.6 * dt;
+      if(keys['KeyD'] || keys['ArrowRight']) yaw -= 1.6 * dt;
+      if(keys['KeyW'] || keys['ArrowUp'])    flightSpeed = Math.min(flightSpeed + 30 * dt, 98);
+      if(keys['KeyS'] || keys['ArrowDown'])  flightSpeed = Math.max(flightSpeed - 25 * dt, 12);
 
-    const turnIntent = (keys['KeyA']||keys['ArrowLeft']) ? 1 : (keys['KeyD']||keys['ArrowRight']) ? -1 : 0;
-    roll = roll * 0.86 + turnIntent * 0.55 * 0.14;
+      const turnIntent = (keys['KeyA']||keys['ArrowLeft']) ? 1 : (keys['KeyD']||keys['ArrowRight']) ? -1 : 0;
+      roll = roll * 0.86 + turnIntent * 0.55 * 0.14;
+
+      // 2. İleri Hareket (Sıfır GC Tahsisi)
+      const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
+      const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
+      _forward.set(-sinY * cosP, sinP, -cosY * cosP);
+
+      dragonPos.addScaledVector(_forward, flightSpeed * dt);
+    }
 
     // Kombo Zaman Aşımı
     if(ringComboTimer > 0){
@@ -3352,13 +3754,6 @@ function animate(){
       windGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.1);
     }
 
-    // 2. İleri Hareket (Sıfır GC Tahsisi)
-    const cosY = Math.cos(yaw), sinY = Math.sin(yaw);
-    const cosP = Math.cos(pitch), sinP = Math.sin(pitch);
-    _forward.set(-sinY * cosP, sinP, -cosY * cosP);
-
-    dragonPos.addScaledVector(_forward, flightSpeed * dt);
-
     // Yumuşak Sınır Rüzgarı (Boundary Updraft)
     const dCenter = Math.sqrt(dragonPos.x*dragonPos.x + dragonPos.z*dragonPos.z);
     if(dCenter > 2200){
@@ -3371,11 +3766,13 @@ function animate(){
 
     // Zemin & Su Seviyesi Koruma
     const groundY = Math.max(-8.5, getTerrainHeight(dragonPos.x, dragonPos.z));
-    if(dragonPos.y < groundY + 12.0){
-      dragonPos.y += (groundY + 12.0 - dragonPos.y) * Math.min(1.0, dt * 5.0);
-      if(pitch < 0) pitch *= 0.85;
+    if(!isLanded){
+      if(dragonPos.y < groundY + 12.0){
+        dragonPos.y += (groundY + 12.0 - dragonPos.y) * Math.min(1.0, dt * 5.0);
+        if(pitch < 0) pitch *= 0.85;
+      }
+      if(dragonPos.y > 420.0) dragonPos.y -= (dragonPos.y - 420.0) * 0.05;
     }
-    if(dragonPos.y > 420.0) dragonPos.y -= (dragonPos.y - 420.0) * 0.05;
 
     // Çember ve Kadim Tapınak Çarpışma Kontrolleri
     checkRingCollision(dragonPos);
@@ -3428,8 +3825,15 @@ function animate(){
 
     // 3. Ejderha Rig Konumu ve Rotasyonu
     dragonRig.position.copy(dragonPos);
-    dragonRig.rotation.order = 'YXZ';
-    dragonRig.rotation.set(pitch, yaw, roll);
+    if(!isFormationFlight){
+      dragonRig.rotation.order = 'YXZ';
+      dragonRig.rotation.set(pitch, yaw, roll);
+    }
+
+    // Doğa Efektleri
+    updateWaterSpray(dt);
+    updateWingTrails(dt);
+    updateDynamicDayCycle(dt);
 
     // 4. Alev Parçacıkları (Vektör Havuzu)
     const positions = fireParticles.geometry.attributes.position.array;
@@ -3460,42 +3864,52 @@ function animate(){
     }
 
     // 5. KAMERA POZİSYONLANDIRMASI (Havuzlanmış Vektörler)
-    if(isFirstPerson){
-      if(currentSpecies === 'meleys'){
-        _camOffset.set(0, 0.98, 0.95);
-      } else if(currentSpecies === 'demon'){
-        _camOffset.set(0, 0.60, 0.52);
-      } else if(currentSpecies === 'wyvern'){
-        _camOffset.set(0, 0.58, 0.22);
-      } else {
-        _camOffset.set(0, 0.98, 0.95);
-      }
+    if(isPhotoMode){
+      const pDist = photoCamDist || 18.0;
+      const cX = dragonPos.x + Math.sin(photoCamAngleX) * Math.cos(photoCamAngleY) * pDist;
+      const cY = dragonPos.y + Math.sin(photoCamAngleY) * pDist + 2.4;
+      const cZ = dragonPos.z + Math.cos(photoCamAngleX) * Math.cos(photoCamAngleY) * pDist;
+      camera.position.set(cX, cY, cZ);
+      _lookTarget.copy(dragonPos).add(new THREE.Vector3(0, 1.2, 0));
+      camera.lookAt(_lookTarget);
     } else {
-      if(currentSpecies === 'demon'){
-        _camOffset.set(0, 3.8, 11.0);
-      } else if(currentSpecies === 'wyvern'){
-        _camOffset.set(0, 2.2, 6.5);
+      if(isFirstPerson){
+        if(currentSpecies === 'meleys'){
+          _camOffset.set(0, 0.98, 0.95);
+        } else if(currentSpecies === 'demon'){
+          _camOffset.set(0, 0.60, 0.52);
+        } else if(currentSpecies === 'wyvern'){
+          _camOffset.set(0, 0.58, 0.22);
+        } else {
+          _camOffset.set(0, 0.98, 0.95);
+        }
       } else {
-        _camOffset.set(0, 3.5, 8.8);
+        if(currentSpecies === 'demon'){
+          _camOffset.set(0, 3.8, 11.0);
+        } else if(currentSpecies === 'wyvern'){
+          _camOffset.set(0, 2.2, 6.5);
+        } else {
+          _camOffset.set(0, 3.5, 8.8);
+        }
       }
-    }
-    _camOffset.applyQuaternion(dragonRig.quaternion);
-    camera.position.copy(dragonPos).add(_camOffset);
+      _camOffset.applyQuaternion(dragonRig.quaternion);
+      camera.position.copy(dragonPos).add(_camOffset);
 
-    const lookDist = 40;
-    _lookTarget.copy(dragonPos).add(_camOffset).addScaledVector(_forward, lookDist);
-    if(isFirstPerson) {
-      if(currentSpecies === 'meleys'){
-        _lookTarget.y -= 0.15;
-      } else if(currentSpecies === 'demon'){
-        _lookTarget.y -= 0.10;
-      } else if(currentSpecies === 'wyvern'){
-        _lookTarget.y -= 0.12;
-      } else {
-        _lookTarget.y -= 0.15;
+      const lookDist = 40;
+      _lookTarget.copy(dragonPos).add(_camOffset).addScaledVector(_forward, lookDist);
+      if(isFirstPerson) {
+        if(currentSpecies === 'meleys'){
+          _lookTarget.y -= 0.15;
+        } else if(currentSpecies === 'demon'){
+          _lookTarget.y -= 0.10;
+        } else if(currentSpecies === 'wyvern'){
+          _lookTarget.y -= 0.12;
+        } else {
+          _lookTarget.y -= 0.15;
+        }
       }
+      camera.lookAt(_lookTarget);
     }
-    camera.lookAt(_lookTarget);
 
     // 6. Işık Takibi
     sunLight.position.set(dragonPos.x + 400, 850, dragonPos.z + 300);
