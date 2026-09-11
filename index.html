@@ -936,7 +936,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
     <!-- TAB 4: KONTROLLER -->
     <div class="tab-pane" id="tab-controls">
       <div class="splash-keys-grid">
-        <div class="splash-key-item"><span class="k-badge">🖱️ SOL TIK</span><span>🔥 Alev Püskürt (Dracarys)</span></div>
         <div class="splash-key-item"><span class="k-badge">🖱️ FARE</span><span>Yönlendir / Bakış Açısı</span></div>
         <div class="splash-key-item"><span class="k-badge">W / S</span><span>Havada: Hızlan/Fren | Yerde: Yürü</span></div>
         <div class="splash-key-item"><span class="k-badge">A / D</span><span>Yatış / Yerde Dönüş</span></div>
@@ -1062,7 +1061,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:#030a04;font-family:
       <span class="help-close" onclick="toggleHelpPanel(false)">✖</span>
     </div>
     <div class="help-grid">
-      <div class="help-item"><span class="help-k">🔥 SOL TIK</span><span class="help-desc">Alev Püskürt (Dracarys)</span></div>
       <div class="help-item"><span class="help-k">🖱️ FARE</span><span class="help-desc">Yönlendir / Bakış</span></div>
       <div class="help-item"><span class="help-k">W / S</span><span class="help-desc">Havada: Hızlan/Fren | Yerde: Yürü</span></div>
       <div class="help-item"><span class="help-k">A / D</span><span class="help-desc">Yatış / Yerde Dönüş</span></div>
@@ -3775,43 +3773,13 @@ const RING_TYPES = {
     colorNum: 0xffcc00,
     emissiveNum: 0xff9900,
     emissiveInt: 0.85,
-    boost: 22.0,
-    maxSpeed: 82.0,
+    boost: 12.0,
+    maxSpeed: 62.0,
     score: 100,
-    popupTitle: '✨ ALTIN İVME! +22 m/s',
+    popupTitle: '✨ ALTIN İVME! +12 m/s',
     popupColor: '#ffea00',
     popupGlow: '0 0 25px #ffaa00',
     auraColor: 'rgba(255, 215, 0, 0.45)'
-  },
-  crimson: {
-    id: 'crimson',
-    name: 'Magma Turbo',
-    colorHex: '#ff2200',
-    colorNum: 0xff1a1a,
-    emissiveNum: 0xff3300,
-    emissiveInt: 1.45,
-    boost: 42.0,
-    maxSpeed: 125.0,
-    score: 250,
-    popupTitle: '🔥 MAGMA TURBO BOOST! +42 m/s 🔥',
-    popupColor: '#ff2b2b',
-    popupGlow: '0 0 30px #ff0000, 0 0 50px #ff6600',
-    auraColor: 'rgba(255, 34, 0, 0.65)'
-  },
-  sapphire: {
-    id: 'sapphire',
-    name: 'Safir Sonik',
-    colorHex: '#00d5ff',
-    colorNum: 0x00d5ff,
-    emissiveNum: 0x0077ff,
-    emissiveInt: 1.25,
-    boost: 30.0,
-    maxSpeed: 102.0,
-    score: 160,
-    popupTitle: '⚡ SAFİR SONİK PATLAMA! +30 m/s ⚡',
-    popupColor: '#00f3ff',
-    popupGlow: '0 0 28px #00aaff, 0 0 45px #00ffff',
-    auraColor: 'rgba(0, 213, 255, 0.55)'
   },
   emerald: {
     id: 'emerald',
@@ -3820,13 +3788,43 @@ const RING_TYPES = {
     colorNum: 0x00ee77,
     emissiveNum: 0x00aa33,
     emissiveInt: 1.15,
-    boost: 24.0,
-    maxSpeed: 88.0,
+    boost: 15.0,
+    maxSpeed: 66.0,
     score: 130,
-    popupTitle: '🍃 ZÜMRÜT TAYFUN İTKİSİ! +24 m/s 🍃',
+    popupTitle: '🍃 ZÜMRÜT TAYFUN İTKİSİ! +15 m/s 🍃',
     popupColor: '#00ff88',
     popupGlow: '0 0 26px #00ee77',
     auraColor: 'rgba(0, 238, 119, 0.50)'
+  },
+  sapphire: {
+    id: 'sapphire',
+    name: 'Safir Sonik',
+    colorHex: '#00d5ff',
+    colorNum: 0x00d5ff,
+    emissiveNum: 0x0077ff,
+    emissiveInt: 1.25,
+    boost: 18.0,
+    maxSpeed: 70.0,
+    score: 160,
+    popupTitle: '⚡ SAFİR SONİK PATLAMA! +18 m/s ⚡',
+    popupColor: '#00f3ff',
+    popupGlow: '0 0 28px #00aaff, 0 0 45px #00ffff',
+    auraColor: 'rgba(0, 213, 255, 0.55)'
+  },
+  crimson: {
+    id: 'crimson',
+    name: 'Magma Turbo',
+    colorHex: '#ff2200',
+    colorNum: 0xff1a1a,
+    emissiveNum: 0xff3300,
+    emissiveInt: 1.45,
+    boost: 22.0,
+    maxSpeed: 75.0,
+    score: 250,
+    popupTitle: '🔥 MAGMA TURBO BOOST! +22 m/s 🔥',
+    popupColor: '#ff2b2b',
+    popupGlow: '0 0 30px #ff0000, 0 0 50px #ff6600',
+    auraColor: 'rgba(255, 34, 0, 0.65)'
   }
 };
 
@@ -3994,8 +3992,8 @@ function checkRingCollision(pos){
       if(elScore) elScore.textContent = playerScore;
 
       // Renkli Boost İtmesi & Hızlanma
-      const boostVal = r.type ? r.type.boost : 22.0;
-      const maxSpd = r.type ? r.type.maxSpeed : 85.0;
+      const boostVal = r.type ? r.type.boost : 14.0;
+      const maxSpd = r.type ? r.type.maxSpeed : 68.0;
       flightSpeed = Math.min(flightSpeed + boostVal, maxSpd);
 
       // Ses efekti (türe göre dinamik frekans) & Sonik Patlama Bas Vuruşu
@@ -5339,25 +5337,7 @@ window.addEventListener('keydown', e => {
 window.addEventListener('keyup', e => {
   keys[e.code] = false;
 });
-
-// 🔥 DRACARYS ALEV NEFESİ KONTROLÜ (Sol Tık ile Alev Püskürtme)
-window.addEventListener('mousedown', e => {
-  if(e.button === 0 && gameActive && !isPhotoMode){
-    const target = e.target;
-    if(target && (target.closest('#playlist-menu') || target.closest('#help-panel') || target.closest('#lobby-box') || target.closest('#polaroid-modal') || target.closest('#hud-music'))){
-      return;
-    }
-    isFiring = true;
-    playFireStreamSound();
-  }
-});
-
-window.addEventListener('mouseup', e => {
-  if(e.button === 0){
-    isFiring = false;
-    stopFireStreamSound();
-  }
-});
+// Sol tık ile pointer lock / odaklanma (Alev nefesi tamamen kaldırıldı)
 
 container.addEventListener('click', () => {
   if(gameActive) {
@@ -6988,23 +6968,28 @@ function animate(){
       mouseDX = 0; mouseDY = 0;
 
       const CRUISE_SPEED = 26.0; // ~94 km/h sakin ve asil süzülüş hızı
-      const SPRINT_SPEED = 56.0; // ~200 km/h W tuşuyla hızlanma
+      const SPRINT_SPEED = 48.0; // ~172 km/h W tuşuyla güçlü uçuş hızı
 
       if(keys['KeyA'] || keys['ArrowLeft'])  yaw += 1.6 * dt;
       if(keys['KeyD'] || keys['ArrowRight']) yaw -= 1.6 * dt;
 
       if(keys['KeyW'] || keys['ArrowUp']){
-        // W'ye basıldığında kanat çırparak hızlan (halka boost'u varsa onu aniden kesme)
-        flightSpeed = Math.min(flightSpeed + 26.0 * dt, Math.max(flightSpeed, SPRINT_SPEED));
+        // W tuşuna basıldığında: SPRINT_SPEED altındaysa hızlan; boost ile üzerindeyse akıcı biçimde SPRINT_SPEED'e sönümlen
+        if(flightSpeed < SPRINT_SPEED){
+          flightSpeed = Math.min(SPRINT_SPEED, flightSpeed + 22.0 * dt);
+        } else {
+          // Halka boost'u sonrası hız asla takılı kalmaz, ~2.5 saniyede akıcı biçimde SPRINT_SPEED'e iner
+          flightSpeed += (SPRINT_SPEED - flightSpeed) * Math.min(1.0, dt * 1.35);
+        }
       } else if(keys['KeyS'] || keys['ArrowDown']){
         // S'ye basıldığında fren yap ve süzül
-        flightSpeed = Math.max(flightSpeed - 28.0 * dt, 10.0);
+        flightSpeed = Math.max(flightSpeed - 30.0 * dt, 12.0);
       } else {
         // Tuşsuz süzülüş: aerodinamik süzülüşle seyir hızına yumuşakça dön
         if(flightSpeed > CRUISE_SPEED){
-          flightSpeed += (CRUISE_SPEED - flightSpeed) * Math.min(1.0, dt * 0.45);
+          flightSpeed += (CRUISE_SPEED - flightSpeed) * Math.min(1.0, dt * 1.5);
         } else if(flightSpeed < CRUISE_SPEED){
-          flightSpeed += (CRUISE_SPEED - flightSpeed) * Math.min(1.0, dt * 0.85);
+          flightSpeed += (CRUISE_SPEED - flightSpeed) * Math.min(1.0, dt * 2.0);
         }
       }
 
@@ -7038,60 +7023,40 @@ function animate(){
     }
 
     if(windGain && audioCtx){
-      const targetGain = (0.03 + (flightSpeed / 125) * 0.18) * currentVolume;
+      const targetGain = (0.03 + (flightSpeed / 80) * 0.18) * currentVolume;
       windGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.1);
     }
 
-    // ── AKILLI SINIR RÜZGARI (Doğal İtme & Asla Dönüşü Kilitlememe) ──
+    // ── AKILLI SINIR RÜZGARI (Harita Dışına Çıkmayı Önleyen Yumuşak Rüzgar) ──
     const dCenter = Math.hypot(dragonPos.x, dragonPos.z);
     if(dCenter > 2100){
-      // Oyuncunun dönüşünü kilitlemeden, harita merkezine doğru yumuşak rüzgar itkisi
-      const pushInward = Math.min(45.0, (dCenter - 2100) * 1.5);
+      // Oyuncunun dümenini ASLA bozmadan merkeze doğru yumuşak hava itişi
+      const pushInward = Math.min(50.0, (dCenter - 2100) * 1.6);
       dragonPos.x -= (dragonPos.x / dCenter) * pushInward * dt;
       dragonPos.z -= (dragonPos.z / dCenter) * pushInward * dt;
-
-      // Oyuncu hiçbir dönüş tuşuna basmıyorsa ve fare oynamıyorsa hafifçe merkeze yönlendir
-      if(!keys['KeyA'] && !keys['KeyD'] && !keys['ArrowLeft'] && !keys['ArrowRight'] && Math.abs(mouseDX) < 1.5){
-        const targetAngle = Math.atan2(dragonPos.x, dragonPos.z);
-        let diff = targetAngle - yaw;
-        while(diff < -Math.PI) diff += Math.PI * 2;
-        while(diff > Math.PI) diff -= Math.PI * 2;
-        yaw += diff * dt * 0.35;
-      }
     }
 
-    // ── ÖNGÖRÜLÜ DAĞ YAMACI SÜZÜLME & ÇARPIŞMA KORUMASI (Terrain Slope Deflection) ──
-    const probeDist = Math.max(12.0, flightSpeed * 0.45);
+    // ── ÖNGÖRÜLÜ DAĞ YAMACI & ZEMİN GÜVENLİK YASTIĞI ──
+    const probeDist = Math.max(8.0, Math.min(22.0, flightSpeed * 0.3));
     const probeX = dragonPos.x + _forward.x * probeDist;
     const probeZ = dragonPos.z + _forward.z * probeDist;
     const aheadGroundY = getSurfaceHeightAt(probeX, probeZ, dragonPos.y);
     const groundY = getSurfaceHeightAt(dragonPos.x, dragonPos.z, dragonPos.y);
 
     if(!isLanded){
-      // 1. İleride dik bir kaya duvarı veya dağ yamacı varsa (duvara çarpıp takılmayı önle)
-      const cliffDiff = aheadGroundY - (dragonPos.y - 3.0);
-      if(cliffDiff > 0){
-        // Dağ yüzeyinin eğim normalini hesapla (yamacın baktığı açık yöne it)
-        const eps = 3.5;
-        const slopeX = (getTerrainHeight(dragonPos.x + eps, dragonPos.z) - getTerrainHeight(dragonPos.x - eps, dragonPos.z)) / (eps * 2);
-        const slopeZ = (getTerrainHeight(dragonPos.x, dragonPos.z + eps) - getTerrainHeight(dragonPos.x, dragonPos.z - eps)) / (eps * 2);
-        const slopeLen = Math.hypot(slopeX, slopeZ) || 1.0;
-        const normX = -slopeX / slopeLen; // Dağ yüzeyinden dışarı doğru
-        const normZ = -slopeZ / slopeLen;
-
-        const deflectSpeed = Math.min(36.0, cliffDiff * 2.5);
-        dragonPos.x += normX * deflectSpeed * dt;
-        dragonPos.z += normZ * deflectSpeed * dt;
-
-        // Dağ yamacından yukarı doğru doğal aerodinamik hava yastığı (lift)
-        dragonPos.y += Math.min(48.0, cliffDiff * 3.4) * dt;
-        if(pitch < 0) pitch *= Math.max(0.1, 1.0 - dt * 6.0);
+      // 1. İleride dik bir kaya duvarı veya dağ yamacı varsa yukarı doğru aerodinamik kaldırma (yanlara sarsmadan)
+      const cliffDiff = aheadGroundY - (dragonPos.y - 2.0);
+      if(cliffDiff > 0 && _forward.y < 0.25){
+        const liftReq = Math.min(28.0, cliffDiff * 2.2);
+        dragonPos.y += liftReq * dt;
+        if(pitch < 0) pitch *= Math.max(0.2, 1.0 - dt * 3.5);
       }
 
-      // 2. Taban zemin koruması (asla arazinin içine gömülmeme)
-      if(dragonPos.y < groundY + 11.5){
-        dragonPos.y += (groundY + 11.5 - dragonPos.y) * Math.min(1.0, dt * 7.0);
-        if(pitch < 0) pitch *= 0.80;
+      // 2. Taban zemin koruması (asla arazinin veya gök adasının içine gömülmeme)
+      const minSafeAlt = 7.5;
+      if(dragonPos.y < groundY + minSafeAlt){
+        dragonPos.y += (groundY + minSafeAlt - dragonPos.y) * Math.min(1.0, dt * 5.0);
+        if(pitch < 0) pitch *= Math.max(0.2, 1.0 - dt * 4.0);
       }
       if(dragonPos.y > 1800.0) dragonPos.y -= (dragonPos.y - 1800.0) * 0.06;
     }
@@ -7170,23 +7135,23 @@ function animate(){
     updateFootstepDust(dt);
     updateSpeedLines(dt, flightSpeed);
 
-    // Dinamik FOV Genişlemesi (Speed Sensation)
+    // Dinamik FOV Genişlemesi (Speed Sensation - Akıcı & Dengeli)
     let targetFov = 60.0;
     if(isPhotoMode){
       targetFov = 50.0;
     } else if(isLanded){
       targetFov = 58.0;
     } else {
-      if(flightSpeed > 85.0){
-        targetFov = 82.0 + Math.min(7.0, (flightSpeed - 85.0) * 0.22); // Magma Turbo: 82°-89°
-      } else if(flightSpeed > 55.0){
-        targetFov = 68.0 + (flightSpeed - 55.0) / 30.0 * 14.0; // Sprint: 68°-82°
+      if(flightSpeed > 48.0){
+        targetFov = 66.0 + Math.min(6.0, (flightSpeed - 48.0) / 27.0 * 6.0); // Boost: 66°-72° max
+      } else if(flightSpeed > 26.0){
+        targetFov = 61.0 + (flightSpeed - 26.0) / 22.0 * 5.0; // Sprint: 61°-66°
       } else {
-        targetFov = 60.0 + (flightSpeed / 55.0) * 8.0; // Cruise: 60°-68°
+        targetFov = 58.0 + (flightSpeed / 26.0) * 3.0; // Cruise: 58°-61°
       }
     }
     if(Math.abs(camera.fov - targetFov) > 0.05){
-      camera.fov += (targetFov - camera.fov) * Math.min(1.0, dt * 5.5);
+      camera.fov += (targetFov - camera.fov) * Math.min(1.0, dt * 4.5);
       camera.updateProjectionMatrix();
     }
 
@@ -7292,22 +7257,23 @@ function animate(){
         } else {
           _camOffset.set(0, 3.5, 8.8);
         }
-        // Yüksek hızda geriye esneme (Thrust distance lag)
-        _camOffset.z += Math.min(5.2, (flightSpeed / 125.0) * 5.2);
+        // Hızlandıkça hafif arkaya esneme (Thrust distance lag)
+        _camOffset.z += Math.min(3.2, (flightSpeed / 75.0) * 3.2);
       }
       _camOffset.applyQuaternion(dragonRig.quaternion);
       camera.position.copy(dragonPos).add(_camOffset);
 
-      // Yüksek hızda aerodinamik rüzgar titreşimi (buffeting micro-shake)
-      if(flightSpeed > 55.0 && !isPhotoMode){
-        const buffeting = Math.min(0.16, (flightSpeed - 55.0) / 70.0 * 0.16);
+      // Yüksek hızda yumuşak aerodinamik rüzgar titreşimi
+      if(flightSpeed > 52.0 && !isPhotoMode){
+        const buffeting = Math.min(0.08, (flightSpeed - 52.0) / 25.0 * 0.08);
         camera.position.x += (Math.random() - 0.5) * buffeting;
         camera.position.y += (Math.random() - 0.5) * buffeting;
       }
       if(!isFirstPerson){
-        const camGroundY = Math.max(-8.5, getTerrainHeight(camera.position.x, camera.position.z));
-        if(camera.position.y < camGroundY + 3.0){
-          camera.position.y = camGroundY + 3.0;
+        const camSurfaceY = Math.max(-8.5, getSurfaceHeightAt(camera.position.x, camera.position.z, camera.position.y));
+        const minCamY = camSurfaceY + 2.2;
+        if(camera.position.y < minCamY){
+          camera.position.y += (minCamY - camera.position.y) * Math.min(1.0, dt * 6.0);
         }
       }
 
