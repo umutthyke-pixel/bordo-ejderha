@@ -3228,6 +3228,75 @@ const tallPineGeo = mergeGeometriesWithColors([
   { geo: tpT5, color: 0x266e34 }
 ]);
 
+// 6. Karla Kaplı Dağ Çamı (Snow-Dusted Alpine Pine)
+const spTrunk = new THREE.CylinderGeometry(0.42, 0.75, 7.0, 7); spTrunk.translate(0, 3.5, 0);
+const spF1 = new THREE.ConeGeometry(4.4, 4.8, 7); spF1.translate(0, 6.5, 0);
+const spS1 = new THREE.ConeGeometry(4.6, 2.2, 7); spS1.translate(0, 7.4, 0);
+const spF2 = new THREE.ConeGeometry(3.6, 4.2, 7); spF2.translate(0, 9.5, 0);
+const spS2 = new THREE.ConeGeometry(3.8, 2.0, 7); spS2.translate(0, 10.3, 0);
+const spF3 = new THREE.ConeGeometry(2.6, 3.6, 7); spF3.translate(0, 12.2, 0);
+const spS3 = new THREE.ConeGeometry(2.8, 1.8, 7); spS3.translate(0, 12.9, 0);
+const spS4 = new THREE.ConeGeometry(1.6, 2.8, 7); spS4.translate(0, 14.5, 0);
+const snowPineGeo = mergeGeometriesWithColors([
+  { geo: spTrunk, color: 0x342217 },
+  { geo: spF1, color: 0x183c2a },
+  { geo: spS1, color: 0xe8f2f8 },
+  { geo: spF2, color: 0x1d4732 },
+  { geo: spS2, color: 0xf0f6fc },
+  { geo: spF3, color: 0x24543b },
+  { geo: spS3, color: 0xf6faff },
+  { geo: spS4, color: 0xffffff }
+]);
+
+// 7. Karlı Dağ Kayası (Snow-Capped Mountain Boulder)
+const sr1 = new THREE.DodecahedronGeometry(2.6, 0); sr1.translate(0, 1.6, 0);
+const sr2 = new THREE.DodecahedronGeometry(1.8, 0); sr2.translate(1.7, 1.2, 0.4);
+const srCap1 = new THREE.DodecahedronGeometry(2.3, 0); srCap1.scale(1.0, 0.45, 1.0); srCap1.translate(0, 2.8, 0);
+const srCap2 = new THREE.DodecahedronGeometry(1.5, 0); srCap2.scale(1.0, 0.42, 1.0); srCap2.translate(1.7, 2.1, 0.4);
+const snowRockGeo = mergeGeometriesWithColors([
+  { geo: sr1, color: 0x5a6369 },
+  { geo: sr2, color: 0x4d555b },
+  { geo: srCap1, color: 0xf0f6fc },
+  { geo: srCap2, color: 0xffffff }
+]);
+
+// 8. Işıltılı Buzul Kristalleri (Shimmering Ice Spires)
+const ic1 = new THREE.ConeGeometry(1.2, 10.0, 6); ic1.translate(0, 5.0, 0);
+const ic2 = new THREE.ConeGeometry(0.85, 7.5, 6); ic2.translate(1.4, 3.5, 0.7);
+ic2.rotateZ(-0.18);
+const ic3 = new THREE.ConeGeometry(0.7, 6.0, 6); ic3.translate(-1.2, 2.8, -0.6);
+ic3.rotateZ(0.22);
+const ic4 = new THREE.ConeGeometry(0.55, 4.5, 6); ic4.translate(0.3, 2.0, 1.3);
+ic4.rotateX(0.2);
+const iceCrystalGeo = mergeGeometriesWithColors([
+  { geo: ic1, color: 0xa5ecff },
+  { geo: ic2, color: 0x6ee0ff },
+  { geo: ic3, color: 0x4dd0ff },
+  { geo: ic4, color: 0xc4f4ff }
+]);
+
+const iceCrystalMat = new THREE.MeshStandardMaterial({
+  vertexColors: true,
+  roughness: 0.12,
+  metalness: 0.18,
+  transparent: true,
+  opacity: 0.88,
+  emissive: 0x005577,
+  flatShading: true
+});
+
+// 9. Büyülü Bahar Ağacı (Cherry Blossom Sakura)
+const blTrunk = new THREE.CylinderGeometry(0.38, 0.68, 5.0, 6); blTrunk.translate(0, 2.5, 0);
+const blC1 = new THREE.DodecahedronGeometry(3.5, 1); blC1.translate(0, 6.8, 0);
+const blC2 = new THREE.DodecahedronGeometry(2.5, 1); blC2.translate(1.6, 6.0, 0.9);
+const blC3 = new THREE.DodecahedronGeometry(2.3, 1); blC3.translate(-1.5, 6.2, -0.8);
+const blossomGeo = mergeGeometriesWithColors([
+  { geo: blTrunk, color: 0x482b1c },
+  { geo: blC1, color: 0xff8fb1 },
+  { geo: blC2, color: 0xffadc6 },
+  { geo: blC3, color: 0xff6b97 }
+]);
+
 // ── SIK ORMAN BÖLGELERİ (Dense Forest Biomes) ──
 const FOREST_BIOMES = [
   { x: -550, z: -450, radius: 460, name: "Kuzey Çamlığı" },
@@ -3235,7 +3304,29 @@ const FOREST_BIOMES = [
   { x: -750, z: 650, radius: 500, name: "Batı Vadi Koruluğu" },
   { x: 500, z: 800, radius: 440, name: "Güney Göl Kıyısı Çamlığı" },
   { x: -250, z: 1100, radius: 420, name: "Derin Sis Ormanı" },
-  { x: 350, z: -1050, radius: 450, name: "Ulu Dağ Sık Ormanı" }
+  { x: 350, z: -1050, radius: 450, name: "Ulu Dağ Sık Ormanı" },
+  { x: -100, z: -400, radius: 420, name: "Göl Kuzeyi Korusu" },
+  { x: -600, z: -100, radius: 440, name: "Batı Tepeleri Ormanı" },
+  { x: 650, z: 300, radius: 460, name: "Doğu Çam Vadisi" },
+  { x: -400, z: 900, radius: 420, name: "Güneybatı Orman Hattı" }
+];
+
+// ── BAHAR ÇİÇEĞİ KİRAZ VADİLERİ (Enchanted Blossom Groves) ──
+const BLOSSOM_BIOMES = [
+  { x: -380, z: 260, radius: 340, name: "Sakura Vadi Koruluğu" },
+  { x: 420, z: -160, radius: 320, name: "Göl Doğusu Bahar Korusu" },
+  { x: -180, z: -680, radius: 330, name: "Kuzey Bahar Yamacı" },
+  { x: 260, z: 620, radius: 310, name: "Gül Bahçesi Düzlüğü" }
+];
+
+// ── KARLI ZİRVELER VE BUZUL BİYOMU (Snow & Glacial Biomes) ──
+const SNOW_BIOMES = [
+  { x: -1100, z: -1100, radius: 650, name: "Kuzeybatı Buzul Sırtı" },
+  { x: 1150, z: -1150, radius: 700, name: "Kuzeydoğu Buz Sıradağları" },
+  { x: 1350, z: 1250, radius: 750, name: "Güneydoğu Ulu Dağ Zirvesi" },
+  { x: -1250, z: 1250, radius: 720, name: "Güneybatı Ayaz Zirvesi" },
+  { x: -1450, z: -100, radius: 620, name: "Batı Karlı Dağ Hattı" },
+  { x: 1450, z: 200, radius: 620, name: "Doğu Karlı Platoları" }
 ];
 
 const floraMat = new THREE.MeshStandardMaterial({
@@ -3245,66 +3336,62 @@ const floraMat = new THREE.MeshStandardMaterial({
   flatShading: true
 });
 
-function placeInstances(geo, count, scaleRange, validMinY, validMaxY){
-  const imesh = new THREE.InstancedMesh(geo, floraMat, count);
+function placeBiomedInstances(geo, count, scaleRange, validMinY, validMaxY, biomes, biomeBias = 0.65, customMat = floraMat){
+  const imesh = new THREE.InstancedMesh(geo, customMat, count);
   const d = new THREE.Object3D();
   let placed = 0, attempts = 0;
-  while(placed < count && attempts < count * 5){
-    attempts++;
-    const tx = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.88);
-    const tz = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.88);
-    const ty = getTerrainHeight(tx, tz);
-    if(ty < validMinY || ty > validMaxY) continue;
-
-    d.position.set(tx, ty, tz);
-    const s = scaleRange[0] + Math.random() * (scaleRange[1] - scaleRange[0]);
-    d.scale.set(s, s * (0.9 + Math.random()*0.35), s);
-    d.rotation.y = Math.random() * Math.PI * 2;
-    d.updateMatrix();
-    imesh.setMatrixAt(placed, d.matrix);
-    placed++;
-  }
-  imesh.instanceMatrix.needsUpdate = true;
-  scene.add(imesh);
-}
-
-function placeForestInstances(geo, count, scaleRange, validMinY, validMaxY, biomes){
-  const imesh = new THREE.InstancedMesh(geo, floraMat, count);
-  const d = new THREE.Object3D();
-  let placed = 0, attempts = 0;
-  while(placed < count && attempts < count * 6){
+  const maxAttempts = count * 8;
+  while(placed < count && attempts < maxAttempts){
     attempts++;
     let tx, tz;
-    if(biomes && biomes.length > 0 && Math.random() < 0.75){
+    if(biomes && biomes.length > 0 && Math.random() < biomeBias){
       const b = biomes[Math.floor(Math.random() * biomes.length)];
       const ang = Math.random() * Math.PI * 2;
       const dist = Math.sqrt(Math.random()) * b.radius;
       tx = b.x + Math.cos(ang) * dist;
       tz = b.z + Math.sin(ang) * dist;
     } else {
-      tx = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.86);
-      tz = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.86);
+      tx = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.88);
+      tz = (Math.random() - 0.5) * (TERRAIN_WIDTH * 0.88);
     }
     const ty = getTerrainHeight(tx, tz);
     if(ty < validMinY || ty > validMaxY) continue;
 
     d.position.set(tx, ty, tz);
     const s = scaleRange[0] + Math.random() * (scaleRange[1] - scaleRange[0]);
-    d.scale.set(s, s * (0.95 + Math.random() * 0.45), s);
+    d.scale.set(s, s * (0.92 + Math.random() * 0.35), s);
     d.rotation.y = Math.random() * Math.PI * 2;
+    d.rotation.x = (Math.random() - 0.5) * 0.08;
+    d.rotation.z = (Math.random() - 0.5) * 0.08;
     d.updateMatrix();
     imesh.setMatrixAt(placed, d.matrix);
     placed++;
   }
   imesh.instanceMatrix.needsUpdate = true;
   scene.add(imesh);
+  return imesh;
 }
 
-placeForestInstances(tallPineGeo, 1650, [1.0, 1.85], -6.0, 82.0, FOREST_BIOMES);
-placeInstances(pineGeo, 850, [0.8, 1.6], -6.0, 85.0);
-placeInstances(oakGeo, 550, [0.85, 1.55], -6.0, 60.0);
-placeInstances(birchGeo, 400, [0.75, 1.45], -4.0, 68.0);
-placeInstances(rockGeo, 600, [0.7, 1.8], -7.0, 115.0);
+function placeInstances(geo, count, scaleRange, validMinY, validMaxY){
+  return placeBiomedInstances(geo, count, scaleRange, validMinY, validMaxY, null, 0.0, floraMat);
+}
+function placeForestInstances(geo, count, scaleRange, validMinY, validMaxY, biomes){
+  return placeBiomedInstances(geo, count, scaleRange, validMinY, validMaxY, biomes, 0.65, floraMat);
+}
+
+// ── FLORA VE DOĞAL ARAZİ DAĞILIMI (22,000+ Instanced Mesh) ──
+// Vadi, Ova ve Yamaç Ağaçları (Barren boşlukları yok eden küresel dağılım)
+placeBiomedInstances(tallPineGeo, 4200, [1.0, 1.95], -5.0, 108.0, FOREST_BIOMES, 0.55);
+placeBiomedInstances(pineGeo, 3200, [0.8, 1.65], -6.0, 98.0, FOREST_BIOMES, 0.50);
+placeBiomedInstances(oakGeo, 2200, [0.85, 1.6], -6.0, 65.0, FOREST_BIOMES, 0.45);
+placeBiomedInstances(birchGeo, 2000, [0.75, 1.5], -3.0, 78.0, FOREST_BIOMES, 0.45);
+placeBiomedInstances(blossomGeo, 1600, [0.85, 1.65], -6.0, 55.0, BLOSSOM_BIOMES, 0.82);
+placeBiomedInstances(rockGeo, 2600, [0.7, 1.9], -7.0, 118.0, null, 0.0);
+
+// Karlı Zirveler ve Buzul Dağları (Snow Biome Props)
+placeBiomedInstances(snowPineGeo, 3600, [0.85, 1.75], 90.0, 290.0, SNOW_BIOMES, 0.65);
+placeBiomedInstances(snowRockGeo, 1800, [0.8, 2.2], 95.0, 380.0, SNOW_BIOMES, 0.55);
+placeBiomedInstances(iceCrystalGeo, 950, [0.75, 1.6], 118.0, 380.0, SNOW_BIOMES, 0.68, iceCrystalMat);
 
 // ═══════════════════════════════════════════════════
 //  3D POFUDUK BULUTLAR (Floating Low-Poly Clouds)
@@ -3570,6 +3657,71 @@ sanctuaryGroup.add(sLight);
 
 scene.add(sanctuaryGroup);
 
+// ═══════════════════════════════════════════════════
+//  KARLI ZİRVE KADİM SUNAKLARI (Glacial Peak Shrines)
+// ═══════════════════════════════════════════════════
+const PEAK_SHRINES = [
+  { x: 1150, z: -1150, name: "Kuzeydoğu Buzul Tapınağı" },
+  { x: -1250, z: 1250, name: "Güneybatı Ayaz Zirvesi" },
+  { x: 1350, z: 1250, name: "Güneydoğu Kadim Sunak" }
+];
+
+const frostfireShrines = [];
+const peakStoneMat = new THREE.MeshStandardMaterial({ color: 0x5a656e, roughness: 0.85, metalness: 0.1 });
+const peakSnowMat = new THREE.MeshStandardMaterial({ color: 0xeef4fa, roughness: 0.7, metalness: 0.05 });
+const frostfireMat = new THREE.MeshStandardMaterial({
+  color: 0x7ae5ff,
+  emissive: 0x0099cc,
+  emissiveIntensity: 1.2,
+  roughness: 0.2,
+  metalness: 0.3,
+  transparent: true,
+  opacity: 0.92
+});
+
+PEAK_SHRINES.forEach(shrine => {
+  shrine.y = getTerrainHeight(shrine.x, shrine.z);
+  const grp = new THREE.Group();
+  grp.position.set(shrine.x, shrine.y, shrine.z);
+
+  // Altar Base (Merkez Taş Kürsü)
+  const baseMesh = new THREE.Mesh(new THREE.CylinderGeometry(4.2, 5.0, 1.4, 8), peakStoneMat);
+  baseMesh.position.y = 0.7;
+  grp.add(baseMesh);
+
+  const baseSnow = new THREE.Mesh(new THREE.CylinderGeometry(4.3, 4.3, 0.3, 8), peakSnowMat);
+  baseSnow.position.y = 1.45;
+  grp.add(baseSnow);
+
+  // 4 Megalithic Pillars with Snow Caps
+  for(let i = 0; i < 4; i++){
+    const ang = (i / 4) * Math.PI * 2 + Math.PI / 4;
+    const px = Math.cos(ang) * 6.5;
+    const pz = Math.sin(ang) * 6.5;
+    const pMesh = new THREE.Mesh(new THREE.BoxGeometry(1.6, 7.5, 1.6), peakStoneMat);
+    pMesh.position.set(px, 3.75, pz);
+    pMesh.rotation.y = ang;
+    grp.add(pMesh);
+
+    const pCap = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.7, 2.0), peakSnowMat);
+    pCap.position.set(px, 7.6, pz);
+    grp.add(pCap);
+  }
+
+  // Floating Frostfire Crystal
+  const crystalMesh = new THREE.Mesh(new THREE.OctahedronGeometry(1.6, 0), frostfireMat);
+  crystalMesh.position.y = 3.2;
+  grp.add(crystalMesh);
+
+  // Frostfire Aura Light
+  const fLight = new THREE.PointLight(0x45d2ff, 2.2, 70);
+  fLight.position.y = 3.5;
+  grp.add(fLight);
+
+  scene.add(grp);
+  frostfireShrines.push({ pos: new THREE.Vector3(shrine.x, shrine.y + 3.2, shrine.z), crystal: crystalMesh, light: fLight, name: shrine.name });
+});
+
 const SANCTUARY_RING_CENTER = SANCTUARY_POS.clone().add(new THREE.Vector3(0, 16, 0));
 let sanctuaryCooldown = 0;
 function checkSanctuaryCollision(pos){
@@ -3586,6 +3738,23 @@ function checkSanctuaryCollision(pos){
       elRingPopup.style.opacity = '0';
       elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
     }, 1800);
+    return;
+  }
+  for(let i = 0; i < frostfireShrines.length; i++){
+    const s = frostfireShrines[i];
+    if(pos.distanceTo(s.pos) < 22){
+      sanctuaryCooldown = 8.0;
+      flightSpeed = Math.min(flightSpeed + 35, 130);
+      playRingChime();
+      elRingPopup.textContent = `❄️ ${s.name} KUTSAMASI! +TURBO HIZ`;
+      elRingPopup.style.opacity = '1';
+      elRingPopup.style.transform = 'translate(-50%, -50%) scale(1.15)';
+      setTimeout(()=>{
+        elRingPopup.style.opacity = '0';
+        elRingPopup.style.transform = 'translate(-50%, -50%) scale(0.7)';
+      }, 1800);
+      break;
+    }
   }
 }
 
@@ -5548,7 +5717,21 @@ function renderRadarStaticBg(){
   radarBgCtx.arc(cx, cy, 320 * scale, 0, Math.PI * 2);
   radarBgCtx.fill();
 
-  // 2. Sık Orman Biyomları
+  // 2. Karlı Zirveler & Buzul Biyomları (Minimapte açık buz mavisi alanlar)
+  radarBgCtx.fillStyle = 'rgba(215, 238, 255, 0.38)';
+  radarBgCtx.strokeStyle = 'rgba(160, 220, 255, 0.65)';
+  radarBgCtx.lineWidth = 1;
+  SNOW_BIOMES.forEach(b => {
+    const bx = cx + b.x * scale;
+    const by = cy + b.z * scale;
+    const br = b.radius * scale;
+    radarBgCtx.beginPath();
+    radarBgCtx.arc(bx, by, br, 0, Math.PI * 2);
+    radarBgCtx.fill();
+    radarBgCtx.stroke();
+  });
+
+  // 3. Sık Orman Biyomları (Zümrüt Yeşili)
   radarBgCtx.fillStyle = 'rgba(28, 120, 48, 0.42)';
   radarBgCtx.strokeStyle = 'rgba(45, 175, 75, 0.6)';
   radarBgCtx.lineWidth = 1;
@@ -5562,7 +5745,21 @@ function renderRadarStaticBg(){
     radarBgCtx.stroke();
   });
 
-  // 3b. Dağ Şelalesi & Vadi Deresi
+  // 4. Bahar Kiraz Çiçeği Vadileri (Pembe Vadi Biyomları)
+  radarBgCtx.fillStyle = 'rgba(255, 180, 210, 0.40)';
+  radarBgCtx.strokeStyle = 'rgba(255, 140, 185, 0.65)';
+  radarBgCtx.lineWidth = 1;
+  BLOSSOM_BIOMES.forEach(b => {
+    const bx = cx + b.x * scale;
+    const by = cy + b.z * scale;
+    const br = b.radius * scale;
+    radarBgCtx.beginPath();
+    radarBgCtx.arc(bx, by, br, 0, Math.PI * 2);
+    radarBgCtx.fill();
+    radarBgCtx.stroke();
+  });
+
+  // 5. Dağ Şelalesi & Vadi Deresi
   const wx = cx + (-620) * scale;
   const wy = cy + 180 * scale;
   radarBgCtx.fillStyle = '#00e5ff';
@@ -5570,7 +5767,7 @@ function renderRadarStaticBg(){
   radarBgCtx.arc(wx, wy, 3.0, 0, Math.PI * 2);
   radarBgCtx.fill();
 
-  // 3c. Kadim Ejderha Tapınağı (Megalith Altar)
+  // 6. Kadim Ejderha Tapınağı (Megalith Altar)
   const sx = cx + SANCTUARY_POS.x * scale;
   const sy = cy + SANCTUARY_POS.z * scale;
   radarBgCtx.fillStyle = '#da70d6';
@@ -5580,6 +5777,23 @@ function renderRadarStaticBg(){
   radarBgCtx.arc(sx, sy, 4.2, 0, Math.PI * 2);
   radarBgCtx.fill();
   radarBgCtx.stroke();
+
+  // 7. Karlı Zirve Kadim Sunakları (Peak Shrines - Cyan Baklava İkonları)
+  PEAK_SHRINES.forEach(ps => {
+    const px = cx + ps.x * scale;
+    const py = cy + ps.z * scale;
+    radarBgCtx.fillStyle = '#4ae3ff';
+    radarBgCtx.strokeStyle = '#ffffff';
+    radarBgCtx.lineWidth = 1;
+    radarBgCtx.beginPath();
+    radarBgCtx.moveTo(px, py - 3.5);
+    radarBgCtx.lineTo(px + 3.0, py);
+    radarBgCtx.lineTo(px, py + 3.5);
+    radarBgCtx.lineTo(px - 3.0, py);
+    radarBgCtx.closePath();
+    radarBgCtx.fill();
+    radarBgCtx.stroke();
+  });
 
   radarBgCtx.restore();
   radarBgReady = true;
@@ -5729,6 +5943,20 @@ function animate(){
   }
   if(typeof waterfallMat !== 'undefined' && waterfallMat){
     waterfallMat.opacity = 0.74 + Math.sin(Date.now() * 0.005) * 0.08;
+  }
+  if(typeof frostfireShrines !== 'undefined' && frostfireShrines.length > 0){
+    const sTime = clock.getElapsedTime();
+    for(let i = 0; i < frostfireShrines.length; i++){
+      const s = frostfireShrines[i];
+      if(s && s.crystal){
+        s.crystal.rotation.y += dt * 1.0;
+        s.crystal.rotation.z = Math.sin(sTime * 1.8 + i) * 0.12;
+        s.crystal.position.y = 3.2 + Math.sin(sTime * 2.2 + i * 1.5) * 0.32;
+        if(s.light){
+          s.light.intensity = 2.2 + Math.sin(sTime * 3.0 + i) * 0.5;
+        }
+      }
+    }
   }
 
   if(sanctuaryCooldown > 0) sanctuaryCooldown -= dt;
